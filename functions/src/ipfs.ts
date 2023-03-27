@@ -1,13 +1,11 @@
 import * as functions from "firebase-functions";
 import {cids} from "./utils/firebase.js";
 import {indexCID} from "./runner/tasks.js";
-import {getMetadataForCID} from "./utils/infura.js";
-import fetch from "node-fetch";
 import cors from "cors";
 const corsHandler = cors({origin: true});
 
 // IPFS-GET ENDPOINT: Get the contents of a pinned file/dir on the IPFS network, provided a CID
-const get = functions.https.onRequest(async (req: any, res: any) => {
+const get = functions.https.onRequest(async (req, res) => {
   return await corsHandler(req, res, async () => {
     // ipfs cid to fetch, provided by the client
     const cid = req.query.cid ?? req.body.cid ?? "";

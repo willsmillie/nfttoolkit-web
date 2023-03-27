@@ -13,20 +13,20 @@ import {
   Alert,
 } from '@mui/material';
 import useDebounce from '../hooks/useDebounce';
-import { getENS } from '../API';
+import { getAccount } from '../API';
 
 const Content = () => {
   const [loading, setLoading] = useState(false);
-  const [ens, setEns] = useState('');
+  const [account, setAccount] = useState('');
   const [results, setResults] = useState('');
 
   // DeBounce Function
   useDebounce(
     () => {
-      if (ens.length === 0) return;
+      if (account.length === 0) return;
 
       setLoading(true);
-      getENS(encodeURIComponent(ens))
+      getAccount(encodeURIComponent(account))
         .then((r) => r?.data)
         .then(setResults)
         .catch(console.error)
@@ -34,7 +34,7 @@ const Content = () => {
           setLoading(false);
         });
     },
-    [ens],
+    [account],
     800
   );
 
@@ -75,7 +75,7 @@ const Content = () => {
                     size="small"
                     rows={3}
                     onChange={(e) => {
-                      setEns(e.target.value);
+                      setAccount(e.target.value);
                     }}
                   />
                 </Stack>

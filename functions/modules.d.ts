@@ -4,7 +4,7 @@ declare global {
       INFURA_PROJECT_ID: string;
       ETH_ACCOUNT_PRIVATE_KEY: string;
       ETH_ACCOUNT_ADDRESS: string;
-      CHAIN_ID: any;
+      CHAIN_ID: string | number;
     }
   }
 }

@@ -1,6 +1,4 @@
 import fetch from "node-fetch";
-import cors from "cors";
-const corsHandler = cors({origin: true});
 import {RateLimit as ratelimit} from "async-sema";
 
 // configure a limit of maximum 5 requests / second
@@ -20,10 +18,10 @@ const getMetadataForCID = async (cid: string) => {
   // Post request to the infura ipfs API
   const headers = {"Content-Type": "application/json", "Authorization": auth, "RequestMode": "no-cors"};
   const request = fetch(url, {method: "POST", headers: headers, redirect: "follow"});
-  const response = await request.then((res) => res.json()).catch((e) => console.error);
+  const response = await request.then((res) => res.json()).catch(console.error);
 
   // pretty printed mapping of the results
-  const infos = (response["Links"] ?? []).map((e) => `${e.Name} => ${e.Hash["/"]}`);
+  // const infos = (response["Links"] ?? []).map((e) => `${e.Name} => ${e.Hash["/"]}`);
 
   return response;
 };

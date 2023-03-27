@@ -65,12 +65,11 @@ const Content = () => {
             <Card>
               <CardContent>
                 <Stack spacing={2}>
-                  <p>Connect Wallet</p>
                   <small>Retrieve the balances of an account.</small>
                   <TextField
-                    label="ens / address"
+                    label="accountId"
                     id="outlined-size-small"
-                    placeholder="0x12345..."
+                    placeholder="12345"
                     size="small"
                     onChange={(e) => {
                       setId(e.target.value);

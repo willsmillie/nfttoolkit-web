@@ -1,23 +1,23 @@
 import * as functions from 'firebase-functions';
 import { nfts } from './utils/firebase.js';
 import { indexNFT } from './runner/tasks.js';
-import { getBalances, getHoldersForNFTData, getAccount } from './utils/web3.js';
+import { getBalances, getHoldersForNFTData } from './utils/web3.js';
 import cors from 'cors';
 const corsHandler = cors({ origin: true });
 
 // LISTING All INDEXED NFTS
-const list = functions.https.onRequest(async (req: any, res: any) => {
-  const results: any[] = [];
+const list = functions.https.onRequest(async (req, res) => {
+  const results = [];
 
   nfts
     .get()
-    .then((querySnapshot: any) => {
-      querySnapshot.forEach((doc: any) => {
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
         results.push(doc.data());
       });
       return res.send(results);
     })
-    .catch((error: any) => {
+    .catch((error) => {
       console.log('Error getting documents: ', error);
     });
 });
@@ -29,19 +29,16 @@ const ownedBy = functions
     memory: '1GB',
   })
   .https.onRequest(async (req: any, res: any) => {
-    const account = req.query.account ?? req.body.account
-    const address = await getAccount(accountId);
-
+    const account = req.query.account ?? req.body.account;
     // Get balance of account from loopring
-    const { userNFTBalances } = await getBalances(accountId);
-    // userNFTBalances.forEach((token: any) => indexNFT(token));
-    console.log(userNFTBalances);
+    const { userNFTBalances } = await getBalances(account);
+    // userNFTBalances.forEach((token) => indexNFT(token));
     res.set('Access-Control-Allow-Origin', '*');
     return res.send(userNFTBalances);
   });
 
 // get the cached metadata of an nft
-const get = functions.https.onRequest(async (req: any, res: any) => {
+const get = functions.https.onRequest(async (req, res) => {
   return await corsHandler(req, res, async () => {
     const nftId =
       req.query.nftId ?? req.body.nftId ?? '0x8a1967f5f93da038ad570a5244879031d010b8efa5c95eadcdf7df0f8cfbd25c';
@@ -62,7 +59,7 @@ const get = functions.https.onRequest(async (req: any, res: any) => {
 });
 
 // get the cached holders of an nft
-const getHolders = functions.https.onRequest(async (req: any, res: any) => {
+const getHolders = functions.https.onRequest(async (req, res) => {
   return await corsHandler(req, res, async () => {
     const nftData =
       req.query.nftData ?? req.body.nftData ?? '0x8a1967f5f93da038ad570a5244879031d010b8efa5c95eadcdf7df0f8cfbd25c';

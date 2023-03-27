@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const base = 'http://127.0.0.1:5001//nfttoolkit/us-central1/';
+const dev = 'http://127.0.0.1:5001/nfttoolkit-ba61b/us-central1/';
+const prod = 'https://';
+const base = dev;
 
 // Get NFT Metadata by NFT ID
 export const getNFT = (nftId) => {
@@ -11,9 +13,9 @@ export const getNFT = (nftId) => {
 };
 
 // Get an address from an ens
-export const getENS = (ens) => {
-  const endpoint = 'ens-get';
-  const params = `ens=${ens}`;
+export const getAccount = (account) => {
+  const endpoint = 'accounts-get';
+  const params = `account=${account}`;
   const url = `${base}${endpoint}?${params}`;
   return axios.get(url);
 };
@@ -35,9 +37,9 @@ export const getHolders = (nftData) => {
 };
 
 // Get holdings of a specific account
-export const getOwnedBy = (accountId) => {
+export const getOwnedBy = (account) => {
   const endpoint = 'nfts-ownedBy';
-  const params = `accountId=${accountId}`;
+  const params = `account=${account}`;
   const url = `${base}${endpoint}?${params}`;
   return axios.get(url);
 };
