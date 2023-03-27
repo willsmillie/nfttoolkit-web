@@ -101,7 +101,7 @@ const Content = () => {
                     rows={15}
                     value={JSON.stringify(metadata, null, 2)}
                     id="outlined-size-small"
-                    defaultValue="0x12345..."
+                    defaultValue=""
                     size="small"
                   />
                   <p>Token Data:</p>
@@ -111,7 +111,7 @@ const Content = () => {
                     rows={15}
                     value={JSON.stringify(tokenData, null, 2)}
                     id="outlined-size-small"
-                    defaultValue="0x12345..."
+                    defaultValue=""
                     size="small"
                   />
                 </Stack>

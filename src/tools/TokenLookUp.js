@@ -82,7 +82,7 @@ const Content = () => {
             <Card>
               <CardContent>
                 <Stack spacing={2}>
-                  <p>Holders:</p>
+                  <p>Results:</p>
                   <StatusView />
                   <TextField
                     label="Metadata"
@@ -90,7 +90,7 @@ const Content = () => {
                     rows={15}
                     value={JSON.stringify(metadata, null, 2)}
                     id="outlined-size-small"
-                    defaultValue="0x12345..."
+                    defaultValue=""
                     size="small"
                   />
                 </Stack>
