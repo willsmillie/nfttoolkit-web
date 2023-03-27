@@ -30,7 +30,7 @@
     "react/jsx-key": 1,
     "import/no-cycle": 0,
     "arrow-body-style": 1,
-    "react/prop-types": 1,
+    "react/prop-types": 0,
     "consistent-return": 1,
     "no-param-reassign": 0,
     "no-use-before-define": 0,
