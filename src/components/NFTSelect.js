@@ -1,8 +1,6 @@
-import { useEffect, useState } from 'react';
 // @mui
 import { Select, MenuItem } from '@mui/material';
 // @web3-react
-import * as Web3 from 'web3';
 import { useWeb3React } from '@web3-react/core';
 import { useBalances } from '../hooks/useBalances';
 import ConnectButton from './ConnectButton';

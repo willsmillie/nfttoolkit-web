@@ -11,7 +11,6 @@ import {
   Alert,
 } from '@mui/material';
 import useDebounce from '../hooks/useDebounce';
-import ConnectButton from '../components/ConnectButton';
 import NFTSelect from '../components/NFTSelect';
 import { useBalances } from '../hooks/useBalances';
 import { getNFT } from '../API';

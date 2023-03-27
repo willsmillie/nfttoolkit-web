@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react';
-// @mui
-import { Container, Typography, Grid, Stack } from '@mui/material';
 // @web3-react
 import * as Web3 from 'web3';
 import { useWeb3React } from '@web3-react/core';
