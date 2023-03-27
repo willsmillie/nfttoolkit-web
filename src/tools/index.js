@@ -1,8 +1,8 @@
-import AirDrop from './AirDrop';
+// import AirDrop from './AirDrop';
 import ENSResolver from './EnsResolver';
 import TokenLookUp from './TokenLookUp';
-import ThreadRipper from './ThreadRipper';
-import TokenGate from './TokenGate';
+// import ThreadRipper from './ThreadRipper';
+// import TokenGate from './TokenGate';
 import TokenHolders from './TokenHolders';
 import Donate from './Donate';
 import MyTokens from './MyTokens';

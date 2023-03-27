@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
-  Box,
   Backdrop,
   Grid,
   Stack,
@@ -9,7 +8,6 @@ import {
   CardContent,
   Typography,
   CircularProgress,
-  Button,
   Alert,
 } from '@mui/material';
 import useDebounce from '../hooks/useDebounce';

@@ -44,9 +44,9 @@ export default function Router() {
 
 // Dashboard
 const PageOne = Loadable(lazy(() => import('../pages/PageOne')));
-const PageTwo = Loadable(lazy(() => import('../pages/PageTwo')));
-const PageThree = Loadable(lazy(() => import('../pages/PageThree')));
-const PageFour = Loadable(lazy(() => import('../pages/PageFour')));
-const PageFive = Loadable(lazy(() => import('../pages/PageFive')));
-const PageSix = Loadable(lazy(() => import('../pages/PageSix')));
+// const PageTwo = Loadable(lazy(() => import('../pages/PageTwo')));
+// const PageThree = Loadable(lazy(() => import('../pages/PageThree')));
+// const PageFour = Loadable(lazy(() => import('../pages/PageFour')));
+// const PageFive = Loadable(lazy(() => import('../pages/PageFive')));
+// const PageSix = Loadable(lazy(() => import('../pages/PageSix')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));

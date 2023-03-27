@@ -1,6 +1,5 @@
-import { useState } from 'react';
 // @mui
-import { Container, Typography, Grid, Card, CardContent, CardActionArea } from '@mui/material';
+import { Container, Typography, Grid } from '@mui/material';
 // hooks
 import useSettings from '../hooks/useSettings';
 // components
@@ -12,7 +11,6 @@ import Tools from '../tools';
 
 export default function PageOne() {
   const { themeStretch } = useSettings();
-  const [showTool, setShowTool] = useState(null);
 
   return (
     <Page title="Tools">
@@ -24,13 +22,7 @@ export default function PageOne() {
 
         <Grid container justifyContent="space-evenly" alignItems="stretch" spacing={2}>
           {Tools.map((p) => (
-            <ToolCard
-              sx={{ flex: 'grow' }}
-              tool={p}
-              onClick={(tool) => {
-                setShowTool(tool);
-              }}
-            />
+            <ToolCard key={p.name} sx={{ flex: 'grow' }} tool={p} />
           ))}
         </Grid>
       </Container>

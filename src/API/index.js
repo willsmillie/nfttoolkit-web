@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const dev = 'http://127.0.0.1:5001/nfttoolkit-ba61b/us-central1/';
-const prod = 'https://';
-const base = dev;
+const prod = 'https://us-central1-nfttoolkit-ba61b.cloudfunctions.net/';
+const base = process.env.DEVELOPMENT ? dev : prod;
 
 // Get NFT Metadata by NFT ID
 export const getNFT = (nftId) => {

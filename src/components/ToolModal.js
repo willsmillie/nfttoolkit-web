@@ -8,15 +8,9 @@ import {
   CardContent,
   CardActionArea,
   Dialog,
-  ListItemText,
-  ListItem,
-  Button,
-  List,
-  Divider,
   AppBar,
   Toolbar,
   IconButton,
-  Slide,
 } from '@mui/material';
 
 export default function ToolCard({ tool }) {
@@ -36,8 +30,8 @@ export default function ToolCard({ tool }) {
         <Card>
           <CardActionArea onClick={handleClickOpen}>
             <CardContent>
-              <Typography variant="h4">{tool.name}</Typography>
-              <Typography>{tool.description}</Typography>
+              <Typography variant="h4">{tool?.name}</Typography>
+              <Typography>{tool?.description}</Typography>
             </CardContent>
           </CardActionArea>
         </Card>
@@ -49,11 +43,11 @@ export default function ToolCard({ tool }) {
               <Close />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              {tool.name}
+              {tool?.name}
             </Typography>
           </Toolbar>
         </AppBar>
-        <Container>{tool.content()}</Container>
+        <Container>{tool?.content()}</Container>
       </Dialog>
     </>
   );
