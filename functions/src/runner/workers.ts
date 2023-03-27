@@ -25,7 +25,9 @@ const workers: Workers = {
   indexAccount: async ({address}) => {
     const resolvedAddress = await resolveENS(address);
     const ens = address != resolvedAddress ? address : null;
-    if (resolvedAddress) accounts.add({address: resolvedAddress, ens}).catch(console.error);
+    if (resolvedAddress) {
+      accounts.doc(resolvedAddress).set({address: resolvedAddress, ens}, {merge: true}).catch(console.error);
+    }
   },
 };
 
