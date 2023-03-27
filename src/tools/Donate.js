@@ -7,12 +7,12 @@ const Content = () => (
       Leave a tip?
     </Typography>
     <Typography gutterBottom>
-      If you clicked here, thank you for even considering it! If you find NFTToolK.it useful, and want to support
-      further development (or help me and my dog eat).
+      If you clicked here, thank you for even considering it! If you find NFT Tool Kit useful, and want to support
+      further development (or help me and my dog eat) consider leaving a tip.
     </Typography>
 
     <Stack direction="row" spacing={2}>
-      <BuyMeACoffee />
+      <BuyMeACoffee sx={{ minWidth: '100px' }} />
       <Button variant="contained" large>
         Fenneckit.eth
       </Button>
