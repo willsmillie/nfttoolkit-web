@@ -11,20 +11,26 @@ import {
   Alert,
 } from '@mui/material';
 import useDebounce from '../hooks/useDebounce';
-import { getOwnedBy } from '../API';
+import ConnectButton from '../components/ConnectButton';
+import NFTSelect from '../components/NFTSelect';
+import { useBalances } from '../hooks/useBalances';
+import { getNFT } from '../API';
 
 const Content = () => {
   const [loading, setLoading] = useState(false);
   const [id, setId] = useState('');
   const [metadata, setMetadata] = useState('');
 
-  // DeBounce Function
+  const balances = useBalances();
+  const tokenData = (balances ?? []).find((e) => e.nftId === id);
+
+  // // DeBounce Function
   useDebounce(
     () => {
       if (id.length === 0) return;
 
       setLoading(true);
-      getOwnedBy(id)
+      getNFT(id)
         .then((r) => r?.data)
         .then(setMetadata)
         .finally(() => {
@@ -40,7 +46,7 @@ const Content = () => {
       case 'ok' || 'success':
         return <Alert severity="success">Fetched</Alert>;
       case 'indexing':
-        return <Alert severity="info">This accounted is queued for indexing, please check back later!</Alert>;
+        return <Alert severity="info">This item is queued for indexing, please check back in a moment!</Alert>;
       case 'error':
         return <Alert severity="error">This is an error alert — check it out!</Alert>;
       default:
@@ -64,7 +70,14 @@ const Content = () => {
               <CardContent>
                 <Stack spacing={2}>
                   <small>Retrieve the balances of an account.</small>
-                  <TextField
+                  <NFTSelect
+                    value={id}
+                    onChange={(e) => {
+                      console.log('SELECTED', e.target.value);
+                      setId(e.target.value);
+                    }}
+                  />
+                  {/* <TextField
                     label="accountId"
                     id="outlined-size-small"
                     placeholder="12345"
@@ -72,7 +85,7 @@ const Content = () => {
                     onChange={(e) => {
                       setId(e.target.value);
                     }}
-                  />
+                  /> */}
                 </Stack>
               </CardContent>
             </Card>
@@ -81,14 +94,23 @@ const Content = () => {
             <Card>
               <CardContent>
                 <Stack spacing={2}>
-                  <p>Metadata:</p>
+                  <p>IPFS Metadata:</p>
                   <StatusView />
                   <TextField
                     label="Metadata"
-                    disabled
                     multiline
                     rows={15}
                     value={JSON.stringify(metadata, null, 2)}
+                    id="outlined-size-small"
+                    defaultValue="0x12345..."
+                    size="small"
+                  />
+                  <p>Token Data:</p>
+                  <TextField
+                    label="Metadata"
+                    multiline
+                    rows={15}
+                    value={JSON.stringify(tokenData, null, 2)}
                     id="outlined-size-small"
                     defaultValue="0x12345..."
                     size="small"

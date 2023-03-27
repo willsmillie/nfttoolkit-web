@@ -1,3 +1,7 @@
+// web3
+import { Web3ReactProvider } from '@web3-react/core';
+import { Web3Provider } from '@ethersproject/providers';
+
 // scroll bar
 import 'simplebar/src/simplebar.css';
 
@@ -16,16 +20,23 @@ import { CollapseDrawerProvider } from './contexts/CollapseDrawerContext';
 import App from './App';
 
 // ----------------------------------------------------------------------
+function getLibrary(provider) {
+  return new Web3Provider(provider);
+}
+
+// ----------------------------------------------------------------------
 
 ReactDOM.render(
   <HelmetProvider>
-    <SettingsProvider>
-      <CollapseDrawerProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </CollapseDrawerProvider>
-    </SettingsProvider>
+    <Web3ReactProvider getLibrary={getLibrary}>
+      <SettingsProvider>
+        <CollapseDrawerProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </CollapseDrawerProvider>
+      </SettingsProvider>
+    </Web3ReactProvider>
   </HelmetProvider>,
   document.getElementById('root')
 );
