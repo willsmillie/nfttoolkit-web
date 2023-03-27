@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const base = 'http://127.0.0.1:5001/fenneckitnft/us-central1/';
+const base = 'http://127.0.0.1:5001//nfttoolkit/us-central1/';
 
 // Get NFT Metadata by NFT ID
 export const getNFT = (nftId) => {
