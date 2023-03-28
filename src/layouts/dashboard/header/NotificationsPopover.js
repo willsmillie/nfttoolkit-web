@@ -19,8 +19,6 @@ import {
 } from '@mui/material';
 // utils
 import { fToNow } from '../../../utils/formatTime';
-// _mock_
-import { _notifications } from '../../../_mock';
 // components
 import Iconify from '../../../components/Iconify';
 import Scrollbar from '../../../components/Scrollbar';
@@ -46,7 +44,7 @@ export default function NotificationsPopover() {
 
   const handleMarkAllAsRead = () => {
     setNotifications(
-      notifications.map((notification) => ({
+      notifications ?? [].map((notification) => ({
         ...notification,
         isUnRead: false,
       }))
