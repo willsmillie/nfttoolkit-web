@@ -1,5 +1,5 @@
 // @mui
-import { Select, MenuItem } from '@mui/material';
+import { Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 // @web3-react
 import { useWeb3React } from '@web3-react/core';
 import { useBalances } from '../hooks/useBalances';
@@ -16,13 +16,16 @@ export default function PageOne({ value, onChange }) {
       {!active ? (
         <ConnectButton />
       ) : (
-        <Select labelId="nft-select" id="nft-select" value={value} label="Select NFT" onChange={onChange}>
-          {(tokens ?? []).map((e) => (
-            <MenuItem key={e.nftId} value={e.nftId}>
-              {e.nftId}
-            </MenuItem>
-          ))}
-        </Select>
+        <FormControl>
+          <InputLabel id="nft-select-label">Select NFT</InputLabel>
+          <Select labelId="nft-select" id="nft-select" value={value} label="Select NFT" onChange={onChange}>
+            {(tokens ?? []).map((e) => (
+              <MenuItem key={e.nftId} value={e.nftId}>
+                {e.nftId}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       )}
     </>
   );

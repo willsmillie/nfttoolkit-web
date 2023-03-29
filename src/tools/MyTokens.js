@@ -72,7 +72,6 @@ const Content = () => {
                   <NFTSelect
                     value={id}
                     onChange={(e) => {
-                      console.log('SELECTED', e.target.value);
                       setId(e.target.value);
                     }}
                   />
@@ -126,7 +125,7 @@ const Content = () => {
 
 export default {
   name: '🗂️ My Tokens',
-  description: 'View a wallets holdings',
+  description: 'Connect a wallet to view its holdings',
   color: 'orange',
   content: Content,
 };
