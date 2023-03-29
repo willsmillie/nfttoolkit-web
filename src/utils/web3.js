@@ -56,7 +56,6 @@ export const authenticate = async (address, web3) => {
 };
 
 export const getBalances = async ({ accountId, apiKey }) => {
-  console.log('accountID: ', accountId);
   const balances = await userAPI.getUserNFTBalances({ accountId, limit: 50 }, apiKey);
   return balances;
 };
