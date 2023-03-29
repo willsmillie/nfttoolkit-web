@@ -1,7 +1,7 @@
-import getCacheOrFetch from '../utils/getCacheOrFetch.js';
-import { accounts, db } from '../utils/firebase.js';
-import { indexAccount, indexAccountById } from '../runner/tasks.js';
-import * as Web3 from '../utils/web3.js';
+import getCacheOrFetch from "../utils/getCacheOrFetch.js";
+import {accounts, db} from "../utils/firebase.js";
+import {indexAccount, indexAccountById} from "../runner/tasks.js";
+import * as Web3 from "../utils/web3.js";
 
 export const getBalances = Web3.getBalances;
 
@@ -14,27 +14,27 @@ export const getAccount = async (account) => {
 // get accounts by ens /
 export const getAccountsByAddresses = async (mixedAddresses) => {
   // 0x addresses to return
-  var results = [];
+  const results = [];
 
   // get it from the db
   await accounts
-    .where(
-      'ens',
-      'in',
-      mixedAddresses.filter((e) => e.endsWith('.eth'))
-    )
-    .get()
-    .then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        results.push(doc.data());
-      });
-    })
-    .catch((err) => console.error(err.message));
+      .where(
+          "ens",
+          "in",
+          mixedAddresses.filter((e) => e.endsWith(".eth"))
+      )
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          results.push(doc.data());
+        });
+      })
+      .catch((err) => console.error(err.message));
 
   // accounts to be indexed
   const missingAccounts = mixedAddresses
-    .filter((addressOrEns) => !results.find((i) => i.ens === addressOrEns || i.address === addressOrEns))
-    .filter((e) => e.endsWith('.eth'));
+      .filter((addressOrEns) => !results.find((i) => i.ens === addressOrEns || i.address === addressOrEns))
+      .filter((e) => e.endsWith(".eth"));
 
   // index the missing accounts
   if (missingAccounts.length > 0) {
@@ -43,35 +43,36 @@ export const getAccountsByAddresses = async (mixedAddresses) => {
       if (mixedAddress) indexAccount(mixedAddress);
     }
   } else {
-    return { results };
+    return {results};
   }
 
-  return { status: 'indexing' };
+  return {status: "indexing"};
 };
 
 // get accounts ids
 export const getAccountsByIds = async (accountIds) => {
   // after all of the data is fetched, return it
-  const results = await getContentById([...accountIds], 'accounts');
+  const results = await getContentById([...accountIds], "accounts");
 
   // accounts to be indexed
   const missingAccounts = accountIds.filter((id) => !results.find((i) => i.accountId === id));
 
   // index the missing accounts
   if (missingAccounts.length > 0) {
-    console.log(missingAccounts.length, ' Missing accounts');
+    console.log(missingAccounts.length, " Missing accounts");
     for (const i in missingAccounts) {
       const mixedAddress = missingAccounts[i];
       if (mixedAddress) indexAccountById(mixedAddress);
     }
   } else {
-    return { results: results };
+    return {results: results};
   }
 
-  return { status: 'indexing' };
+  return {status: "indexing"};
 };
 
-export async function getContentById(ids, path = 'accounts') {
+// Batch queries due to firebase "IN" limit
+const getContentById = async (ids, path = "accounts") => {
   // don't run if there aren't any ids or a path for the collection
   if (!ids || !ids.length || !path) return [];
 
@@ -84,13 +85,13 @@ export async function getContentById(ids, path = 'accounts') {
 
     // add the batch request to to a queue
     batches.push(
-      collectionPath
-        .where('accountId', 'in', [...batch])
-        .get()
-        .then((results) => results.docs.map((result) => ({ /* id: result.id, */ ...result.data() })))
+        collectionPath
+            .where("accountId", "in", [...batch])
+            .get()
+            .then((results) => results.docs.map((result) => ({/* id: result.id, */ ...result.data()})))
     );
   }
 
   // after all of the data is fetched, return it
   return Promise.all(batches).then((content) => content.flat());
-}
+};
