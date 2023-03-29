@@ -1,11 +1,11 @@
-import PrivateKeyProvider from 'truffle-privatekey-provider';
-import Web3 from 'web3';
-import * as sdk from '@loopring-web/loopring-sdk';
-import LoopringAPIClass from './loopring.js';
-import dotenv from 'dotenv';
+import PrivateKeyProvider from "truffle-privatekey-provider";
+import Web3 from "web3";
+import * as sdk from "@loopring-web/loopring-sdk";
+import LoopringAPIClass from "./loopring.js";
+import dotenv from "dotenv";
 // import fetch from 'node-fetch';
-import axios from 'axios';
-import { RateLimit as ratelimit } from 'async-sema';
+import axios from "axios";
+import {RateLimit as ratelimit} from "async-sema";
 
 // configure a limit of maximum 5 requests / second
 const limit = ratelimit(5);
@@ -14,21 +14,21 @@ const limit = ratelimit(5);
 dotenv.config();
 
 // Env vars
-const { INFURA_PROJECT_ID, ETH_ACCOUNT_PRIVATE_KEY, ETH_ACCOUNT_ADDRESS, LOOPRING_API_KEY } = process.env;
+const {INFURA_PROJECT_ID, ETH_ACCOUNT_PRIVATE_KEY, ETH_ACCOUNT_ADDRESS, LOOPRING_API_KEY} = process.env;
 const provider = new PrivateKeyProvider(ETH_ACCOUNT_PRIVATE_KEY, `https://mainnet.infura.io/v3/${INFURA_PROJECT_ID}`);
 const web3 = new Web3(provider);
-const { exchangeAPI, userAPI, walletAPI, nftAPI } = LoopringAPIClass;
+const {exchangeAPI, userAPI, walletAPI, nftAPI} = LoopringAPIClass;
 
-const signatureKeyPairMock = async function (exchangeAddress: string, accInfo: sdk.AccountInfo) {
-  if (!accInfo) console.error('NO ACCINFO');
+const signatureKeyPairMock = async function(exchangeAddress: string, accInfo: sdk.AccountInfo) {
+  if (!accInfo) console.error("NO ACCINFO");
   const opts = {
     web3: web3,
     address: accInfo.owner,
     keySeed:
       accInfo.keySeed ||
-      sdk.GlobalAPI.KEY_MESSAGE.replace('${exchangeAddress}', exchangeAddress).replace(
-        '${nonce}',
-        (accInfo.nonce - 1).toString()
+      sdk.GlobalAPI.KEY_MESSAGE.replace("${exchangeAddress}", exchangeAddress).replace(
+          "${nonce}",
+          (accInfo.nonce - 1).toString()
       ),
     walletType: sdk.ConnectorNames.MetaMask,
     accountId: Number(accInfo.accountId),
@@ -40,55 +40,53 @@ const signatureKeyPairMock = async function (exchangeAddress: string, accInfo: s
 };
 
 // Authenticate the account defined in your .env file
-// export const authenticate = async () => {
-//   if (process.env.LOOPRING_API_KEY == null) {
-//     try {
-//       const { exchangeInfo } = await exchangeAPI.getExchangeInfo();
-//       const { accInfo } = await exchangeAPI.getAccount({ owner: ETH_ACCOUNT_ADDRESS });
+export const authenticate = async () => {
+  if (LOOPRING_API_KEY == null) {
+    try {
+      const {exchangeInfo} = await exchangeAPI.getExchangeInfo();
+      const {accInfo} = await exchangeAPI.getAccount({owner: ETH_ACCOUNT_ADDRESS});
 
-//       const eddsaKey = await signatureKeyPairMock(exchangeInfo.exchangeAddress, accInfo);
-//       const { apiKey } = await userAPI.getUserApiKey({ accountId: accInfo.accountId }, eddsaKey.sk);
-//       // const { userNFTBalances } = await userAPI.getUserNFTBalances({ accountId: accInfo.accountId, limit: 20 }, apiKey);
-//       // console.log(userNFTBalances);
+      const eddsaKey = await signatureKeyPairMock(exchangeInfo.exchangeAddress, accInfo);
+      const {apiKey} = await userAPI.getUserApiKey({accountId: accInfo.accountId}, eddsaKey.sk);
+      // const { userNFTBalances } = await userAPI.getUserNFTBalances({ accountId: accInfo.accountId, limit: 20 }, apiKey);
+      // console.log(userNFTBalances);
 
-//       process.env.LOOPRING_API_KEY = apiKey;
-//       console.log('LOADED API KEY: ', apiKey);
-//       return { ...accInfo, apiKey };
-//     } catch (error) {
-//       console.error(error);
-//       return { apiKey: null };
-//     }
-//   } else {
-//     return { apiKey: LOOPRING_API_KEY };
-//   }
-// };
+      process.env.LOOPRING_API_KEY = apiKey;
+      console.log("LOADED API KEY: ", apiKey);
+      return {...accInfo, apiKey};
+    } catch (error) {
+      console.error(error);
+      return {apiKey: null};
+    }
+  } else {
+    return {apiKey: LOOPRING_API_KEY};
+  }
+};
 
 // returns the NFT balances given an L2 accountId
 export const getBalances = async (accountId: number) => {
-  return await userAPI.getUserNFTBalances({ accountId, limit: 500 }, LOOPRING_API_KEY);
+  return await userAPI.getUserNFTBalances({accountId, limit: 500}, LOOPRING_API_KEY);
 };
 
 // retreive ipfs metadata given a tokenId
-export const getMetadataForNFT = async function (nftId) {
-  await limit();
+export const getMetadataForNFT = async function(nftId) {
   const cid = nftAPI.ipfsNftIDToCid(nftId);
   const metadata = await axios
-    .get(`https://gateway.ipfs.io/ipfs/${cid}`)
-    .then((x) => x.data)
-    .catch((error) => console.log(error));
+      .get(`https://gateway.ipfs.io/ipfs/${cid}`)
+      .then((x) => x.data)
+      .catch((error) => console.log(error));
 
   return metadata;
 };
 
 // retreive holders given a tokenId
 export const getHoldersForNFTData = async (nftData: string) => {
-  var results = [];
-  var totalNum = null;
-  var error = null;
+  const results = [];
+  let totalNum = null;
 
   while (totalNum === null || results.length < totalNum) {
-    let url = `https://api3.loopring.io/api/v3/nft/info/nftHolders?nftData=${nftData}&offset=${results.length}&limit=500`;
-    var res: any = await makeRequest(url);
+    const url = `https://api3.loopring.io/api/v3/nft/info/nftHolders?nftData=${nftData}&offset=${results.length}&limit=500`;
+    const res: any = await makeRequest(url);
 
     if (!totalNum && res?.totalNum) totalNum = res.totalNum;
     if (res?.nftHolders?.length === 0 || res?.nftHolders == undefined) break;
@@ -145,18 +143,18 @@ export const getAccount = async (accountId) => {
 
 // resolve an ens domain to hex address
 export const resolveENS = async (domain: string) =>
-  domain.toLowerCase().endsWith('.eth')
-    ? (
-        await walletAPI.getAddressByENS({
-          fullName: domain.toLowerCase(),
-        })
-      ).address
-    : domain;
+  domain.toLowerCase().endsWith(".eth") ?
+    (
+      await walletAPI.getAddressByENS({
+        fullName: domain.toLowerCase(),
+      })
+    ).address :
+    domain;
 
 // Convenience for making the HTTP req header
 const makeHeader = (apiKey: string = LOOPRING_API_KEY) => {
   return {
-    'X-API-KEY': apiKey,
+    "X-API-KEY": apiKey,
   };
 };
 
@@ -164,8 +162,8 @@ const makeHeader = (apiKey: string = LOOPRING_API_KEY) => {
 const makeRequest = async (url: string) => {
   await limit();
   return await axios
-    .get(encodeURI(url), {
-      headers: makeHeader(),
-    })
-    .then((res) => res.data);
+      .get(encodeURI(url), {
+        headers: makeHeader(),
+      })
+      .then((res) => res.data);
 };
