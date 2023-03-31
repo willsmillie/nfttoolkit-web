@@ -1,7 +1,7 @@
 // import AirDrop from './AirDrop';
 import ENSResolver from './EnsResolver';
 import TokenLookUp from './TokenLookUp';
-// import ThreadRipper from './ThreadRipper';
+import ThreadRipper from './ThreadRipper';
 // import TokenGate from './TokenGate';
 import TokenHolders from './TokenHolders';
 import Donate from './Donate';
@@ -13,7 +13,7 @@ export default [
   // AirDrop,
   ENSResolver,
   TokenLookUp,
-  // ThreadRipper,
+  ThreadRipper,
   // TokenGate,
   IPFSIndex,
   TokenHolders,

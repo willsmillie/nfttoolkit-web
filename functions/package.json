@@ -33,6 +33,7 @@
     "limiter": "^2.1.0",
     "node-fetch": "^3.3.0",
     "truffle-privatekey-provider": "^1.5.0",
+    "twitter-api-v2": "^1.14.2",
     "web3": "^1.8.2"
   },
   "devDependencies": {
