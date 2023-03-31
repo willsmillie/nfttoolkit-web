@@ -1,6 +1,6 @@
 import admin from 'firebase-admin';
 import functions from 'firebase-functions';
-import { tasks, db } from '../utils/firebase.js';
+import {tasks, db} from '../utils/firebase.js';
 import workers from './workers.js';
 
 // Performs any tasks pending in the queue
@@ -21,12 +21,12 @@ const checkTaskQueue = async () => {
   tasksToPerform.forEach((snapshot) => {
     // limit jobs to less than 500, per firebase batch write operations limits
     if (jobs.length <= 500) {
-      const { worker, options } = snapshot.data();
+      const {worker, options} = snapshot.data();
 
       // call the relevant worker and update the scheduled task with the results
       const job = workers[worker](options)
-        .then(() => batch.set(snapshot.ref, { status: 'complete' }, { merge: true }))
-        .catch((err) => batch.set(snapshot.ref, { status: 'error', message: err.message }, { merge: true }));
+          .then(() => batch.set(snapshot.ref, {status: 'complete'}, {merge: true}))
+          .catch((err) => batch.set(snapshot.ref, {status: 'error', message: err.message}, {merge: true}));
 
       // att the array of promised jobs
       jobs.push(job);
@@ -44,11 +44,11 @@ const checkTaskQueue = async () => {
 // manually run the task queue (used for local dev)
 const run = functions.https.onRequest(async (req: any, res: any) => {
   checkTaskQueue();
-  res.send({ message: 'ok' });
+  res.send({message: 'ok'});
 });
 
 // Task queue runs every minute
-const runner = functions.runWith({ memory: '2GB' }).pubsub.schedule('* * * * *').onRun(checkTaskQueue);
+const runner = functions.runWith({memory: '2GB'}).pubsub.schedule('* * * * *').onRun(checkTaskQueue);
 
 export default {
   run,

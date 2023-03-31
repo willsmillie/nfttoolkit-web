@@ -1,11 +1,11 @@
-import PrivateKeyProvider from "truffle-privatekey-provider";
-import Web3 from "web3";
-import * as sdk from "@loopring-web/loopring-sdk";
-import LoopringAPIClass from "./loopring.js";
-import dotenv from "dotenv";
+import PrivateKeyProvider from 'truffle-privatekey-provider';
+import Web3 from 'web3';
+import * as sdk from '@loopring-web/loopring-sdk';
+import LoopringAPIClass from './loopring.js';
+import dotenv from 'dotenv';
 // import fetch from 'node-fetch';
-import axios from "axios";
-import {RateLimit as ratelimit} from "async-sema";
+import axios from 'axios';
+import {RateLimit as ratelimit} from 'async-sema';
 
 // configure a limit of maximum 5 requests / second
 const limit = ratelimit(5);
@@ -20,14 +20,14 @@ const web3 = new Web3(provider);
 const {exchangeAPI, userAPI, walletAPI, nftAPI} = LoopringAPIClass;
 
 const signatureKeyPairMock = async function(exchangeAddress: string, accInfo: sdk.AccountInfo) {
-  if (!accInfo) console.error("NO ACCINFO");
+  if (!accInfo) console.error('NO ACCINFO');
   const opts = {
     web3: web3,
     address: accInfo.owner,
     keySeed:
       accInfo.keySeed ||
-      sdk.GlobalAPI.KEY_MESSAGE.replace("${exchangeAddress}", exchangeAddress).replace(
-          "${nonce}",
+      sdk.GlobalAPI.KEY_MESSAGE.replace('${exchangeAddress}', exchangeAddress).replace(
+          '${nonce}',
           (accInfo.nonce - 1).toString()
       ),
     walletType: sdk.ConnectorNames.MetaMask,
@@ -52,7 +52,7 @@ export const authenticate = async () => {
       // console.log(userNFTBalances);
 
       process.env.LOOPRING_API_KEY = apiKey;
-      console.log("LOADED API KEY: ", apiKey);
+      console.log('LOADED API KEY: ', apiKey);
       return {...accInfo, apiKey};
     } catch (error) {
       console.error(error);
@@ -143,7 +143,7 @@ export const getAccount = async (accountId) => {
 
 // resolve an ens domain to hex address
 export const resolveENS = async (domain: string) =>
-  domain.toLowerCase().endsWith(".eth") ?
+  domain.toLowerCase().endsWith('.eth') ?
     (
       await walletAPI.getAddressByENS({
         fullName: domain.toLowerCase(),
@@ -154,7 +154,7 @@ export const resolveENS = async (domain: string) =>
 // Convenience for making the HTTP req header
 const makeHeader = (apiKey: string = LOOPRING_API_KEY) => {
   return {
-    "X-API-KEY": apiKey,
+    'X-API-KEY': apiKey,
   };
 };
 

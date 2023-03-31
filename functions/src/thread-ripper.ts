@@ -6,7 +6,7 @@ import * as Reddit from './utils/reddit.js';
 import * as Twitter from './utils/twitter.js';
 
 import cors from 'cors';
-const corsHandler = cors({ origin: true });
+const corsHandler = cors({origin: true});
 
 // Regular expressions
 
@@ -32,39 +32,33 @@ function getMatches(string, regex, index) {
 }
 
 // get the cached metadata of an ens list
-const get = functions
-  .runWith({
-    timeoutSeconds: 300,
-    memory: '1GB',
-  })
-  .https.onRequest(async (req, res) => {
-    return await corsHandler(req, res, async () => {
-      res.set('Access-Control-Allow-Origin', '*');
-      const postUrls = req.query.url ?? req.body.url ?? 'fenneckit.eth';
+const get = functions.https.onRequest(async (req, res) => {
+  return await corsHandler(req, res, async () => {
+    const postUrls = req.query.url ?? req.body.url ?? 'fenneckit.eth';
 
-      // array containing urls to parse, bc why not
-      const urls = stringToArray(postUrls);
+    // array containing urls to parse, bc why not
+    const urls = stringToArray(postUrls);
 
-      // an array containing the requests
-      const requests: Promise<any>[] = [];
+    // an array containing the requests
+    const requests: Promise<any>[] = [];
 
-      // loop thru the urls preparing the requests
-      urls.forEach((url) => {
-        if (isRedditThread(url)) {
-          requests.push(Reddit.getAddresses(redditPostId(url)));
-        } else if (isTwitterThread(url)) {
-          requests.push(Twitter.getAddresses(twitterStatusId(url)));
-        } else {
-          console.log('UNSUPPORTED', url);
-        }
-      });
-
-      // results of the 0x addresses scraped from the provided urls
-      const results = await Promise.all(requests);
-
-      return res.send(results);
+    // loop thru the urls preparing the requests
+    urls.forEach((url) => {
+      if (isRedditThread(url)) {
+        requests.push(Reddit.getAddresses(redditPostId(url)));
+      } else if (isTwitterThread(url)) {
+        requests.push(Twitter.getAddresses(twitterStatusId(url)));
+      } else {
+        console.log('UNSUPPORTED', url);
+      }
     });
+
+    // results of the 0x addresses scraped from the provided urls
+    const results = await Promise.all(requests);
+
+    return res.set('Access-Control-Allow-Origin', '*').send(results.map((e) => e.flat(10)));
   });
+});
 
 export default {
   get,
