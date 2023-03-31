@@ -1,4 +1,4 @@
-import admin from "firebase-admin";
+import admin from 'firebase-admin';
 
 admin.initializeApp();
 
@@ -14,14 +14,14 @@ config
       });
     })
     .catch(function(err) {
-      console.error("Unable to get template");
+      console.error('Unable to get template');
       console.error(err);
     });
 
 export const auth = admin.auth();
 
-export const nfts = db.collection("nfts");
-export const accounts = db.collection("accounts");
-export const tasks = db.collection("tasks");
-export const cids = db.collection("cids");
+export const nfts = db.collection('nfts');
+export const accounts = db.collection('accounts');
+export const tasks = db.collection('tasks');
+export const cids = db.collection('cids');
 // export const holders = db.collection('holders');

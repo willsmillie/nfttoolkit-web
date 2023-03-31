@@ -43,3 +43,11 @@ export const getOwnedBy = (account) => {
   const url = `${base}${endpoint}?${params}`;
   return axios.get(url);
 };
+
+// Get holdings of a specific account
+export const getThreads = (data) => {
+  const endpoint = 'threadRipper-get';
+  const params = `url=${data}`;
+  const url = `${base}${endpoint}?${params}`;
+  return axios.get(url);
+};

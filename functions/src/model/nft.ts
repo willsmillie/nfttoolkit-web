@@ -1,8 +1,8 @@
-import getCacheOrFetch from "../utils/getCacheOrFetch.js";
-import {nfts} from "../utils/firebase.js";
-import {indexNFT} from "../runner/tasks.js";
-import * as Account from "./account.js";
-import {getHoldersForNFTData} from "../utils/web3.js";
+import getCacheOrFetch from '../utils/getCacheOrFetch.js';
+import {nfts} from '../utils/firebase.js';
+import {indexNFT} from '../runner/tasks.js';
+import * as Account from './account.js';
+import {getHoldersForNFTData} from '../utils/web3.js';
 
 // Get an NFT by ID from the DB, or index it
 export const getNFT = async (nftId) => {

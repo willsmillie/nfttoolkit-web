@@ -13,7 +13,7 @@ const getCacheOrFetch = async (db, docId, dispatchIndex) => {
   const ref = await dispatchIndex(docId);
 
   // tell the client that their request is pending
-  return {status: "indexing", ref};
+  return {status: 'indexing', ref};
 };
 
 export default getCacheOrFetch;

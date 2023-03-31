@@ -1,5 +1,5 @@
-import admin from "firebase-admin";
-import {tasks, nfts, cids} from "../utils/firebase.js";
+import admin from 'firebase-admin';
+import {tasks, nfts, cids} from '../utils/firebase.js';
 
 export const indexNFT = async (nftId) => {
   const now = admin.firestore.Timestamp.now().toDate();
@@ -11,8 +11,8 @@ export const indexNFT = async (nftId) => {
   return tasks
       .add({
         performAt: now,
-        status: "scheduled",
-        worker: "indexNFT",
+        status: 'scheduled',
+        worker: 'indexNFT',
         options: {
           nftId: nftId,
         },
@@ -57,8 +57,8 @@ export const indexCID = async (cid: string) => {
   return tasks
       .add({
         performAt: now,
-        status: "scheduled",
-        worker: "indexCID",
+        status: 'scheduled',
+        worker: 'indexCID',
         options: {
           cid: cid,
         },
@@ -77,8 +77,8 @@ export const indexAccount = async (address: string) => {
   return tasks
       .add({
         performAt: now,
-        status: "scheduled",
-        worker: "indexAccount",
+        status: 'scheduled',
+        worker: 'indexAccount',
         options: {
           address,
         },
@@ -97,8 +97,8 @@ export const indexAccountById = async (accountId: string) => {
   return tasks
       .add({
         performAt: now,
-        status: "scheduled",
-        worker: "indexAccountById",
+        status: 'scheduled',
+        worker: 'indexAccountById',
         options: {
           accountId,
         },

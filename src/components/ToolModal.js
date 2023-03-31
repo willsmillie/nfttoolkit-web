@@ -11,7 +11,9 @@ import {
   AppBar,
   Toolbar,
   IconButton,
+  Stack,
 } from '@mui/material';
+import Label from './Label';
 
 export default function ToolCard({ tool }) {
   const [open, setOpen] = React.useState(false);
@@ -30,7 +32,10 @@ export default function ToolCard({ tool }) {
         <Card>
           <CardActionArea onClick={handleClickOpen}>
             <CardContent>
-              <Typography variant="h4">{tool.name}</Typography>
+              <Stack direction="row" justifyContent="space-between" alignItems="center">
+                <Typography variant="h4">{tool.name}</Typography>
+                {tool.label && <Label color="primary">{tool.label}</Label>}
+              </Stack>
               <Typography>{tool.description}</Typography>
             </CardContent>
           </CardActionArea>

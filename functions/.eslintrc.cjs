@@ -36,17 +36,7 @@ module.exports = {
         ignoreTemplateLiterals: true,
       },
     ],
-    'require-jsdoc': [
-      'error',
-      {
-        require: {
-          FunctionDeclaration: true,
-          MethodDefinition: false,
-          ClassDeclaration: false,
-          ArrowFunctionExpression: false,
-          FunctionExpression: false,
-        },
-      },
-    ],
+    'require-jsdoc': 0,
+    'no-misleading-character-class': 0,
   },
 };

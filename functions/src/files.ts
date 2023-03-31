@@ -1,16 +1,16 @@
-import * as functions from "firebase-functions";
-import {cids} from "./utils/firebase.js";
-import {indexCID} from "./runner/tasks.js";
-import cors from "cors";
+import * as functions from 'firebase-functions';
+import {cids} from './utils/firebase.js';
+import {indexCID} from './runner/tasks.js';
+import cors from 'cors';
 const corsHandler = cors({origin: true});
 
 const parseLinks = (data) => {
   if (!data || data?.Data == null) return null;
   // verify the document is using a file-structure encoding (instead of base64 or something)
-  if (data?.Data["/"]?.bytes === "CAE") {
+  if (data?.Data['/']?.bytes === 'CAE') {
     return Object.keys(data.Links).map((key) => {
       const link = data.Links[key];
-      return {id: link.Hash["/"], name: link.Name, size: link.Tsize};
+      return {id: link.Hash['/'], name: link.Name, size: link.Tsize};
     });
   }
   return null;
@@ -55,11 +55,11 @@ const getOrEnqueueCID = async (cid) => {
     return await getRecursiveLinks(data);
   }
 
-  console.warn("FALLING BACK TO INDEXING");
+  console.warn('FALLING BACK TO INDEXING');
   // If fails bc its missing, create a task to index it.
   await indexCID(cid);
 
-  return {status: "scheduled"};
+  return {status: 'scheduled'};
 };
 
 // IPFS-GET ENDPOINT: Get the contents of a pinned file/dir on the IPFS network, provided a CID
@@ -67,7 +67,7 @@ const get = functions.https.onRequest(async (req, res) => {
   return await corsHandler(req, res, async () => {
     // return await corsHandler(req, res, async () => {
     // ipfs cid to fetch, provided by the client
-    const cid = req.query.cid ?? req.body.cid ?? "";
+    const cid = req.query.cid ?? req.body.cid ?? '';
 
     const result = await getOrEnqueueCID(cid);
 
