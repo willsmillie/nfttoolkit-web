@@ -108,4 +108,5 @@ export default {
   description: 'Get Addresses / ENS from a reddit or twitter post.',
   color: 'blue',
   content: Content,
+  label: 'New',
 };
