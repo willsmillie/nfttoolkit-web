@@ -1,7 +1,7 @@
 # nfttoolkit-web
 React App interfacing with Loopring / GameStop Marketplaces NFT platforms
 
-# Tool
+# Tools
 - 🗂️ My Tokens - connect your wallet and view token metadata
 - 👾 ENS Resolver - convert a mixed list of ens / 0x addresses into 0x addresses
 - 🔍 Token Lookup - get the coorisponding metadata for a token
