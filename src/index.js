@@ -16,6 +16,8 @@ import { HelmetProvider } from 'react-helmet-async';
 // contexts
 import { SettingsProvider } from './contexts/SettingsContext';
 import { CollapseDrawerProvider } from './contexts/CollapseDrawerContext';
+import AuthContextProvider from './contexts/L2Context';
+
 //
 import App from './App';
 
@@ -29,13 +31,15 @@ function getLibrary(provider) {
 ReactDOM.render(
   <HelmetProvider>
     <Web3ReactProvider getLibrary={getLibrary}>
-      <SettingsProvider>
-        <CollapseDrawerProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </CollapseDrawerProvider>
-      </SettingsProvider>
+      <AuthContextProvider>
+        <SettingsProvider>
+          <CollapseDrawerProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </CollapseDrawerProvider>
+        </SettingsProvider>
+      </AuthContextProvider>
     </Web3ReactProvider>
   </HelmetProvider>,
   document.getElementById('root')
