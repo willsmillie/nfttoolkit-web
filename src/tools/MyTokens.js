@@ -13,24 +13,26 @@ import {
 import useDebounce from '../hooks/useDebounce';
 import NFTSelect from '../components/NFTSelect';
 import { useBalances } from '../hooks/useBalances';
-import { getNFT } from '../API';
+import useIPFS from '../hooks/useIPFS';
 
 const Content = () => {
   const [loading, setLoading] = useState(false);
   const [id, setId] = useState('');
   const [metadata, setMetadata] = useState('');
 
-  const balances = useBalances();
-  const tokenData = (balances ?? []).find((e) => e.nftId === id);
+  const { balances } = useBalances();
+  const { fetchIPFS, ipfsNftIDToCid } = useIPFS();
+  const tokenData = balances.find((e) => e.nftId === id);
 
-  // // DeBounce Function
+  // DeBounce Function
   useDebounce(
     () => {
       if (id.length === 0) return;
 
       setLoading(true);
-      getNFT(id)
-        .then((r) => r?.data)
+
+      const cid = ipfsNftIDToCid(id);
+      fetchIPFS(cid)
         .then(setMetadata)
         .finally(() => {
           setLoading(false);

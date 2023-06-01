@@ -10,13 +10,31 @@ import {
   CircularProgress,
   Alert,
 } from '@mui/material';
+import ConnectButton from '../components/ConnectButton';
 import useDebounce from '../hooks/useDebounce';
-import { getHolders } from '../API';
+import { useBalances } from '../hooks/useBalances';
 
 const Content = () => {
+  const { getHoldersForNFTData, getAccountsByIds, active } = useBalances();
   const [loading, setLoading] = useState(false);
   const [id, setId] = useState('');
   const [metadata, setMetadata] = useState('');
+
+  // get holder by nft data
+  const getHolders = async (nftData) => {
+    // call Loopring API service to get the holding accounts
+    const nftHolders = await getHoldersForNFTData(nftData);
+    // prepare to resolve the accounts by mapping the id
+    const accountIds = nftHolders.map((e) => e.accountId);
+
+    // resolve the account objects to hex addresses
+    const results = await getAccountsByIds(accountIds);
+    setMetadata(results.map((e) => e.accInfo.owner));
+    // return just the addresses
+    // if (results?.length > 0) return results.map((e) => e.address);
+
+    // return { status };
+  };
 
   // DeBounce Function
   useDebounce(
@@ -67,15 +85,19 @@ const Content = () => {
                   <small>
                     The Loopring's NFT token data identifier which is a hash string of NFT token address and NFT_ID{' '}
                   </small>
-                  <TextField
-                    label="nftData"
-                    id="outlined-size-small"
-                    placeholder="0x12345..."
-                    size="small"
-                    onChange={(e) => {
-                      setId(e.target.value);
-                    }}
-                  />
+                  {!active ? (
+                    <ConnectButton />
+                  ) : (
+                    <TextField
+                      label="nftData"
+                      id="outlined-size-small"
+                      placeholder="0x12345..."
+                      size="small"
+                      onChange={(e) => {
+                        setId(e.target.value);
+                      }}
+                    />
+                  )}
                 </Stack>
               </CardContent>
             </Card>

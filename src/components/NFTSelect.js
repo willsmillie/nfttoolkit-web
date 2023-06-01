@@ -7,9 +7,14 @@ import ConnectButton from './ConnectButton';
 
 export default function PageOne({ value, onChange }) {
   const { active } = useWeb3React();
-  const balances = useBalances();
+  const { balances } = useBalances();
 
-  const tokens = Object.values(balances ?? {});
+  const flattenedData = Object.values(
+    balances.reduce((acc, currentItem) => {
+      acc[currentItem.nftId] = currentItem;
+      return acc;
+    }, {})
+  );
 
   return (
     <>
@@ -19,7 +24,7 @@ export default function PageOne({ value, onChange }) {
         <FormControl>
           <InputLabel id="nft-select-label">Select NFT</InputLabel>
           <Select labelId="nft-select" id="nft-select" value={value} label="Select NFT" onChange={onChange}>
-            {(tokens ?? []).map((e) => (
+            {(flattenedData ?? []).map((e) => (
               <MenuItem key={e.nftId} value={e.nftId}>
                 {e.nftId}
               </MenuItem>
