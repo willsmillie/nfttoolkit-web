@@ -13,7 +13,7 @@ import TokenInfo from './TokenInfo';
 import useIPFS from '../hooks/useIPFS';
 
 // IPFS LIST
-export default function MediaDetail({ token, show, handleClose }) {
+export default function TokenDetail({ token, show, handleClose }) {
   const { fetchIPFS, ipfsNftIDToCid } = useIPFS();
   const [nftMetadata, setNFTMetadata] = useState(null);
   const name = nftMetadata?.name ?? '';
@@ -27,7 +27,9 @@ export default function MediaDetail({ token, show, handleClose }) {
       const cid = ipfsNftIDToCid(nftId);
       if (!nftMetadata && cid?.length > 0) {
         fetchIPFS(cid)
-          .then(setNFTMetadata)
+          .then((data) => {
+            setNFTMetadata(data);
+          })
           .finally(() => {
             setLoading(false);
           });
@@ -99,30 +101,43 @@ export default function MediaDetail({ token, show, handleClose }) {
 }
 
 const TokenEmbed = ({ token }) => {
-  const { ipfsToHttp } = useIPFS();
-  const { image, name, animation_url, contentType } = token;
+  const { ipfsToHttp, getDAGForCID } = useIPFS();
+  const { image, name, animation_url } = token;
   const imageSrc = ipfsToHttp(animation_url ?? image ?? '');
 
-  const content = () => {
-    switch (contentType ?? 'html') {
-      case 'html':
-        return (
-          <embed
-            alt={name ?? ''}
-            title={name ?? ''}
-            style={{ width: '100%', height: '100%', backgroundColor: '#FFFFFF00' }}
-            src={imageSrc}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          />
-        );
-      default:
-        return (
-          <video width="100%" height="auto" controls>
-            <source src={imageSrc} type="video/mp4" />
-          </video>
-        );
+  const [isDAG, setIsDAG] = useState(null);
+
+  useEffect(() => {
+    function fetch() {
+      if (token && isDAG === null)
+        getDAGForCID(token?.animation_url, token?.image)
+          .then((dag) => {
+            setIsDAG(dag.length > 0);
+          })
+          .catch(() => {
+            setIsDAG(false);
+          });
     }
-  };
+
+    fetch();
+    return () => {};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+
+  const content = () =>
+    isDAG ? (
+      <embed
+        alt={name ?? ''}
+        title={name ?? ''}
+        style={{ width: '100%', height: '100%', backgroundColor: '#FFFFFF00' }}
+        src={imageSrc}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      />
+    ) : (
+      <video width="100%" height="auto" controls>
+        <source src={imageSrc} type="video/mp4" />
+      </video>
+    );
 
   return (
     <Ratio ratio={1} justifyContent="center" alignItems="stretch" spacing={0}>

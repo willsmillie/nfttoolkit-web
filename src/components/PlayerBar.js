@@ -14,8 +14,6 @@ import FastRewindRounded from '@mui/icons-material/FastRewindRounded';
 import useIPFS from '../hooks/useIPFS';
 
 const Widget = styled('div')(() => ({
-  paddingRight: 16,
-  paddingLeft: 16,
   borderRadius: 0,
   bottom: 0,
   left: 0,
@@ -24,7 +22,6 @@ const Widget = styled('div')(() => ({
   maxWidth: '100%',
   margin: 0,
   position: 'fixed',
-  bgcolor: 'background.paper',
 }));
 
 const TinyText = styled(Typography)({
@@ -185,7 +182,13 @@ export default function PlayerBar({ track, onToggle, setIsPlaying, isPlaying, on
           <></>
         )}
 
-        <Stack direction="row" alignItems="center" justifyContent="center" spacing={2}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="center"
+          spacing={2}
+          sx={{ bgcolor: 'background.paper', paddingRight: 2, paddingLeft: 2 }}
+        >
           <Box
             sx={{
               display: 'flex',

@@ -17,7 +17,7 @@ const IPFSView = ({ cid, collectionInfo, files }) => {
 
   const typeCounts = files?.reduce((acc, ele) => {
     const { type } = ele;
-    acc[type] = (acc[type] || 0) + 1;
+    if (type) acc[type] = (acc[type] || 0) + 1;
     return acc;
   }, {});
 
