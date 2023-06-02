@@ -72,7 +72,7 @@ export const getBalances = async (accountId: number) => {
 export const getMetadataForNFT = async function(nftId) {
   const cid = nftAPI.ipfsNftIDToCid(nftId);
   const metadata = await axios
-      .get(`https://gateway.ipfs.io/ipfs/${cid}`)
+      .get(`https://nfttoolkit.infura-ipfs.io/ipfs/${cid}`)
       .then((x) => x.data)
       .catch((error) => console.log(error));
 

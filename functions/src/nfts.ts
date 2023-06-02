@@ -29,11 +29,13 @@ const ownedBy = functions
       memory: '1GB',
     })
     .https.onRequest(async (req: any, res: any) => {
-      const account = req.query.account ?? req.body.account;
-      // Get balance of account from loopring
-      const {userNFTBalances} = await Account.getBalances(account);
-      // userNFTBalances.forEach((token) => indexNFT(token));
-      return res.set('Access-Control-Allow-Origin', '*').send(userNFTBalances);
+      return await corsHandler(req, res, async () => {
+        const account = req.query.account ?? req.body.account;
+        // Get balance of account from loopring
+        const {userNFTBalances} = await Account.getBalances(account);
+        // userNFTBalances.forEach((token) => indexNFT(token));
+        return res.set('Access-Control-Allow-Origin', '*').send(userNFTBalances);
+      });
     });
 
 // get the cached metadata of an nft

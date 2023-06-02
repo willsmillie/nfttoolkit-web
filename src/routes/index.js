@@ -26,9 +26,19 @@ export default function Router() {
       element: <Navigate to="/tools" replace />,
     },
     {
+      path: '/assets',
+      element: <DashboardLayout />,
+      children: [{ path: '/assets', element: <Assets /> }],
+    },
+    {
       path: '/tools',
       element: <DashboardLayout />,
-      children: [{ path: '/tools', element: <PageOne /> }],
+      children: [{ path: '/tools', element: <Tools /> }],
+    },
+    {
+      path: '/player',
+      element: <DashboardLayout />,
+      children: [{ path: '/player', element: <Player /> }],
     },
     {
       path: '*',
@@ -43,10 +53,8 @@ export default function Router() {
 }
 
 // Dashboard
-const PageOne = Loadable(lazy(() => import('../pages/PageOne')));
-// const PageTwo = Loadable(lazy(() => import('../pages/PageTwo')));
-// const PageThree = Loadable(lazy(() => import('../pages/PageThree')));
-// const PageFour = Loadable(lazy(() => import('../pages/PageFour')));
-// const PageFive = Loadable(lazy(() => import('../pages/PageFive')));
-// const PageSix = Loadable(lazy(() => import('../pages/PageSix')));
+const Assets = Loadable(lazy(() => import('../pages/MyTokens')));
+const Tools = Loadable(lazy(() => import('../pages/Tools')));
+const Player = Loadable(lazy(() => import('../pages/Player')));
+
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));

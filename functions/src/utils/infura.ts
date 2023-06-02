@@ -23,7 +23,19 @@ const getMetadataForCID = async (cid: string) => {
   // pretty printed mapping of the results
   // const infos = (response["Links"] ?? []).map((e) => `${e.Name} => ${e.Hash["/"]}`);
 
-  return response;
+  return parseLinks(response);
+};
+
+const parseLinks = (data) => {
+  if (!data || data?.Data == null) return null;
+  // verify the document is using a file-structure encoding (instead of base64 or something)
+  if (data?.Data['/']?.bytes === 'CAE') {
+    return Object.keys(data.Links).map((key) => {
+      const link = data.Links[key];
+      return {id: link.Hash['/'], name: link.Name, size: link.Tsize};
+    });
+  }
+  return null;
 };
 
 export {getMetadataForCID};

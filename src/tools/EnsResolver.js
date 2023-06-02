@@ -11,7 +11,9 @@ import {
   Alert,
 } from '@mui/material';
 import useDebounce from '../hooks/useDebounce';
-import { getAccount } from '../API';
+
+import stringToArray from '../utils/stringToArray';
+import { resolveENS } from '../utils/web3';
 
 const Content = () => {
   const [loading, setLoading] = useState(false);
@@ -21,11 +23,14 @@ const Content = () => {
   // DeBounce Function
   useDebounce(
     () => {
+      const reqs = [];
       if (account.length === 0) return;
-
       setLoading(true);
-      getAccount(encodeURIComponent(account))
-        .then((r) => r?.data)
+      stringToArray(account).forEach((acct) => {
+        reqs.push(resolveENS(encodeURIComponent(acct)));
+      });
+
+      Promise.all(reqs)
         .then(setResults)
         .catch(console.error)
         .finally(() => {

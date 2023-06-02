@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const dev = 'http://127.0.0.1:5001/nfttoolkit-ba61b/us-central1/';
 const prod = 'https://us-central1-nfttoolkit-ba61b.cloudfunctions.net/';
-const base = process.env.DEVELOPMENT ? dev : prod;
+const base = process.env.REACT_APP_DEVELOPMENT ? dev : prod;
 
 // Get NFT Metadata by NFT ID
 export const getNFT = (nftId) => {
@@ -25,7 +25,7 @@ export const getCID = (cid) => {
   const endpoint = 'ipfs-get';
   const params = `cid=${cid}`;
   const url = `${base}${endpoint}?${params}`;
-  return axios.get(url);
+  return axios.get(url).then((r) => r.data);
 };
 
 // Get holders of a specific token
@@ -37,9 +37,9 @@ export const getHolders = (nftData) => {
 };
 
 // Get holdings of a specific account
-export const getOwnedBy = (account) => {
+export const getOwnedBy = (accountId) => {
   const endpoint = 'nfts-ownedBy';
-  const params = `account=${account}`;
+  const params = `account=${accountId}`;
   const url = `${base}${endpoint}?${params}`;
   return axios.get(url);
 };

@@ -10,13 +10,17 @@ import {
   CircularProgress,
   Alert,
 } from '@mui/material';
+// import { getNFT } from '../API';
 import useDebounce from '../hooks/useDebounce';
-import { getNFT } from '../API';
+import { useBalances } from '../hooks/useBalances';
+import useIPFS from '../hooks/useIPFS';
 
 const Content = () => {
   const [loading, setLoading] = useState(false);
   const [id, setId] = useState('');
   const [metadata, setMetadata] = useState('');
+  const { fetchIPFS } = useBalances();
+  const { ipfsNftIDToCid } = useIPFS();
 
   // DeBounce Function
   useDebounce(
@@ -24,8 +28,7 @@ const Content = () => {
       if (id.length === 0) return;
 
       setLoading(true);
-      getNFT(id)
-        .then((r) => r?.data)
+      fetchIPFS(ipfsNftIDToCid(id))
         .then(setMetadata)
         .finally(() => {
           setLoading(false);
