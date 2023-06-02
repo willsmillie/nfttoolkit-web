@@ -71,4 +71,5 @@ export default {
   description: 'Interact with token gated content.',
   color: 'blue',
   content: Content,
+  label: 'New',
 };
