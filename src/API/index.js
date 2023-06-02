@@ -3,7 +3,7 @@ import axios from 'axios';
 const dev = 'http://127.0.0.1:5001/nfttoolkit-ba61b/us-central1/';
 const prod = 'https://us-central1-nfttoolkit-ba61b.cloudfunctions.net/';
 const base = process.env.REACT_APP_DEVELOPMENT || process.env.NODE_ENV === 'development' ? dev : prod;
-console.log(process.env);
+
 // Get NFT Metadata by NFT ID
 export const getNFT = (nftId) => {
   const endpoint = 'nfts-get';
