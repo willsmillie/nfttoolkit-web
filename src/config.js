@@ -35,7 +35,7 @@ export const defaultSettings = {
   themeDirection: 'ltr',
   themeContrast: 'default',
   themeLayout: 'horizontal',
-  themeColorPresets: 'green',
+  themeColorPresets: 'default', // green
   themeStretch: false,
 };
 

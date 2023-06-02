@@ -75,7 +75,7 @@ export default function TokenDetail({ token, show, handleClose }) {
                 {name ?? 'Token Name'}
               </Typography>
 
-              <TokenEmbed token={nftMetadata} />
+              <TokenEmbed token={nftMetadata} open={show} />
 
               <TokenInfo token={nftMetadata} />
             </Stack>
@@ -100,7 +100,7 @@ export default function TokenDetail({ token, show, handleClose }) {
   );
 }
 
-const TokenEmbed = ({ token }) => {
+const TokenEmbed = ({ token, open }) => {
   const { ipfsToHttp, getDAGForCID } = useIPFS();
   const { image, name, animation_url } = token;
   const imageSrc = ipfsToHttp(animation_url ?? image ?? '');
@@ -109,7 +109,7 @@ const TokenEmbed = ({ token }) => {
 
   useEffect(() => {
     function fetch() {
-      if (token && isDAG === null)
+      if (token && isDAG === null && open)
         getDAGForCID(token?.animation_url, token?.image)
           .then((dag) => {
             setIsDAG(dag.length > 0);
@@ -122,7 +122,7 @@ const TokenEmbed = ({ token }) => {
     fetch();
     return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
+  }, [token, open]);
 
   const content = () =>
     isDAG ? (
