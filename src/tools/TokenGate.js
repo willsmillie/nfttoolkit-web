@@ -1,46 +1,66 @@
-import { useState, useEffect } from 'react';
-import { Grid, Stack, TextField } from '@mui/material';
+import { useState } from 'react';
+import { Grid, Stack, Card, CardContent } from '@mui/material';
+import useDebounce from '../hooks/useDebounce';
+import NFTSelect from '../components/NFTSelect';
+import FileList from '../components/FileList';
+import { useBalances } from '../hooks/useBalances';
+import useIPFS from '../hooks/useIPFS';
 
 const Content = () => {
-  const [ids, setIds] = useState('');
+  const [setLoading] = useState(false);
+  const [id, setId] = useState('');
+  const [metadata, setMetadata] = useState('');
 
-  useEffect(() => {
-    function fetch() {
-      console.log('Fetching Id: ', ids);
-    }
+  const { balances } = useBalances();
+  const { fetchIPFS, ipfsNftIDToCid } = useIPFS();
+  const tokenData = balances.find((e) => e.nftId.toLowerCase() === id.toLowerCase());
 
-    return fetch();
-  }, [ids]);
+  // DeBounce Function
+  useDebounce(
+    () => {
+      if (id.length === 0) return;
+
+      setLoading(true);
+
+      const cid = ipfsNftIDToCid(id);
+      fetchIPFS(cid)
+        .then(setMetadata)
+        .finally(() => {
+          setLoading(false);
+        });
+    },
+    [id],
+    800
+  );
 
   return (
     <Grid container margin={2} spacing={2}>
-      <Grid item xs={6}>
-        <Stack spacing={2}>
-          <p>🔍 Token Look Up</p>
-          <TextField
-            label="nftId(s)"
-            id="outlined-size-small"
-            defaultValue="0x12345..."
-            size="small"
-            onChange={(e) => {
-              setIds(e.target.value);
-            }}
-          />
-        </Stack>
+      <Grid item xs={12}>
+        <Card>
+          <CardContent>
+            <Stack spacing={2}>
+              <p>Interact with token gated content.</p>
+              <NFTSelect
+                value={id}
+                onChange={(e) => {
+                  setId(e.target.value);
+                }}
+              />
+            </Stack>
+          </CardContent>
+        </Card>
       </Grid>
-      <Grid item xs={6}>
-        <Stack spacing={2}>
-          <p>Results:</p>
-          <TextField
-            label="nftId(s)"
-            disabled
-            multiline
-            rows={4}
-            id="outlined-size-small"
-            defaultValue="0x12345..."
-            size="small"
-          />
-        </Stack>
+      <Grid item xs={12}>
+        <Card>
+          <CardContent>
+            <Stack spacing={2}>
+              <p>Results:</p>
+              {id && (
+                <FileList nftId={id} minter={tokenData?.minter} cid={metadata?.animation_url ?? metadata?.image} />
+              )}
+            </Stack>
+          </CardContent>
+        </Card>
       </Grid>
     </Grid>
   );

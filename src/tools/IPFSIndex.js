@@ -11,12 +11,14 @@ import {
   Alert,
 } from '@mui/material';
 import useDebounce from '../hooks/useDebounce';
-import { getCID } from '../API';
+import useIPFS from '../hooks/useIPFS';
 
 const Content = () => {
   const [loading, setLoading] = useState(false);
   const [cid, setCID] = useState('');
   const [results, setResults] = useState('');
+
+  const { getDAGForCID } = useIPFS();
 
   // DeBounce Function
   useDebounce(
@@ -24,8 +26,7 @@ const Content = () => {
       if (cid.length === 0) return;
 
       setLoading(true);
-      getCID(encodeURIComponent(cid))
-        .then((r) => r?.data)
+      getDAGForCID(cid)
         .then(setResults)
         .catch(console.error)
         .finally(() => {

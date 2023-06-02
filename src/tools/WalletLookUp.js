@@ -10,31 +10,46 @@ import {
   CircularProgress,
   Alert,
 } from '@mui/material';
-// import { getNFT } from '../API';
+import ConnectButton from '../components/ConnectButton';
 import useDebounce from '../hooks/useDebounce';
 import { useBalances } from '../hooks/useBalances';
-import useIPFS from '../hooks/useIPFS';
+import { resolveENS } from '../utils/web3';
 
 const Content = () => {
   const [loading, setLoading] = useState(false);
-  const [id, setId] = useState('');
+  const [account, setAccount] = useState('');
   const [metadata, setMetadata] = useState('');
-  const { fetchIPFS } = useBalances();
-  const { ipfsNftIDToCid } = useIPFS();
+  const { authData, getAccountByAddress, getBalances, active } = useBalances();
 
+  // const [filters, setFilters] = useState({ minter: '0xb28e467158f4de5a652d308ae580b1733e3fb463' });
   // DeBounce Function
   useDebounce(
     () => {
-      if (id.length === 0) return;
+      if (account.length === 0) return;
 
       setLoading(true);
-      fetchIPFS(ipfsNftIDToCid(id))
+      resolveENS(account)
+        .then(getAccountByAddress)
+        .then((r) => getBalances({ apiKey: authData.apiKey, accountId: r?.accInfo?.accountId }) ?? [])
+        // .then((r) =>
+        //   r?.flat().filter((ele) => {
+        //     let result = false;
+        //     Object.keys(filters).forEach((filter) => {
+        //       console.log(ele[filter], filters[filter]);
+        //       if (ele[filter].toLowerCase() === filters[filter].toLowerCase()) {
+        //         result = true;
+        //       }
+        //     });
+
+        //     return result;
+        //   })
+        // )
         .then(setMetadata)
         .finally(() => {
           setLoading(false);
         });
     },
-    [id],
+    [account],
     800
   );
 
@@ -60,27 +75,42 @@ const Content = () => {
       )}
 
       <Stack spacing={1} padding={1}>
-        <Typography variant="h4">Fetch associated metadata from IPFS</Typography>
+        <Typography variant="h4">Fetch the contents of a wallet</Typography>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Card>
               <CardContent>
                 <Stack spacing={2}>
-                  <p>Enter a comma-delimited list of NFT Ids</p>
+                  <p>Enter an ENS/Wallet Address</p>
 
-                  <TextField
-                    label="nftId(s)"
-                    id="outlined-size-small"
-                    placeholder="0x5fdda54fe162472b47b2a158580cf4bc782ea8d26478abf3c82491a7094f1baf"
-                    size="small"
-                    onChange={(e) => {
-                      setId(e.target.value);
-                    }}
-                  />
+                  {!active ? (
+                    <ConnectButton />
+                  ) : (
+                    <TextField
+                      label="ENS / 0x Address"
+                      id="outlined-size-small"
+                      placeholder="fenneckit.eth"
+                      size="small"
+                      rows={3}
+                      onChange={(e) => {
+                        setAccount(e.target.value);
+                      }}
+                    />
+                  )}
                 </Stack>
               </CardContent>
             </Card>
           </Grid>
+          {/* <Grid item xs={12}>
+            <Card>
+              <CardContent>
+                <Stack spacing={2}>
+                  <p>Filters:</p>
+                  {Object.keys(filters).map((filter) => `${filter}: ${filters[filter]}`)}
+                </Stack>
+              </CardContent>
+            </Card>
+          </Grid> */}
           <Grid item xs={12}>
             <Card>
               <CardContent>
@@ -106,4 +136,9 @@ const Content = () => {
   );
 };
 
-export default { name: '🔍 Token Look Up', description: 'Get token metadata', color: 'green', content: Content };
+export default {
+  name: '🪪 Wallet Look Up',
+  description: 'View the contents of a wallet',
+  color: 'green',
+  content: Content,
+};

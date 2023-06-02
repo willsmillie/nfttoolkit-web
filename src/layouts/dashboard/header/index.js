@@ -13,6 +13,8 @@ import { HEADER, NAVBAR } from '../../../config';
 import Logo from '../../../components/Logo';
 import Iconify from '../../../components/Iconify';
 import { IconButtonAnimate } from '../../../components/animate';
+//
+import ConnectButton from '../../../components/ConnectButton';
 
 // ----------------------------------------------------------------------
 
@@ -73,6 +75,7 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
         )}
 
         <Box sx={{ flexGrow: 1 }} />
+        <ConnectButton />
       </Toolbar>
     </RootStyle>
   );

@@ -4,6 +4,5 @@ import { AuthContext } from '../contexts/L2Context';
 
 // ----------------------------------------------------------------------
 export function useBalances() {
-  const { balances } = useContext(AuthContext);
-  return balances;
+  return useContext(AuthContext);
 }
