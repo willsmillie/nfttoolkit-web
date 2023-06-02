@@ -4,12 +4,6 @@ import useIPFS from '../hooks/useIPFS';
 import IPFSFileRow from './IPFSFileRow';
 
 const IPFSTree = ({ cid, onFileClick }) => {
-  const [scrollTop, setScrollTop] = useState(0);
-
-  const handleScroll = (event) => {
-    setScrollTop(event.target.scrollTop);
-  };
-
   const { getDAGForCID } = useIPFS();
 
   const [documentData, setDocumentData] = useState(null);
@@ -17,6 +11,7 @@ const IPFSTree = ({ cid, onFileClick }) => {
 
   useEffect(() => {
     const fetchDocument = async () => {
+      console.log('Fetching GAD for CID: ', cid);
       if (cid) {
         setLoading(true);
 
@@ -32,6 +27,8 @@ const IPFSTree = ({ cid, onFileClick }) => {
     if (!loading && !documentData) {
       fetchDocument();
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cid]);
 
   return (
@@ -46,10 +43,9 @@ const IPFSTree = ({ cid, onFileClick }) => {
         '& ul': { padding: 0 },
       }}
     >
-      {Object.values(documentData ?? {}).map((file) => {
-        console.log(file);
-        return <IPFSFileRow key={file?.name} file={file} onFileClick={onFileClick} />;
-      })}
+      {Object.values(documentData ?? {}).map((file) => (
+        <IPFSFileRow key={file?.name} file={file} onFileClick={onFileClick} />
+      ))}
     </List>
   );
 };

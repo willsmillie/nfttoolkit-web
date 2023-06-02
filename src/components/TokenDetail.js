@@ -3,16 +3,13 @@
 import React, { useState, useEffect } from 'react';
 
 // @mui
-import { Box, Grid, Stack, Typography, Modal, List } from '@mui/material';
+import { Box, Grid, Stack, Typography, Modal } from '@mui/material';
 
 import Ratio from 'react-ratio';
-// import ConnectPopover from '../components/ConnectPopover';
-import { db } from '../utils/firebase';
 
 // components
 import FileList from './FileList';
 import TokenInfo from './TokenInfo';
-import IPFSTree from './IPFSTree';
 import useIPFS from '../hooks/useIPFS';
 
 // IPFS LIST
@@ -38,6 +35,7 @@ export default function MediaDetail({ token, show, handleClose }) {
     }
 
     return () => {};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   const style = {
@@ -88,7 +86,11 @@ export default function MediaDetail({ token, show, handleClose }) {
               Documents and attachments that have been uploaded as part of your current tokens.
             </Typography>
             {/* <IPFSTree cid={token?.animation_url ?? token?.image ?? ''} /> */}
-            <FileList nftId={token?.nftId} cid={token?.animation_url ?? token?.image} minter={token?.minter} />
+            <FileList
+              nftId={token?.nftId}
+              cid={nftMetadata?.animation_url ?? nftMetadata?.image}
+              minter={token?.minter}
+            />
           </Grid>
         </Grid>
       </Box>

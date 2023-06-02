@@ -4,7 +4,6 @@ import { useState } from 'react';
 import {
   Box,
   Chip,
-  List,
   Stack,
   Drawer,
   Button,
@@ -20,11 +19,8 @@ import { fData } from '../utils/formatNumber';
 import { fDateTime } from '../utils/formatTime';
 // components
 import Iconify from './Iconify';
-// import Scrollbar from './scrollbar';
+
 import FileThumbnail, { fileFormat } from './file-thumbnail';
-//
-// import FileShareDialog from './FileShareDialog';
-// import FileInvitedItem from '../FileInvitedItem';
 
 // ----------------------------------------------------------------------
 
@@ -38,26 +34,16 @@ FileDetailsDrawer.propTypes = {
   onFavorite: PropTypes.func,
 };
 
-export default function FileDetailsDrawer({
-  item,
-  open,
-  favorited,
-  //
-  onFavorite,
-  onCopyLink,
-  onClose,
-  onDelete,
-  ...other
-}) {
-  const { name, size, url, type, shared, dateModified = new Date() } = item;
+export default function FileDetailsDrawer({ item, open, favorited, onFavorite, onClose, onDelete, ...other }) {
+  const { name, size, url, type, dateModified = new Date() } = item;
 
-  const hasShared = shared && !!shared.length;
+  // const hasShared = shared && !!shared.length;
 
-  const [openShare, setOpenShare] = useState(false);
+  // const [openShare, setOpenShare] = useState(false);
 
   const [toggleTags, setToggleTags] = useState(true);
 
-  const [inviteEmail, setInviteEmail] = useState('');
+  // const [inviteEmail, setInviteEmail] = useState('');
 
   const [tags, setTags] = useState(item?.tags?.slice(0, 3));
 
@@ -71,17 +57,9 @@ export default function FileDetailsDrawer({
     setToggleProperties(!toggleProperties);
   };
 
-  const handleOpenShare = () => {
-    setOpenShare(true);
-  };
-
-  const handleCloseShare = () => {
-    setOpenShare(false);
-  };
-
-  const handleChangeInvite = (event) => {
-    setInviteEmail(event.target.value);
-  };
+  // const handleOpenShare = () => {
+  //   setOpenShare(true);
+  // };
 
   return (
     <>
@@ -164,7 +142,7 @@ export default function FileDetailsDrawer({
           </Stack>
         </Stack>
 
-        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ p: 2.5 }}>
+        {/* <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ p: 2.5 }}>
           <Typography variant="subtitle2"> File Share With </Typography>
 
           <IconButton
@@ -184,7 +162,7 @@ export default function FileDetailsDrawer({
           >
             <Iconify icon="eva:plus-fill" />
           </IconButton>
-        </Stack>
+        </Stack> */}
 
         {/* {hasShared && (
           <List disablePadding sx={{ pl: 2.5, pr: 1 }}>

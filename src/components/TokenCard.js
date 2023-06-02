@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Typography, CardContent, Card, CardMedia, CardActionArea } from '@mui/material';
+import { Card, CardActionArea } from '@mui/material';
 import IPFSView from './IPFSView';
 import TokenDetail from './TokenDetail';
 import { ipfsNftIDToCid } from '../utils/web3';

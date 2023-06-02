@@ -4,15 +4,7 @@ import { RateLimit as ratelimit } from 'async-sema';
 import * as Web3 from 'web3';
 import { InjectedConnector } from '@web3-react/injected-connector';
 import { useWeb3React } from '@web3-react/core';
-import {
-  authenticate,
-  getBalances,
-  getAccountById,
-  getAccountByAddress,
-  getMetadataForNFT,
-  resolveENS,
-} from '../utils/web3';
-import stringToArray from '../utils/stringToArray';
+import { authenticate, getBalances, getAccountById, getAccountByAddress, getMetadataForNFT } from '../utils/web3';
 
 // configure a limit of maximum 5 requests / second
 const limit = ratelimit(5);
@@ -86,7 +78,10 @@ const AuthContextProvider = (props) => {
       const url = `https://api3.loopring.io/api/v3/nft/info/nftHolders?nftData=${nftData}&offset=${offset}&limit=${batchSize}`;
       const res = await makeRequest(url); // eslint-disable-line no-await-in-loop
 
-      if (!totalNum && res?.totalNum) totalNum = res.totalNum;
+      if (!totalNum && res?.totalNum) {
+        const newTotal = res.totalNum;
+        totalNum = newTotal;
+      }
       if (res?.nftHolders?.length === 0 || res?.nftHolders === undefined) break;
       results.push(...(res?.nftHolders ?? []));
 
@@ -96,15 +91,16 @@ const AuthContextProvider = (props) => {
     return results;
   };
   // get accounts ids
-  const getAccountsByIds = async (accountIds) => {
+  async function getAccountsByIds(accountIds) {
     const reqs = [];
-    if (accountIds?.length === 0) return;
+    if (accountIds?.length === 0) return [];
+
     accountIds.forEach((acct) => {
       reqs.push(getAccountById(acct));
     });
 
     return Promise.all(reqs);
-  };
+  }
 
   //  Convenience for making the HTTP req header
   const makeHeader = (apiKey) => ({

@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { ToggleButtonGroup, ToggleButton } from '@mui/material';
 
 const SegmentedButton = ({ selectedOption, setSelectedOption }) => {
@@ -10,9 +9,9 @@ const SegmentedButton = ({ selectedOption, setSelectedOption }) => {
 
   return (
     <ToggleButtonGroup value={selectedOption} exclusive onChange={handleOptionChange} aria-label="Segmented Button">
-      <ToggleButton value="upload" aria-label="Upload">
+      {/* <ToggleButton value="upload" aria-label="Upload">
         Upload
-      </ToggleButton>
+      </ToggleButton> */}
       <ToggleButton value="ipfs" aria-label="IPFS">
         IPFS
       </ToggleButton>

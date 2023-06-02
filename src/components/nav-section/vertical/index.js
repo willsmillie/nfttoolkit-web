@@ -28,7 +28,6 @@ NavSectionVertical.propTypes = {
 };
 
 export default function NavSectionVertical({ navConfig = [], isCollapse = false, ...other }) {
-  console.log(navConfig);
   return (
     <Box {...other}>
       {Object.values(navConfig ?? {}).map((group) => (

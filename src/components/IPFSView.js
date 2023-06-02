@@ -12,6 +12,7 @@ const IPFSView = ({ cid, collectionInfo, files }) => {
       fetchIPFS(cid).then(setNFTMetadata);
     }
     return () => {};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cid]);
 
   const typeCounts = files?.reduce((acc, ele) => {
@@ -61,7 +62,7 @@ const IPFSView = ({ cid, collectionInfo, files }) => {
         </Typography>
         <Stack direction="row" sx={{ py: 2 }} spacing={1}>
           {Object.keys(typeCounts ?? {}).map((type) => (
-            <Chip label={`${typeCounts[type]} ${capitalizeFirstLetter(type)}`} color={colorForType(type)} />
+            <Chip key={type} label={`${typeCounts[type]} ${capitalizeFirstLetter(type)}`} color={colorForType(type)} />
           ))}
         </Stack>
       </CardContent>

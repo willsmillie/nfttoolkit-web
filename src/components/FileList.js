@@ -1,19 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tooltip, TableBody, IconButton, TableContainer, Box, Stack } from '@mui/material';
+import { Table, TableBody, TableContainer, Stack } from '@mui/material';
 import { db } from '../utils/firebase';
 import FileUploadForm from './FileUploadForm';
 import FileRow from './FileRow';
 import { useBalances } from '../hooks/useBalances';
-import { emptyRows, TableEmptyRows, TableHeadCustom, TableSelectedAction, TablePaginationCustom } from './table';
-
-const TABLE_HEAD = [
-  { id: 'name', label: 'Name', align: 'left' },
-  { id: 'size', label: 'Size', align: 'left', width: 120 },
-  { id: 'type', label: 'Type', align: 'center', width: 120 },
-  { id: 'dateModified', label: 'Modified', align: 'left', width: 160 },
-  { id: 'shared', label: 'Shared', align: 'right', width: 100 },
-  { id: '' },
-];
 
 const FileList = ({ nftId, minter, cid }) => {
   const [files, setFiles] = useState([]);
@@ -67,35 +57,10 @@ const FileList = ({ nftId, minter, cid }) => {
             },
           }}
         >
-          <TableHeadCustom
-            // order={order}
-            // orderBy={orderBy}
-            headLabel={TABLE_HEAD}
-            // rowCount={tableData.length}
-            // numSelected={selected.length}
-            // onSort={onSort}
-            // onSelectAllRows={(checked) =>
-            //   onSelectAllRows(
-            //     checked,
-            //     tableData.map((row) => row.id)
-            //   )
-            // }
-            sx={{
-              '& .MuiTableCell-head': {
-                bgcolor: 'transparent',
-              },
-            }}
-          />
-
           <TableBody>
-            {/* {dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => ( */}
             {files.map((file) => (
               <FileRow sx={{ maxWidth: '300px' }} key={file.id} row={file} />
             ))}
-
-            {/* <TableEmptyRows height={denseHeight} emptyRows={emptyRows(page, rowsPerPage, tableData.length)} /> */}
-
-            {/* <TableNoData isNotFound={isNotFound} /> */}
           </TableBody>
         </Table>
       </TableContainer>

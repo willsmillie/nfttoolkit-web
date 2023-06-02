@@ -1,19 +1,6 @@
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
-import {
-  Stack,
-  Avatar,
-  Button,
-  Divider,
-  Checkbox,
-  TableRow,
-  MenuItem,
-  TableCell,
-  IconButton,
-  Typography,
-  AvatarGroup,
-} from '@mui/material';
+import { Stack, Avatar, Checkbox, TableRow, TableCell, IconButton, Typography, AvatarGroup } from '@mui/material';
 // hooks
 import useDoubleClick from '../hooks/useDoubleClick';
 // import useCopyToClipboard from '../../../../hooks/useCopyToClipboard';
@@ -22,37 +9,15 @@ import { fDate } from '../utils/formatTime';
 import { fData } from '../utils/formatNumber';
 // components
 import Iconify from './Iconify';
-// import MenuPopover from '../../../../components/menu-popover';
-// import { useSnackbar } from '../../../../components/snackbar';
-// import ConfirmDialog from '../../../../components/confirm-dialog';
-import FileThumbnail from './file-thumbnail';
-//
+
 // import FileShareDialog from '../portal/FileShareDialog';
 import FileDetailsDrawer from './FileDetailsDrawer';
 
-// ----------------------------------------------------------------------
-
-FileTableRow.propTypes = {
-  row: PropTypes.object,
-  selected: PropTypes.bool,
-  onDeleteRow: PropTypes.func,
-  onSelectRow: PropTypes.func,
-};
-
+// ------
 export default function FileTableRow({ row, selected, onSelectRow, onDeleteRow }) {
   const { name, size = 0, type, dateModified = new Date(), shared = false, isFavorited = false } = row;
 
-  // const { enqueueSnackbar } = useSnackbar();
-
-  // const { copy } = useCopyToClipboard();
-
-  const [inviteEmail, setInviteEmail] = useState('');
-
-  const [openShare, setOpenShare] = useState(false);
-
   const [openDetails, setOpenDetails] = useState(false);
-
-  const [openConfirm, setOpenConfirm] = useState(false);
 
   const [favorited, setFavorited] = useState(isFavorited);
 
@@ -70,32 +35,8 @@ export default function FileTableRow({ row, selected, onSelectRow, onDeleteRow }
     setOpenDetails(false);
   };
 
-  const handleOpenShare = () => {
-    setOpenShare(true);
-  };
-
-  const handleCloseShare = () => {
-    setOpenShare(false);
-  };
-
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
-
   const handleOpenPopover = (event) => {
     setOpenPopover(event.currentTarget);
-  };
-
-  const handleClosePopover = () => {
-    setOpenPopover(null);
-  };
-
-  const handleChangeInvite = (event) => {
-    setInviteEmail(event.target.value);
   };
 
   const handleClick = useDoubleClick({
@@ -104,11 +45,6 @@ export default function FileTableRow({ row, selected, onSelectRow, onDeleteRow }
     },
     doubleClick: () => console.log('DOUBLE CLICK'),
   });
-
-  // const handleCopy = () => {
-  //   enqueueSnackbar('Copied!');
-  //   copy(row.url);
-  // };
 
   return (
     <>

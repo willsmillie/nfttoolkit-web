@@ -19,7 +19,7 @@ const Content = () => {
   const [loading, setLoading] = useState(false);
   const [id, setId] = useState('');
   const [metadata, setMetadata] = useState('');
-  const { balances, getMetadataForNFT, fetchIPFS } = useBalances();
+  const { fetchIPFS } = useBalances();
   const { ipfsNftIDToCid } = useIPFS();
 
   // DeBounce Function

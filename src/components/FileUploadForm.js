@@ -1,26 +1,21 @@
 import React, { useState } from 'react';
 import { Stack, Box, Typography, TextField, Button, Modal, Paper } from '@mui/material';
-import { storage, db } from '../utils/firebase';
+import { db } from '../utils/firebase';
 import IPFSTree from './IPFSTree';
 import TokenGateSourceSelector from './TokenGateSourceSelector';
 
 const Form = ({ nftId, cid, onAddFile }) => {
-  const [uploadFile, setUploadFile] = useState(false);
+  // const [uploadFile, setUploadFile] = useState(false);
   const [externalLink, setExternalLink] = useState('');
   const [openModal, setOpenModal] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [selectedOption, setSelectedOption] = useState('upload');
+  const [selectedOption, setSelectedOption] = useState('url');
   const [name, setName] = useState('');
   const [size, setSize] = useState('');
 
-  const handleFileOptionChange = (e) => {
-    setUploadFile(e.target.checked);
-  };
-
-  const handleExternalLinkChange = (e) => {
-    setExternalLink(e.target.value);
-  };
-
+  // const handleFileOptionChange = (e) => {
+  //   setUploadFile(e.target.checked);
+  // };
   const handleOpenModal = () => {
     setOpenModal(true);
   };
@@ -42,7 +37,7 @@ const Form = ({ nftId, cid, onAddFile }) => {
     if (selectedFile) {
       console.log('upload....');
     } else {
-      const newLink = { nftId, url: externalLink, name };
+      const newLink = { nftId, url: externalLink, name, size };
       db.collection('files')
         .add(newLink)
         .then(() => {
@@ -74,6 +69,7 @@ const Form = ({ nftId, cid, onAddFile }) => {
             left: '50%',
             transform: 'translate(-50%, -50%)',
             textAlign: 'center',
+            bgcolor: 'background.paper',
           }}
         >
           <Stack spacing={2} alignItems="center" justifyContent="stretch">

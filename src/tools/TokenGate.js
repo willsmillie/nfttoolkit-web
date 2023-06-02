@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Grid, Stack, TextField, Card, CardContent } from '@mui/material';
+import { useState } from 'react';
+import { Grid, Stack, Card, CardContent } from '@mui/material';
 import useDebounce from '../hooks/useDebounce';
 import NFTSelect from '../components/NFTSelect';
 import FileList from '../components/FileList';
@@ -7,7 +7,7 @@ import { useBalances } from '../hooks/useBalances';
 import useIPFS from '../hooks/useIPFS';
 
 const Content = () => {
-  const [loading, setLoading] = useState(false);
+  const [setLoading] = useState(false);
   const [id, setId] = useState('');
   const [metadata, setMetadata] = useState('');
 

@@ -100,7 +100,7 @@ export const resolveENS = async (domain) =>
     : domain;
 
 // retreive ipfs metadata given a tokenId
-export const getMetadataForNFT = async function (nftId) {
+export const getMetadataForNFT = async (nftId) => {
   const cid = nftAPI.ipfsNftIDToCid(nftId);
   const metadata = await axios
     .get(`https://nfttoolkit.infura-ipfs.io/ipfs/${cid}`)

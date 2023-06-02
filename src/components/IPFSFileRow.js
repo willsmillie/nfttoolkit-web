@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 
 // @mui
 import { Collapse, List, ListItem, ListItemIcon, ListItemText, ListItemButton, IconButton } from '@mui/material';
-import Ratio from 'react-ratio';
 import {
   MusicNote,
   Description,
@@ -119,6 +118,7 @@ const FileRow = ({ file, onFileClick }) => {
 
       fetchData();
       return () => {};
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [file, open]);
 
     return (

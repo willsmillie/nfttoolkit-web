@@ -21,7 +21,7 @@ const Content = () => {
   const [metadata, setMetadata] = useState('');
   const { authData, getAccountByAddress, getBalances, active } = useBalances();
 
-  const [filters, setFilters] = useState({ minter: '0xb28e467158f4de5a652d308ae580b1733e3fb463' });
+  // const [filters, setFilters] = useState({ minter: '0xb28e467158f4de5a652d308ae580b1733e3fb463' });
   // DeBounce Function
   useDebounce(
     () => {
@@ -31,19 +31,19 @@ const Content = () => {
       resolveENS(account)
         .then(getAccountByAddress)
         .then((r) => getBalances({ apiKey: authData.apiKey, accountId: r?.accInfo?.accountId }) ?? [])
-        .then((r) =>
-          r?.flat().filter((ele) => {
-            let result = false;
-            Object.keys(filters).forEach((filter) => {
-              console.log(ele[filter], filters[filter]);
-              if (ele[filter].toLowerCase() === filters[filter].toLowerCase()) {
-                result = true;
-              }
-            });
+        // .then((r) =>
+        //   r?.flat().filter((ele) => {
+        //     let result = false;
+        //     Object.keys(filters).forEach((filter) => {
+        //       console.log(ele[filter], filters[filter]);
+        //       if (ele[filter].toLowerCase() === filters[filter].toLowerCase()) {
+        //         result = true;
+        //       }
+        //     });
 
-            return result;
-          })
-        )
+        //     return result;
+        //   })
+        // )
         .then(setMetadata)
         .finally(() => {
           setLoading(false);
@@ -101,7 +101,7 @@ const Content = () => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <Card>
               <CardContent>
                 <Stack spacing={2}>
@@ -110,7 +110,7 @@ const Content = () => {
                 </Stack>
               </CardContent>
             </Card>
-          </Grid>
+          </Grid> */}
           <Grid item xs={12}>
             <Card>
               <CardContent>
