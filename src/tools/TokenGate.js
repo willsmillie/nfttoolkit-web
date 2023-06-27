@@ -7,7 +7,7 @@ import { useBalances } from '../hooks/useBalances';
 import useIPFS from '../hooks/useIPFS';
 
 const Content = () => {
-  const [setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [id, setId] = useState('');
   const [metadata, setMetadata] = useState('');
 
