@@ -1,5 +1,3 @@
-const crypto = require('crypto');
-const fetch = require('node-fetch')
 const { GraphQLClient } = require("graphql-request");
 const { getAccountNFTsQuery, getAccountMintedNFTsQuery } = require("./nfts");
 
@@ -8,7 +6,7 @@ const loopringGraphEndpoint = "https://api.thegraph.com/subgraphs/name/loopring/
 /**
  * Fetches the NFTs associated with an account.
  * @param {string} id - The ID of the account.
- * @returns {Promise<Array<string>>} - An array of NFT IDs.
+ * @return {Promise<Array<string>>} - An array of NFT IDs.
  * @throws {Error} - If an error occurs while fetching the NFTs.
  */
 async function getAccountNFTs(id) {
@@ -29,17 +27,15 @@ async function getAccountNFTs(id) {
         break; // No more results, exit the loop
       }
 
-      const filteredSlots = slots.filter(slot => slot.nft && slot.nft.nftID !== null);
+      const filteredSlots = slots.filter((slot) => slot.nft && slot.nft.nftID !== null);
       // Compute NFT data hash for each NFT
       const computedBalances = filteredSlots
-      .map(({nft}) => {
-        return { 
-          nftId: nft.nftID, 
-          minter: nft.mintedAtTransaction.minter.address, 
-          minterAccountId: nft.mintedAtTransaction.minter.id,
-          tokenAddress: nft.mintedAtTransaction.tokenAddress 
-        };
-      });
+          .map(({ nft }) => ({
+            nftId: nft.nftID,
+            minter: nft.mintedAtTransaction.minter.address,
+            minterAccountId: nft.mintedAtTransaction.minter.id,
+            tokenAddress: nft.mintedAtTransaction.tokenAddress,
+          }));
 
       nfts = nfts.concat(computedBalances);
       skip += first;
@@ -54,8 +50,8 @@ async function getAccountNFTs(id) {
 
 /**
  * Fetches the NFTs minted by an account.
- * @param {string} id - The ID of the minter account.
- * @returns {Promise<Array<string>>} - An array of NFT IDs minted by the account.
+ * @param {string} accountId - The ID of the minter account.
+ * @return {Promise<Array<string>>} - An array of NFT IDs minted by the account.
  * @throws {Error} - If an error occurs while fetching the minted NFTs.
  */
 async function getAccountMintedNFTs(accountId) {
@@ -67,7 +63,7 @@ async function getAccountMintedNFTs(accountId) {
     let mints = []; // Store all mints
 
     // Convert accountId to integer
-    const accountIdInt = parseInt(accountId);
+    const accountIdInt = parseInt(accountId, 10);
 
     // Fetch all pages of results
     while (true) {
@@ -80,9 +76,7 @@ async function getAccountMintedNFTs(accountId) {
       }
 
       // Compute NFT data hash for each minted NFT
-      const computedMints = fetchedMints.map(mint => {
-        return { nftId: mint.nftID, minter: mint.minter.address, tokenAddress: mint.tokenAddress };
-      });
+      const computedMints = fetchedMints.map((mint) => ({ nftId: mint.nftID, minter: mint.minter.address, tokenAddress: mint.tokenAddress }));
 
       mints = mints.concat(computedMints);
       skip += first;

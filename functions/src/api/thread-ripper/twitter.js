@@ -1,11 +1,11 @@
-const { TwitterApi } = require('twitter-api-v2');
-const ethExp = require('./eth-ens-address-regex');
+const { TwitterApi } = require("twitter-api-v2");
+const ethExp = require("./eth-ens-address-regex");
 
-const { 
+const {
   TWITTER_API_KEY,
   TWITTER_API_SECRET,
-  TWITTER_ACCESS_TOKEN, 
-  TWITTER_ACCESS_TOKEN_SECRET
+  TWITTER_ACCESS_TOKEN,
+  TWITTER_ACCESS_TOKEN_SECRET,
 } = process.env;
 
 // auth methods
@@ -29,9 +29,9 @@ const twitter = auth();
 const getAddresses = async (tweetId) => {
   const replies = await loadTweets(tweetId);
   const allAddresses = replies
-    .map((reply) => reply.match(ethExp))
-    .filter((result) => result !== null)
-    .map((result) => result[0]);
+      .map((reply) => reply.match(ethExp))
+      .filter((result) => result !== null)
+      .map((result) => result[0]);
 
   return allAddresses;
 };
@@ -39,17 +39,17 @@ const getAddresses = async (tweetId) => {
 // load tweets from the timeline
 const loadTweets = async (tweetId) => {
   const response = await twitter.v2.search(`conversation_id:${tweetId}`, {
-    'user.fields': ['name', 'username'],
-    'tweet.fields': ['author_id', 'conversation_id', 'created_at', 'in_reply_to_user_id', 'referenced_tweets'],
+    "user.fields": ["name", "username"],
+    "tweet.fields": ["author_id", "conversation_id", "created_at", "in_reply_to_user_id", "referenced_tweets"],
   });
 
   await response.autoPaginate(); // Load the entire thread
 
-  const replies = response.data.map((fetchedTweet) => fetchedTweet.text.replace(/(\r\n|\n|\r)/gm, ' '));
+  const replies = response.data.map((fetchedTweet) => fetchedTweet.text.replace(/(\r\n|\n|\r)/gm, " "));
   return replies;
 };
 
 
 module.exports = {
-  getAddresses
-}
+  getAddresses,
+};

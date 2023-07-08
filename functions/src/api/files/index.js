@@ -1,8 +1,9 @@
 const express = require("express");
+
 const router = express.Router();
-const {db} = require("../../utils/firebase")
-const { getAccountNFTs, getAccountMintedNFTs } = require("../../utils/loopring/graphQL");
-const { deriveCollectionsFromNFTs } = require("../../utils/loopring")
+const { db } = require("../../utils/firebase");
+const { getAccountNFTs } = require("../../utils/loopring/graphQL");
+const { deriveCollectionsFromNFTs } = require("../../utils/loopring");
 
 // parse the collection identifier from the url for loopring & gamestop respectively
 const parseCollectionId = (url) => {
@@ -19,26 +20,26 @@ const parseCollectionId = (url) => {
 };
 
 const getGates = async (accountId) => {
-  const nfts = await getAccountNFTs(accountId)
-  
-  const nftIds = nfts.map((e) => e.nftId)
+  const nfts = await getAccountNFTs(accountId);
+
+  const nftIds = nfts.map((e) => e.nftId);
   const collectionIds = await deriveCollectionsFromNFTs(nfts, accountId)
-    .then(collections => collections.map(e => parseCollectionId(e.collectionAddress) ?? e.contractAddress))
-  
-  return [nftIds, collectionIds].flat().map(e=>e.toString())
-}
+      .then((collections) => collections.map((e) => parseCollectionId(e.collectionAddress) ?? e.contractAddress));
+
+  return [nftIds, collectionIds].flat().map((e)=>e.toString());
+};
 
 // Serve the entire list of gateIds for which an account may access
 router.get("/account/:id/gates", async (req, res) => {
   try {
     const accountId = req.params.id;
-    const allIds = await getGates(accountId)
+    const allIds = await getGates(accountId);
     res.json(allIds);
   } catch (error) {
-    console.log(error)
-    res.status(500).json({ error: 'An error occurred while listing gates' });
+    console.log(error);
+    res.status(500).json({ error: "An error occurred while listing gates" });
   }
-})
+});
 
 // Serve the entire file list for a specific account
 // :accountId - ID of the user account
@@ -48,9 +49,9 @@ router.get("/account/:id", async (req, res) => {
   try {
     const accountId = req.params.id;
     // derive the gateIds from the users nftIds & collections addresses
-    const gateIds = await getGates(accountId.toLowerCase())
+    const gateIds = await getGates(accountId.toLowerCase());
 
-    const filesRef = db.collection('files');
+    const filesRef = db.collection("files");
     const batchSize = 30; // Maximum number of values in each batch
 
     // Split the gateIds into multiple batches
@@ -61,9 +62,7 @@ router.get("/account/:id", async (req, res) => {
     }
 
     // Perform multiple queries for each batch of gateIds
-    const queries = gateIdBatches.map((batch) => {
-      return filesRef.where('gateIds', 'array-contains-any', batch).get();
-    });
+    const queries = gateIdBatches.map((batch) => filesRef.where("gateIds", "array-contains-any", batch).get());
 
     // Execute all queries concurrently using Promise.all()
     const querySnapshots = await Promise.all(queries);
@@ -83,8 +82,8 @@ router.get("/account/:id", async (req, res) => {
 
     res.json(files);
   } catch (error) {
-    console.error('Error listing files:', error);
-    res.status(500).json({ error: 'An error occurred while listing files' });
+    console.error("Error listing files:", error);
+    res.status(500).json({ error: "An error occurred while listing files" });
   }
 });
 
@@ -97,19 +96,17 @@ router.get("/account/:id", async (req, res) => {
  */
 router.get("/gate/:gateId", async (req, res) => {
   try {
-    const gateId = req.params.gateId;
+    const { gateId } = req.params;
 
-    const filesRef = db.collection('files');
-    const querySnapshot = await filesRef.where('gateIds', 'array-contains', gateId).get();
+    const filesRef = db.collection("files");
+    const querySnapshot = await filesRef.where("gateIds", "array-contains", gateId).get();
 
-    const files = querySnapshot.docs.map((doc) => {
-      return { id: doc.id, ...doc.data() };
-    });
+    const files = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
     res.json(files);
   } catch (error) {
-    console.error('Error listing files:', error);
-    res.status(500).json({ error: 'An error occurred while listing files' });
+    console.error("Error listing files:", error);
+    res.status(500).json({ error: "An error occurred while listing files" });
   }
 });
 
