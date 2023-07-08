@@ -17,13 +17,15 @@ const api = require("./api");
 authenticateAndPersistApiKey()
     .then(() => {
       console.log("Authenticated against Loopring SDK");
-      // Mount the API routes
-      app.use("/", api);
-
-      // Export the Express app as a Firebase Function
-      exports.api = functions.https.onRequest(app);
     })
     .catch((error) => {
       console.error("Error during authentication:", error);
       process.exit(1);
     });
+
+// Mount the API routes
+app.use("/", api);
+
+// Export the Express app as a Firebase Function
+exports.api = functions.https.onRequest(app);
+
