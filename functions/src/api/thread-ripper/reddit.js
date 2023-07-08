@@ -1,33 +1,38 @@
-import fetch from 'node-fetch';
-import {URLSearchParams} from 'url';
-import ethAddressRegex from './eth-ens-address-regex.js';
+const fetch = require('node-fetch');
+const { URLSearchParams } = require('url');
+const ethAddressRegex = require('./eth-ens-address-regex');
 // Add  Reddit script credentials here
-const {REDDIT_API_KEY, REDDIT_API_SECRET, REDDIT_USERNAME, REDDIT_PASSWORD} = process.env;
+const {
+  REDDIT_API_KEY,
+  REDDIT_API_SECRET,
+  REDDIT_USERNAME,
+  REDDIT_PASSWORD,
+} = process.env;
 
 // gets comments & filters for ens & addresses ETH wallets
-export const getAddresses = async (postId) => {
-  return await getAllComments(postId).then((comments) => {
-    const thread = Object.values(comments);
-    const allAddresses = [];
+const getAddresses = async (postId) => {
+  const comments = await getAllComments(postId);
+  const thread = Object.values(comments);
 
-    for (const comment of thread) {
-      const body = comment.body.replace(/(?:\r\n|\r|\n)/g, ' ');
-      const result = body.match(ethAddressRegex);
+  const allAddresses = thread.reduce((addresses, comment) => {
+    const body = comment.body.replace(/(?:\r\n|\r|\n)/g, ' ');
+    const result = body.match(ethAddressRegex);
 
-      if (result) {
-        allAddresses.push(...result);
-      }
+    if (result) {
+      addresses.push(result[0]);
     }
 
-    return allAddresses;
-  });
+    return addresses;
+  }, []);
+
+  return allAddresses;
 };
 
 // Retrieve all comments for a given postId from the reddit API
 const getAllComments = async (postId) => {
   const token = await auth();
 
-  const {comments, more} = await getPost(postId, token);
+  const { comments, more } = await getPost(postId, token);
 
   while (more.length) {
     const current = more.shift();
@@ -35,10 +40,10 @@ const getAllComments = async (postId) => {
     if (current.length) {
       more.push(current);
     }
-    const {comments: moreComments, more: moreMore} = await getMoreChildren(
-        `t3_${postId}`,
-        selection.join(','),
-        token
+    const { comments: moreComments, more: moreMore } = await getMoreChildren(
+      `t3_${postId}`,
+      selection.join(','),
+      token
     );
     comments.push(...moreComments);
     if (moreMore.length) {
@@ -59,7 +64,7 @@ const auth = async () => {
   params.append('username', REDDIT_USERNAME);
   params.append('password', REDDIT_PASSWORD);
 
-  const res: any = await fetch('https://www.reddit.com/api/v1/access_token', {
+  const res = await fetch('https://www.reddit.com/api/v1/access_token', {
     method: 'POST',
     headers: {
       Authorization: `Basic ${basicAuth}`,
@@ -91,7 +96,7 @@ const getPost = async (postId, accessToken) => {
     extractComments(child, comments, more);
   });
 
-  return {comments, more};
+  return { comments, more };
 };
 
 // extract the comments from a thread of comments
@@ -110,22 +115,24 @@ const extractComments = (child, comments, more) => {
         more.push(child.data.children);
       }
       break;
+    default:
+      break;
   }
 };
 
 // Retrieve child comments from the reddit API
 const getMoreChildren = async (linkId, children, accessToken) => {
   const res = await fetch(
-      `https://oauth.reddit.com/api/morechildren?link_id=${linkId}&children=${children}&api_type=json`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
+    `https://oauth.reddit.com/api/morechildren?link_id=${linkId}&children=${children}&api_type=json`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
   );
 
-  const body: any = await res.json();
+  const body = await res.json();
   const comments = [];
   const more = [];
 
@@ -133,5 +140,10 @@ const getMoreChildren = async (linkId, children, accessToken) => {
     extractComments(thing, comments, more);
   });
 
-  return {comments, more};
+  return { comments, more };
 };
+
+
+module.exports = {
+  getAddresses
+}
