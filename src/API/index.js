@@ -4,6 +4,9 @@ const dev = 'http://127.0.0.1:5001/nfttoolkit-ba61b/us-central1/api/';
 const prod = 'https://us-central1-nfttoolkit-ba61b.cloudfunctions.net/api/';
 const base = process.env.REACT_APP_DEVELOPMENT ? dev : prod;
 
+// cors proxy for GSMP collection reqs
+export const proxyUrl = `${base}proxy/`;
+
 // Get tokens of a specific account
 export const getDerivedCollections = async (accountId) => {
   console.log('get collections derived from NFTs for accountId: ', accountId);
