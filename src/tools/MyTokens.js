@@ -1,28 +1,16 @@
 import { useState } from 'react';
-import {
-  Backdrop,
-  Grid,
-  Stack,
-  TextField,
-  Card,
-  CardContent,
-  Typography,
-  CircularProgress,
-  Alert,
-} from '@mui/material';
+import { Backdrop, Grid, Stack, TextField, Card, CardContent, Typography, CircularProgress } from '@mui/material';
 import useDebounce from '../hooks/useDebounce';
 import NFTSelect from '../components/NFTSelect';
-import { useBalances } from '../hooks/useBalances';
-import useIPFS from '../hooks/useIPFS';
+import useLoopring from '../hooks/useLoopring';
 
 const Content = () => {
+  const { active, nfts, getNFTData } = useLoopring();
+
   const [loading, setLoading] = useState(false);
   const [id, setId] = useState('');
   const [metadata, setMetadata] = useState('');
-
-  const { balances } = useBalances();
-  const { fetchIPFS, ipfsNftIDToCid } = useIPFS();
-  const tokenData = balances.find((e) => e.nftId === id);
+  const [tokenData, setTokenData] = useState('');
 
   // DeBounce Function
   useDebounce(
@@ -31,29 +19,20 @@ const Content = () => {
 
       setLoading(true);
 
-      const cid = ipfsNftIDToCid(id);
-      fetchIPFS(cid)
-        .then(setMetadata)
-        .finally(() => {
-          setLoading(false);
-        });
+      const selectedTokenInfo = nfts?.find((e) => e.nftId.toLowerCase() === id.toLowerCase());
+      console.log('selected: ', selectedTokenInfo);
+      if (selectedTokenInfo) {
+        getNFTData(selectedTokenInfo).then(setTokenData);
+        setMetadata(selectedTokenInfo);
+      } else {
+        setTokenData('');
+      }
+
+      setLoading(false);
     },
     [id],
     800
   );
-
-  const StatusView = () => {
-    switch (metadata?.status) {
-      case 'ok' || 'success':
-        return <Alert severity="success">Fetched</Alert>;
-      case 'indexing':
-        return <Alert severity="info">This item is queued for indexing, please check back in a moment!</Alert>;
-      case 'error':
-        return <Alert severity="error">This is an error alert — check it out!</Alert>;
-      default:
-        return <></>;
-    }
-  };
 
   return (
     <>
@@ -72,20 +51,14 @@ const Content = () => {
                 <Stack spacing={2}>
                   <small>Retrieve the balances of an account.</small>
                   <NFTSelect
+                    active={active}
+                    isLoading={loading}
+                    rows={nfts}
                     value={id}
                     onChange={(e) => {
                       setId(e.target.value);
                     }}
                   />
-                  {/* <TextField
-                    label="accountId"
-                    id="outlined-size-small"
-                    placeholder="12345"
-                    size="small"
-                    onChange={(e) => {
-                      setId(e.target.value);
-                    }}
-                  /> */}
                 </Stack>
               </CardContent>
             </Card>
@@ -95,14 +68,12 @@ const Content = () => {
               <CardContent>
                 <Stack spacing={2}>
                   <p>IPFS Metadata:</p>
-                  <StatusView />
                   <TextField
                     label="Metadata"
                     multiline
                     rows={15}
                     value={JSON.stringify(metadata, null, 2)}
                     id="outlined-size-small"
-                    defaultValue=""
                     size="small"
                   />
                   <p>Token Data:</p>
@@ -112,7 +83,6 @@ const Content = () => {
                     rows={15}
                     value={JSON.stringify(tokenData, null, 2)}
                     id="outlined-size-small"
-                    defaultValue=""
                     size="small"
                   />
                 </Stack>
@@ -127,7 +97,7 @@ const Content = () => {
 
 export default {
   name: '🗂️ My Tokens',
-  description: 'Connect a wallet to view its holdings',
+  description: 'Connect your wallet to view metadata for your current tokens.',
   color: 'orange',
   content: Content,
 };

@@ -23,7 +23,6 @@ const navConfig = [
     subheader: 'NFT Tool Kit',
     items: [
       { title: 'Assets', path: '/assets', icon: ICONS.assets },
-      { title: 'Player', path: '/player', icon: ICONS.player },
       { title: 'Tools', path: '/tools', icon: ICONS.dashboard },
       { title: 'Github', path: 'http://github.com/willsmillie/nfttoolkit-web', icon: ICONS.github },
     ],

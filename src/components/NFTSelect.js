@@ -1,20 +1,15 @@
 // @mui
 import { Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 // @web3-react
-import { useWeb3React } from '@web3-react/core';
-import { useBalances } from '../hooks/useBalances';
 import ConnectButton from './ConnectButton';
 
-export default function PageOne({ value, onChange }) {
-  const { active } = useWeb3React();
-  const { balances } = useBalances();
+function TokenMenuItem({ nft }) {
+  const name = nft.metadata?.base?.name?.length > 0 ? nft.metadata?.base?.name : nft.nftId;
+  return <p>{name}</p>;
+}
 
-  const flattenedData = Object.values(
-    balances.reduce((acc, currentItem) => {
-      acc[currentItem.nftId] = currentItem;
-      return acc;
-    }, {})
-  );
+export default function TokenSelect({ active, isLoading, rows, value, onChange }) {
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <>
@@ -24,9 +19,9 @@ export default function PageOne({ value, onChange }) {
         <FormControl>
           <InputLabel id="nft-select-label">Select NFT</InputLabel>
           <Select labelId="nft-select" id="nft-select" value={value} label="Select NFT" onChange={onChange}>
-            {(flattenedData ?? []).map((e) => (
-              <MenuItem key={e.nftId} value={e.nftId}>
-                {e.nftId}
+            {(rows ?? []).map((nft) => (
+              <MenuItem key={nft.nftId} value={nft.nftId}>
+                <TokenMenuItem nft={nft} />
               </MenuItem>
             ))}
           </Select>

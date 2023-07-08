@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from 'react';
-import YouTube from 'react-youtube';
 
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -11,7 +10,7 @@ import PauseRounded from '@mui/icons-material/PauseRounded';
 import PlayArrowRounded from '@mui/icons-material/PlayArrowRounded';
 import FastForwardRounded from '@mui/icons-material/FastForwardRounded';
 import FastRewindRounded from '@mui/icons-material/FastRewindRounded';
-import useIPFS from '../hooks/useIPFS';
+import { ipfsToHttp } from '../utils/ipfs';
 
 const Widget = styled('div')(() => ({
   borderRadius: 0,
@@ -32,7 +31,6 @@ const TinyText = styled(Typography)({
 });
 
 export default function PlayerBar({ track, onToggle, setIsPlaying, isPlaying, onNext, onLast }) {
-  const { ipfsToHttp } = useIPFS();
   const [isAudioReady, setIsAudioReady] = useState(false);
 
   const path = ipfsToHttp(track?.url ?? '');
@@ -72,6 +70,7 @@ export default function PlayerBar({ track, onToggle, setIsPlaying, isPlaying, on
             startTimer();
           })
           .catch((error) => {
+            setIsPlaying(false);
             console.log('Failed to play audio:', error);
           });
       }
@@ -147,47 +146,15 @@ export default function PlayerBar({ track, onToggle, setIsPlaying, isPlaying, on
 
   const mainIconColor = '#fff';
 
-  const handleOnReady = () => {
-    // setDuration(audioRef.current.getDuration());
-    // isReady.current = true;
-  };
-
-  const handleOnStateChange = (event) => {
-    const { data } = event;
-    if (data === 0) {
-      // Video ended, play next track
-      onNext();
-    }
-  };
-
-  const opts = {
-    height: '390',
-    width: '640',
-    playerVars: {
-      autoplay: isPlaying ? 1 : 0,
-      origin: window.location.origin,
-    },
-  };
-  const isYouTubeLink = track?.url?.includes('youtube.com') || track?.url?.includes('youtu.be');
-  const regex = /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/gi;
-  const match = regex.exec(track?.url);
-  const videoId = isYouTubeLink ? match[1] : null;
-
   return (
     track && (
       <Widget>
-        {isYouTubeLink ? (
-          <YouTube videoId={videoId} opts={opts} onReady={handleOnReady} onStateChange={handleOnStateChange} />
-        ) : (
-          <></>
-        )}
-
         <Stack
           direction="row"
           alignItems="center"
           justifyContent="center"
           spacing={2}
-          sx={{ bgcolor: 'background.paper', paddingRight: 2, paddingLeft: 2 }}
+          sx={{ bgcolor: 'primary.light', paddingRight: 2, paddingLeft: 2 }}
         >
           <Box
             sx={{
