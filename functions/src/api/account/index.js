@@ -1,14 +1,9 @@
 const express = require("express");
+
 const router = express.Router();
-const { RateLimit: ratelimit } = require('async-sema');
 const { getAccountNFTs, getAccountMintedNFTs } = require("../../utils/loopring/graphQL");
 const { getAccountCollections } = require("../../utils/loopring/api");
-const { getCollections: getGameStopCollections } = require("../../utils/gamestop/api")
-const { userAPI } = require("../../utils/loopring/api");
-const { deriveCollectionsFromNFTs } = require("../../utils/loopring")
-
-const apiKey = process.env.LOOPRING_API_KEY
-const limit = ratelimit(5);
+const { deriveCollectionsFromNFTs } = require("../../utils/loopring");
 
 // Define the routes for the /api/account endpoint
 // GET /api/account
@@ -22,8 +17,8 @@ router.get("/", (req, res) => res.send({ status: "nfttoolkit/api/accounts at you
 router.get("/:id/collections", async (req, res) => {
   try {
     const accountId = req.params.id;
-    const accountAddress = req.query.owner
-    const results = await getAccountCollections(accountId)
+    // const accountAddress = req.query.owner;
+    const results = await getAccountCollections(accountId);
     // const gmeResults = await getGameStopCollections(accountAddress)
     res.json(results);
   } catch (error) {
@@ -38,9 +33,9 @@ router.get("/:id/collections", async (req, res) => {
 // // Returns an array of NFT IDs
 router.get("/:id/collectionsFromNFTs", async (req, res) => {
   try {
-    const id = req.params.id;
-    const nfts = await getAccountNFTs(id)
-    const results = await deriveCollectionsFromNFTs(nfts, id)
+    const { id } = req.params;
+    const nfts = await getAccountNFTs(id);
+    const results = await deriveCollectionsFromNFTs(nfts, id);
     res.json(results);
   } catch (error) {
     console.error("Error:", error);
@@ -55,7 +50,7 @@ router.get("/:id/collectionsFromNFTs", async (req, res) => {
 // Returns an array of NFT IDs
 router.get("/:id/nfts", async (req, res) => {
   try {
-    const id = req.params.id;
+    const { id } = req.params;
     const nfts = await getAccountNFTs(id);
     res.json(nfts);
   } catch (error) {
@@ -70,7 +65,7 @@ router.get("/:id/nfts", async (req, res) => {
 // Returns an array of NFT IDs
 router.get("/:id/mintedNfts", async (req, res) => {
   try {
-    const id = req.params.id;
+    const { id } = req.params;
     const nfts = await getAccountMintedNFTs(Number(id));
     res.json(nfts);
   } catch (error) {
