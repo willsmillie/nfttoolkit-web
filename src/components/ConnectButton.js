@@ -1,17 +1,15 @@
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable react/jsx-key */
-import React, { useContext } from 'react';
+import { useState } from 'react';
 import { Typography, Button, Menu, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 
 // @web3-react
-import { useWeb3React } from '@web3-react/core';
-import { AuthContext } from '../contexts/L2Context';
+import useLoopring from '../hooks/useLoopring';
 
 export default function ConnectPopover() {
-  const { connect, disconnect } = useContext(AuthContext);
-  const { active, account } = useWeb3React();
+  const { active, account, connect, disconnect } = useLoopring();
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
   const handleClick = (event) => setAnchorEl(event.currentTarget);
@@ -28,7 +26,6 @@ export default function ConnectPopover() {
         }}
       >
         <Typography
-          nowrap
           sx={{
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
@@ -51,7 +48,7 @@ export default function ConnectPopover() {
           'aria-labelledby': 'basic-button',
         }}
       >
-        {active && account && <MenuItem onClick={disconnect}>Disconnect</MenuItem>}
+        {active && <MenuItem onClick={disconnect}>Disconnect</MenuItem>}
         {!active && (
           <MenuItem onClick={connect}>
             <ListItemIcon>

@@ -12,7 +12,7 @@ Image.propTypes = {
   sx: PropTypes.object,
 };
 
-export default function Image({ ratio, disabledEffect = false, effect = 'blur', sx, ...other }) {
+export default function Image({ ratio, contentMode = 'fill', disabledEffect = false, effect = 'blur', sx, ...other }) {
   if (ratio) {
     return (
       <Box
@@ -41,7 +41,7 @@ export default function Image({ ratio, disabledEffect = false, effect = 'blur', 
           wrapperClassName="wrapper"
           effect={disabledEffect ? undefined : effect}
           placeholderSrc="/assets/placeholder.svg"
-          sx={{ width: 1, height: 1, objectFit: 'cover' }}
+          sx={{ width: 1, height: 1, objectFit: contentMode === 'fit' ? 'scale-down' : 'cover' }}
           {...other}
         />
       </Box>
@@ -73,7 +73,7 @@ export default function Image({ ratio, disabledEffect = false, effect = 'blur', 
 
 // ----------------------------------------------------------------------
 
-function getRatio(ratio = '1/1') {
+export function getRatio(ratio = '1/1') {
   return {
     '4/3': 'calc(100% / 4 * 3)',
     '3/4': 'calc(100% / 3 * 4)',

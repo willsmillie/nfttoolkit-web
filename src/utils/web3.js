@@ -1,19 +1,21 @@
 /* eslint-disable no-template-curly-in-string */
 import * as sdk from '@loopring-web/loopring-sdk';
-import axios from 'axios';
 import { RateLimit as limit } from 'async-sema';
 
 // Env vars
-const CHAIN_ID = 1;
+const CHAIN_ID = process.env.CHAIN_ID || 1;
 
 const exchangeAPI = new sdk.ExchangeAPI({ chainId: CHAIN_ID });
-const userAPI = new sdk.UserAPI({ chainId: CHAIN_ID });
+export const userAPI = new sdk.UserAPI({ chainId: CHAIN_ID });
 const walletAPI = new sdk.WalletAPI({ chainId: CHAIN_ID });
-const nftAPI = new sdk.NFTAPI({ chainId: CHAIN_ID });
+export const nftAPI = new sdk.NFTAPI({ chainId: CHAIN_ID });
 
-export const ipfsNftIDToCid = (nftId) => nftAPI.ipfsNftIDToCid(nftId);
 export const getAccountById = (accountId) => exchangeAPI.getAccount({ accountId });
 export const getAccountByAddress = async (address) => exchangeAPI.getAccount({ owner: address });
+export const ipfsNftIDToCid = (nftId) => {
+  if (!nftId || nftId?.length === 0) return '';
+  return nftAPI.ipfsNftIDToCid(nftId);
+};
 
 const signatureKeyPairMock = async (accInfo, exchangeAddress, web3) => {
   const keySeed = accInfo.keySeed || 'Connect to NFTToolKit';
@@ -40,7 +42,6 @@ export const authenticate = async (address, web3) => {
     const { exchangeAddress } = exchangeInfo;
 
     // Get the accountId and other metadata needed for sig
-    // debug("ETH_ACCOUNT_ADDRESS", ETH_ACCOUNT_ADDRESS);
     const { accInfo } = await exchangeAPI.getAccount({
       owner: address,
     });
@@ -49,7 +50,6 @@ export const authenticate = async (address, web3) => {
     // Auth to API via signature
     const eddsaKey = await signatureKeyPairMock(accInfo, exchangeAddress, web3);
     const { apiKey } = await userAPI.getUserApiKey({ accountId }, eddsaKey.sk);
-    // localStorage.setItem('loopring_api_key', apiKey);
 
     return { ...accInfo, apiKey, eddsaKey, exchangeAddress };
   } catch (error) {
@@ -69,7 +69,10 @@ export const getBalances = async ({ accountId, apiKey }) => {
   while (currentPage <= totalPages) {
     await rateLimit(); // Wait for rate limit to be available
 
-    const response = await userAPI.getUserNFTBalances({ accountId, limit: pageLimit, page: currentPage }, apiKey);
+    const response = await userAPI.getUserNFTBalances(
+      { accountId, limit: pageLimit, page: currentPage, metadata: true },
+      apiKey
+    );
 
     if (response.userNFTBalances) totalItems.push(...response.userNFTBalances);
 
@@ -84,10 +87,6 @@ export const getBalances = async ({ accountId, apiKey }) => {
 
   return totalItems;
 };
-export const isAdmin = (account) => {
-  const id = process.env.REACT_APP_ETH_ACCOUNT_ADDRESS;
-  return account === id;
-};
 
 // resolve an ens domain to hex address
 export const resolveENS = async (domain) =>
@@ -98,14 +97,3 @@ export const resolveENS = async (domain) =>
         })
       ).address
     : domain;
-
-// retreive ipfs metadata given a tokenId
-export const getMetadataForNFT = async (nftId) => {
-  const cid = nftAPI.ipfsNftIDToCid(nftId);
-  const metadata = await axios
-    .get(`https://nfttoolkit.infura-ipfs.io/ipfs/${cid}`)
-    .then((x) => x.data)
-    .catch((error) => console.log(error));
-
-  return metadata;
-};

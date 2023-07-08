@@ -1,15 +1,5 @@
 import { useState } from 'react';
-import {
-  Backdrop,
-  Grid,
-  Stack,
-  TextField,
-  Card,
-  CardContent,
-  Typography,
-  CircularProgress,
-  Alert,
-} from '@mui/material';
+import { Backdrop, Grid, Stack, TextField, Card, CardContent, Typography, CircularProgress } from '@mui/material';
 import useDebounce from '../hooks/useDebounce';
 import { getThreads } from '../API';
 
@@ -34,19 +24,6 @@ const Content = () => {
     [input],
     800
   );
-
-  const StatusView = () => {
-    switch (results?.status) {
-      case 'ok' || 'success':
-        return <Alert severity="success">Fetched</Alert>;
-      case 'indexing':
-        return <Alert severity="info">This thread is queued for indexing, please check back later!</Alert>;
-      case 'error':
-        return <Alert severity="error">An error ocurred...</Alert>;
-      default:
-        return <></>;
-    }
-  };
 
   return (
     <>
@@ -82,7 +59,6 @@ const Content = () => {
               <CardContent>
                 <Stack spacing={2}>
                   <p>Results:</p>
-                  <StatusView />
                   <TextField
                     label="Metadata"
                     disabled

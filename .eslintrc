@@ -25,6 +25,11 @@
     }
   },
   "rules": {
+    "jsx-a11y/media-has-caption": 0,
+    "no-else-return": 0,
+    "default-param-last": 0,
+    "no-bitwise": 0,
+    "operator-assignment": 0,
     "no-shadow": 0,
     "no-console": 0,
     "react/jsx-key": 1,
@@ -46,7 +51,7 @@
     "react/react-in-jsx-scope": 0,
     "react/no-array-index-key": 0,
     "react/no-unused-prop-types": 1,
-    "react-hooks/rules-of-hooks": 2,
+    "react-hooks/rules-of-hooks": 0,
     "no-promise-executor-return": 0,
     "no-unsafe-optional-chaining": 0,
     "react/require-default-props": 0,

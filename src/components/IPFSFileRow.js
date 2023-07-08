@@ -24,11 +24,9 @@ import {
 // import ConnectPopover from '../components/ConnectPopover';
 
 // components
-import useIPFS from '../hooks/useIPFS';
+import { getDAGForCID } from '../utils/ipfs';
 
 const FileRow = ({ file, onFileClick }) => {
-  const { getDAGForCID } = useIPFS();
-
   const extForFile = (file) => {
     const re = /(?:\.([^.]+))?$/;
     const ext = re.exec(file?.name)[1];

@@ -36,11 +36,6 @@ export default function Router() {
       children: [{ path: '/tools', element: <Tools /> }],
     },
     {
-      path: '/player',
-      element: <DashboardLayout />,
-      children: [{ path: '/player', element: <Player /> }],
-    },
-    {
       path: '*',
       element: <LogoOnlyLayout />,
       children: [
@@ -55,6 +50,5 @@ export default function Router() {
 // Dashboard
 const Assets = Loadable(lazy(() => import('../pages/MyTokens')));
 const Tools = Loadable(lazy(() => import('../pages/Tools')));
-const Player = Loadable(lazy(() => import('../pages/Player')));
 
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));

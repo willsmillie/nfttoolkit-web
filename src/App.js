@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from 'react-query';
 // routes
 import Router from './routes';
 // theme
@@ -10,16 +11,20 @@ import MotionLazyContainer from './components/animate/MotionLazyContainer';
 
 // ----------------------------------------------------------------------
 
+const queryClient = new QueryClient();
+
 export default function App() {
   return (
-    <MotionLazyContainer>
-      <ThemeProvider>
-        <ThemeSettings>
-          <ProgressBarStyle />
-          <ScrollToTop />
-          <Router />
-        </ThemeSettings>
-      </ThemeProvider>
-    </MotionLazyContainer>
+    <QueryClientProvider client={queryClient}>
+      <MotionLazyContainer>
+        <ThemeProvider>
+          <ThemeSettings>
+            <ProgressBarStyle />
+            <ScrollToTop />
+            <Router />
+          </ThemeSettings>
+        </ThemeProvider>
+      </MotionLazyContainer>
+    </QueryClientProvider>
   );
 }

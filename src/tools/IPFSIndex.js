@@ -1,24 +1,12 @@
 import { useState } from 'react';
-import {
-  Backdrop,
-  Grid,
-  Stack,
-  TextField,
-  Card,
-  CardContent,
-  Typography,
-  CircularProgress,
-  Alert,
-} from '@mui/material';
+import { Backdrop, Grid, Stack, TextField, Card, CardContent, Typography, CircularProgress } from '@mui/material';
 import useDebounce from '../hooks/useDebounce';
-import useIPFS from '../hooks/useIPFS';
+import { getDAGForCID } from '../utils/ipfs';
 
 const Content = () => {
   const [loading, setLoading] = useState(false);
   const [cid, setCID] = useState('');
   const [results, setResults] = useState('');
-
-  const { getDAGForCID } = useIPFS();
 
   // DeBounce Function
   useDebounce(
@@ -36,19 +24,6 @@ const Content = () => {
     [cid],
     800
   );
-
-  const StatusView = () => {
-    switch (results?.status) {
-      case 'ok' || 'success':
-        return <Alert severity="success">Fetched</Alert>;
-      case 'indexing':
-        return <Alert severity="info">This cid is queued for indexing, please check back later!</Alert>;
-      case 'error':
-        return <Alert severity="error">There was an error!</Alert>;
-      default:
-        return <></>;
-    }
-  };
 
   return (
     <>
@@ -85,7 +60,6 @@ const Content = () => {
               <CardContent>
                 <Stack spacing={2}>
                   <p>Results:</p>
-                  <StatusView />
                   <TextField
                     label="IPFS Results"
                     multiline
@@ -107,7 +81,7 @@ const Content = () => {
 
 export default {
   name: '🪐 IPFS Index',
-  description: 'Inspect IPFS data for tokens.',
+  description: 'Inspect IPFS metadata data or file tree for tokens.',
   color: 'orange',
   content: Content,
 };

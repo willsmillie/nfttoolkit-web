@@ -1,21 +1,23 @@
 import { useState, useEffect } from 'react';
-import { List } from '@mui/material';
-import useIPFS from '../hooks/useIPFS';
+import { List, TextField } from '@mui/material';
+import { getDAGForCID, sanitizeCID } from '../utils/ipfs';
 import IPFSFileRow from './IPFSFileRow';
+import useDebounce from '../hooks/useDebounce';
 
 const IPFSTree = ({ cid, onFileClick }) => {
-  const { getDAGForCID } = useIPFS();
+  const [customCid, setCustomCid] = useState(sanitizeCID(cid));
 
   const [documentData, setDocumentData] = useState(null);
+  // const [contentType, setContentType] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchDocument = async () => {
-      console.log('Fetching GAD for CID: ', cid);
-      if (cid) {
+      console.log('Fetching GAD for CID: ', customCid);
+      if (customCid) {
         setLoading(true);
 
-        getDAGForCID(cid)
+        getDAGForCID(customCid)
           .then((r) => setDocumentData(r))
           .catch(console.error)
           .finally(() => {
@@ -24,29 +26,79 @@ const IPFSTree = ({ cid, onFileClick }) => {
       }
     };
 
-    if (!loading && !documentData) {
+    if (!loading) {
       fetchDocument();
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cid]);
+  }, [customCid]);
+
+  // DeBounce Function
+  useDebounce(
+    () => {
+      if (customCid.length === 0) {
+        setDocumentData({});
+        return;
+      }
+
+      setLoading(true);
+
+      getDAGForCID(customCid)
+        .then((r) => {
+          console.log(r);
+          setDocumentData(r);
+        })
+        .catch(async (error) => {
+          console.error(error);
+        })
+        .finally(() => {
+          setLoading(false);
+          console.log('fetched doc data', documentData);
+        });
+
+      // fetch(ipfsToHttp(customCid))
+      //   .then((response) =>
+      //     response.blob().then((blob) => ({
+      //       contentType: response.headers.get('Content-Type'),
+      //       raw: blob,
+      //     }))
+      //   )
+      //   .then((data) => setContentType(data.contentType));
+    },
+    [customCid],
+    800
+  );
+
+  const dagValues = Object.values(documentData ?? {});
+  const containsFiles = dagValues.length > 0;
 
   return (
-    <List
-      sx={{
-        width: '100%',
-        maxWidth: 360,
-        bgcolor: 'background.paper',
-        position: 'relative',
-        overflow: 'auto',
-        maxHeight: 300,
-        '& ul': { padding: 0 },
-      }}
-    >
-      {Object.values(documentData ?? {}).map((file) => (
-        <IPFSFileRow key={file?.name} file={file} onFileClick={onFileClick} />
-      ))}
-    </List>
+    <>
+      <TextField
+        value={customCid}
+        placeholder="Qm..."
+        label="IPFS CID"
+        onChange={(e) => setCustomCid(sanitizeCID(e.target.value))}
+      />
+
+      {containsFiles && (
+        <List
+          sx={{
+            width: '100%',
+            maxWidth: 360,
+            bgcolor: 'background.paper',
+            position: 'relative',
+            overflow: 'auto',
+            maxHeight: 300,
+            '& ul': { padding: 0 },
+          }}
+        >
+          {dagValues.map((file) => (
+            <IPFSFileRow key={file?.name} file={file} onFileClick={onFileClick} />
+          ))}
+        </List>
+      )}
+    </>
   );
 };
 

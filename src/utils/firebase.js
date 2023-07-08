@@ -17,9 +17,11 @@ firebase.initializeApp(firebaseConfig);
 const storage = firebase.storage();
 const db = firebase.firestore();
 
-if (process.env.REACT_APP_DEVELOPMENT) {
-  console.log('configuring emus');
-  db.useEmulator('127.0.0.1', 8080);
-}
+const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
-export { db, storage };
+// if (process.env.REACT_APP_DEVELOPMENT) {
+//   console.log('configuring emus');
+//   db.useEmulator('127.0.0.1', 8080);
+// }
+
+export { db, storage, timestamp };

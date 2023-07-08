@@ -1,21 +1,11 @@
 import { useState } from 'react';
-import {
-  Backdrop,
-  Grid,
-  Stack,
-  TextField,
-  Card,
-  CardContent,
-  Typography,
-  CircularProgress,
-  Alert,
-} from '@mui/material';
+import { Backdrop, Grid, Stack, TextField, Card, CardContent, Typography, CircularProgress } from '@mui/material';
 import ConnectButton from '../components/ConnectButton';
 import useDebounce from '../hooks/useDebounce';
-import { useBalances } from '../hooks/useBalances';
+import useLoopring from '../hooks/useLoopring';
 
 const Content = () => {
-  const { getHoldersForNFTData, getAccountsByIds, active } = useBalances();
+  const { getHoldersForNFTData, getAccountsByIds, active } = useLoopring();
   const [loading, setLoading] = useState(false);
   const [id, setId] = useState('');
   const [metadata, setMetadata] = useState('');
@@ -53,19 +43,6 @@ const Content = () => {
     800
   );
 
-  const StatusView = () => {
-    switch (metadata?.status) {
-      case 'ok' || 'success':
-        return <Alert severity="success">Fetched</Alert>;
-      case 'indexing':
-        return <Alert severity="info">This token is queued for indexing, please check back later!</Alert>;
-      case 'error':
-        return <Alert severity="error">This is an error alert — check it out!</Alert>;
-      default:
-        return <></>;
-    }
-  };
-
   return (
     <>
       {loading && (
@@ -82,21 +59,21 @@ const Content = () => {
               <CardContent>
                 <Stack spacing={2}>
                   <p>Enter an NFT Data</p>
-                  <small>
-                    The Loopring's NFT token data identifier which is a hash string of NFT token address and NFT_ID{' '}
-                  </small>
                   {!active ? (
                     <ConnectButton />
                   ) : (
-                    <TextField
-                      label="nftData"
-                      id="outlined-size-small"
-                      placeholder="0x12345..."
-                      size="small"
-                      onChange={(e) => {
-                        setId(e.target.value);
-                      }}
-                    />
+                    <>
+                      <small>nftData can be retrieved in the 'My Tokens' or 'Token Look Up' tools.</small>
+                      <TextField
+                        label="nftData"
+                        id="outlined-size-small"
+                        placeholder="0x12345..."
+                        size="small"
+                        onChange={(e) => {
+                          setId(e.target.value);
+                        }}
+                      />
+                    </>
                   )}
                 </Stack>
               </CardContent>
@@ -106,10 +83,8 @@ const Content = () => {
             <Card>
               <CardContent>
                 <Stack spacing={2}>
-                  <p>Metadata:</p>
-                  <StatusView />
+                  <p>Holder Addresses:</p>
                   <TextField
-                    label="Metadata"
                     disabled
                     multiline
                     rows={15}
@@ -128,4 +103,9 @@ const Content = () => {
   );
 };
 
-export default { name: '🧩 Token Holders', description: 'Get holders of tokens', color: 'blue', content: Content };
+export default {
+  name: '🧩 Token Holders',
+  description: 'Retrieve a list of holders of a given token for airdrops.',
+  color: 'blue',
+  content: Content,
+};

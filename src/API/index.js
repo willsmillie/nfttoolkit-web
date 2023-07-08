@@ -1,51 +1,62 @@
 import axios from 'axios';
 
-const dev = 'http://127.0.0.1:5001/nfttoolkit-ba61b/us-central1/';
-const prod = 'https://us-central1-nfttoolkit-ba61b.cloudfunctions.net/';
+const dev = 'http://127.0.0.1:5001/nfttoolkit-ba61b/us-central1/api/';
+const prod = 'https://us-central1-nfttoolkit-ba61b.cloudfunctions.net/api/';
 const base = process.env.REACT_APP_DEVELOPMENT ? dev : prod;
 
-// Get NFT Metadata by NFT ID
-export const getNFT = (nftId) => {
-  const endpoint = 'nfts-get';
-  const params = `nftId=${nftId}`;
-  const url = `${base}${endpoint}?${params}`;
-  return axios.get(url);
+// Get tokens of a specific account
+export const getDerivedCollections = async (accountId) => {
+  console.log('get collections derived from NFTs for accountId: ', accountId);
+  if (!accountId) return [];
+  const endpoint = `account/${accountId}/collectionsFromNFTs`; // Replace with your actual endpoint URL
+  const url = `${base}${endpoint}`;
+  const response = await axios.get(url);
+  return response.data;
 };
 
-// Get an address from an ens
-export const getAccount = (account) => {
-  const endpoint = 'accounts-get';
-  const params = `account=${account}`;
-  const url = `${base}${endpoint}?${params}`;
-  return axios.get(url);
+// Get tokens of a specific account
+export const getNFTs = async (accountId) => {
+  console.log('get NFTs for accountId: ', accountId);
+  if (!accountId) return [];
+  const endpoint = `account/${accountId}/nfts`; // Replace with your actual endpoint URL
+  const url = `${base}${endpoint}`;
+  const response = await axios.get(url);
+  return response.data;
 };
 
-// Get the ipfs data associated with a CID
-export const getCID = (cid) => {
-  const endpoint = 'ipfs-get';
-  const params = `cid=${cid}`;
-  const url = `${base}${endpoint}?${params}`;
-  return axios.get(url).then((r) => r.data);
+// Get token gated files for a specific account
+export const getFiles = async (accountId) => {
+  console.log('get files for accountId: ', accountId);
+  if (!accountId) return [];
+  const endpoint = `files/account/${accountId}`; // Replace with your actual endpoint URL
+  const url = `${base}${endpoint}`;
+  const response = await axios.get(url);
+  return response.data;
 };
 
-// Get holders of a specific token
-export const getHolders = (nftData) => {
-  const endpoint = 'nfts-getHolders';
-  const params = `nftData=${nftData}`;
-  const url = `${base}${endpoint}?${params}`;
-  return axios.get(url);
+// Get token gated files for a specific account
+export const getFilesForGate = async (gateId) => {
+  console.log('get files for gateId: ', gateId);
+  if (!gateId) return [];
+  const endpoint = `files/gate/${gateId}`; // Replace with your actual endpoint URL
+  const url = `${base}${endpoint}`;
+  const response = await axios.get(url);
+  return response.data;
 };
 
-// Get holdings of a specific account
-export const getOwnedBy = (accountId) => {
-  const endpoint = 'nfts-ownedBy';
-  const params = `account=${accountId}`;
-  const url = `${base}${endpoint}?${params}`;
-  return axios.get(url);
+// Get mints of a specific account
+export const getMints = async (accountId) => {
+  console.log('get mints for accountId: ', accountId);
+  if (!accountId) return [];
+  const endpoint = `account/${accountId}/mintedNfts`; // Replace with your actual endpoint URL
+  const url = `${base}${endpoint}`;
+  const response = await axios.get(url);
+  return response.data;
 };
 
 // Get holdings of a specific account
 export const getThreads = (data) => {
+  console.log('get threads for url: ', data);
   const endpoint = 'threadRipper-get';
   const params = `url=${data}`;
   const url = `${base}${endpoint}?${params}`;

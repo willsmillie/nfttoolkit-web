@@ -28,7 +28,7 @@ import { IconButtonAnimate } from '../../../components/animate';
 // ----------------------------------------------------------------------
 
 export default function NotificationsPopover() {
-  const [notifications, setNotifications] = useState(_notifications);
+  const [notifications, setNotifications] = useState([]);
 
   const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
 
@@ -44,10 +44,11 @@ export default function NotificationsPopover() {
 
   const handleMarkAllAsRead = () => {
     setNotifications(
-      notifications ?? [].map((notification) => ({
-        ...notification,
-        isUnRead: false,
-      }))
+      notifications ??
+        [].map((notification) => ({
+          ...notification,
+          isUnRead: false,
+        }))
     );
   };
 

@@ -1,26 +1,12 @@
 import { useState } from 'react';
-import {
-  Backdrop,
-  Grid,
-  Stack,
-  TextField,
-  Card,
-  CardContent,
-  Typography,
-  CircularProgress,
-  Alert,
-} from '@mui/material';
-// import { getNFT } from '../API';
+import { Backdrop, Grid, Stack, TextField, Card, CardContent, Typography, CircularProgress } from '@mui/material';
 import useDebounce from '../hooks/useDebounce';
-import { useBalances } from '../hooks/useBalances';
-import useIPFS from '../hooks/useIPFS';
+import { ipfsNftIDToCid, fetchIPFS } from '../utils/ipfs';
 
 const Content = () => {
   const [loading, setLoading] = useState(false);
   const [id, setId] = useState('');
   const [metadata, setMetadata] = useState('');
-  const { fetchIPFS } = useBalances();
-  const { ipfsNftIDToCid } = useIPFS();
 
   // DeBounce Function
   useDebounce(
@@ -37,19 +23,6 @@ const Content = () => {
     [id],
     800
   );
-
-  const StatusView = () => {
-    switch (metadata?.status) {
-      case 'ok' || 'success':
-        return <Alert severity="success">Fetched</Alert>;
-      case 'indexing':
-        return <Alert severity="info">This token is queued for indexing, please check back later!</Alert>;
-      case 'error':
-        return <Alert severity="error">This is an error alert — check it out!</Alert>;
-      default:
-        return <></>;
-    }
-  };
 
   return (
     <>
@@ -86,7 +59,6 @@ const Content = () => {
               <CardContent>
                 <Stack spacing={2}>
                   <p>Results:</p>
-                  <StatusView />
                   <TextField
                     label="Metadata"
                     multiline
@@ -106,4 +78,9 @@ const Content = () => {
   );
 };
 
-export default { name: '🔍 Token Look Up', description: 'Get token metadata', color: 'green', content: Content };
+export default {
+  name: '🔍 Token Look Up',
+  description: 'Retrieve token metadata from IPFS via nftIds.',
+  color: 'green',
+  content: Content,
+};
