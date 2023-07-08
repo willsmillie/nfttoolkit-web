@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ipfsNftIDToCid, fetchIPFS } from '../utils/ipfs';
 
-const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+// const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
 
 // parse the collection identifier from the url for loopring & gamestop respectively
 export const parseCollectionId = (url) => {
@@ -53,7 +53,7 @@ export const fetchTokenCollectionMetadata = async (metadata) => {
     }
 
     try {
-      const response = await fetch(proxyUrl + metadata.collection_metadata);
+      const response = await fetch(metadata.collection_metadata);
       if (response.ok) {
         const data = await response.json();
         // Cache the collection metadata in localStorage

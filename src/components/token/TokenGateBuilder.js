@@ -17,7 +17,6 @@ const TokenGateBuilder = ({ value, onChange }) => {
 
   useEffect(() => {
     const resolveMints = async () => {
-      console.log(mints);
       const tokenResults = {};
       const collectionResults = {};
 
