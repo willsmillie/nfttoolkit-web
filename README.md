@@ -1,3 +1,4 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/38172068-95c1-4bc9-b8c9-a34f1e524374/deploy-status)](https://app.netlify.com/sites/nfttoolkit/deploys)
 # nfttoolkit-web
 
 React App interfacing with Loopring / GameStop Marketplaces NFT platforms
