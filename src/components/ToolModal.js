@@ -19,9 +19,12 @@ export default function ToolCard({ tool }) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
-    setOpen(true);
+    if (tool.url) {
+      window.open(tool.url, '_blank');
+    } else {
+      setOpen(true);
+    }
   };
-
   const handleClose = () => {
     setOpen(false);
   };

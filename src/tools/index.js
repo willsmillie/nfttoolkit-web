@@ -8,6 +8,7 @@ import TokenHolders from './TokenHolders';
 import Donate from './Donate';
 import MyTokens from './MyTokens';
 import IPFSIndex from './IPFSIndex';
+import TokenDesigner from './TokenDesigner';
 
 export default [
   MyTokens,
@@ -19,5 +20,6 @@ export default [
   TokenGate,
   IPFSIndex,
   TokenHolders,
+  TokenDesigner,
   Donate,
 ];
