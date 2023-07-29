@@ -18,7 +18,7 @@ export default function PageOne() {
         <Typography variant="h3" component="h1" paragraph>
           Tools
         </Typography>
-        <Typography gutterBottom>NFT Tool Kit provides essential utilities for interacting with Looping </Typography>
+        <Typography gutterBottom>NFT Tool Kit provides essential utilities for interacting with Loopring </Typography>
 
         <Grid container justifyContent="space-evenly" alignItems="stretch" spacing={2}>
           {Tools.map((p) => (
