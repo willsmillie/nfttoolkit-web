@@ -95,5 +95,6 @@ export default {
   name: '🪛 Metadata Tester',
   description: 'Configure & preview metadata for custom tokens.',
   color: 'green',
+  label: 'New',
   content: MetadataView,
 };
