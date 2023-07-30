@@ -126,7 +126,6 @@ const Design = ({ onChangeConfig, canReset, onReset, handleNext }) => {
       <Button disabled={!designIsValid} variant="contained" color="primary" size="large" onClick={() => handleNext()}>
         Download
       </Button>
-      <Typography variant="caption">Checkout with Stripe and receive a direct download.</Typography>
     </>
   );
 };
