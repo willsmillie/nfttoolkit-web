@@ -9,6 +9,7 @@ import Donate from './Donate';
 import MyTokens from './MyTokens';
 import IPFSIndex from './IPFSIndex';
 import TokenDesigner from './TokenDesigner';
+import MetadataMaker from './metadata';
 
 export default [
   MyTokens,
@@ -21,5 +22,6 @@ export default [
   IPFSIndex,
   TokenHolders,
   TokenDesigner,
+  MetadataMaker,
   Donate,
 ];
