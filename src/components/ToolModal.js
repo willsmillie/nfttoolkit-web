@@ -33,7 +33,7 @@ export default function ToolCard({ tool }) {
 
   return (
     <>
-      <Grid item xs={4}>
+      <Grid item xs={12} sm={6} lg={4} xl={3}>
         <Card>
           <CardActionArea onClick={handleClickOpen}>
             <CardContent>
