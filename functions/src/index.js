@@ -1,6 +1,7 @@
 const functions = require("firebase-functions");
 const express = require("express");
 const cors = require("cors");
+const fileParser = require('express-multipart-file-parser')
 const { authenticate: authenticateAndPersistApiKey } = require("./utils/loopring/api");
 require("dotenv").config();
 
@@ -9,6 +10,8 @@ const app = express();
 
 // Enable CORS for all routes
 app.use(cors());
+
+app.use(fileParser)
 
 // Import your API routes
 const api = require("./api");
