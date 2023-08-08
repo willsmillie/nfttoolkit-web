@@ -65,3 +65,25 @@ export const getThreads = (data) => {
   const url = `${base}${endpoint}?${params}`;
   return axios.get(url);
 };
+
+// post redpacket reveal
+export const postRedPacketReveal = (imageFile) => {
+  const endpoint = 'redpacketreveal';
+  const url = `${base}${endpoint}`;
+
+  // Log the image file information for debugging purposes
+  console.log('Image file:', imageFile);
+
+  // Create a FormData object and append the image file to it
+  const formData = new FormData();
+  formData.append('image', imageFile);
+
+  // Make a POST request with the FormData object as the request body
+  return axios.post(url, formData, {
+    responseType: 'blob', // important
+    headers: {
+      enctype: 'multipart/form-data',
+      'Content-Type': 'multipart/form-data', // Set the content type to multipart/form-data
+    },
+  });
+};
