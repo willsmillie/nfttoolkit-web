@@ -1,6 +1,8 @@
 const functions = require("firebase-functions");
 const express = require("express");
 const cors = require("cors");
+const fileParser = require("express-multipart-file-parser");
+const redpacketreveal = require("./utils/redpacketreveal");
 const { authenticate: authenticateAndPersistApiKey } = require("./utils/loopring/api");
 require("dotenv").config();
 
@@ -28,4 +30,14 @@ app.use("/", api);
 
 // Export the Express app as a Firebase Function
 exports.api = functions.https.onRequest(app);
+
+
+// Create an express app for the API
+const imageProcessor = express();
+// Enable CORS for all routes
+imageProcessor.use(cors());
+imageProcessor.use(fileParser);
+imageProcessor.use("/", redpacketreveal);
+
+exports.redpacketreveal = functions.https.onRequest(imageProcessor);
 

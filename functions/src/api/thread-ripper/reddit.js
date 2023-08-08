@@ -1,5 +1,5 @@
-const fetch = require("node-fetch");
 const { URLSearchParams } = require("url");
+const fetch = require("node-fetch");
 const ethAddressRegex = require("./eth-ens-address-regex");
 // Add  Reddit script credentials here
 const {

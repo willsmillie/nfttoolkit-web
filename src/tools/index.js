@@ -10,6 +10,7 @@ import MyTokens from './MyTokens';
 import IPFSIndex from './IPFSIndex';
 import TokenDesigner from './TokenDesigner';
 import MetadataMaker from './metadata';
+import RedPacketReveal from './redpacket-reveal';
 
 export default [
   MyTokens,
@@ -23,5 +24,6 @@ export default [
   TokenHolders,
   TokenDesigner,
   MetadataMaker,
+  RedPacketReveal,
   Donate,
 ];

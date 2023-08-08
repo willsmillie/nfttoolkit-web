@@ -15,7 +15,7 @@ const {
   INFURA_PROJECT_ID,
   ETH_ACCOUNT_PRIVATE_KEY,
   ETH_ACCOUNT_ADDRESS,
-  CHAIN_ID,
+  REACT_APP_CHAIN_ID: CHAIN_ID,
 } = (() => {
   const { env } = process;
   return {

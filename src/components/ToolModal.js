@@ -14,11 +14,13 @@ import {
   Stack,
 } from '@mui/material';
 import Label from './Label';
+import { logAnalytics } from '../utils/firebase';
 
 export default function ToolCard({ tool }) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
+    logAnalytics('click_tool', { tool: tool.name });
     if (tool.url) {
       window.open(tool.url, '_blank');
     } else {
