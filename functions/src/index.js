@@ -39,5 +39,5 @@ imageProcessor.use(cors());
 imageProcessor.use(fileParser);
 imageProcessor.use("/", redpacketreveal);
 
-exports.redpacketreveal = functions.https.onRequest(imageProcessor);
+exports.redpacketreveal = functions.runWith({timeoutSeconds: 300}).https.onRequest(imageProcessor);
 
