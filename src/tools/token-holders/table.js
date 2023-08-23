@@ -28,28 +28,26 @@ const columns = [
   },
 ];
 
-const Table = ({ rows }) => {
-  return (
-    <Box sx={{ width: '100%' }}>
-      <DataGrid
-        rows={rows ?? []}
-        columns={columns}
-        rowHeight={38}
-        getRowId={(row) => row.accountId ?? 0}
-        slots={{ toolbar: GridToolbar }}
-        pageSizeOptions={[10, 25, 50]}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 10,
-            },
+const Table = ({ rows }) => (
+  <Box sx={{ width: '100%' }}>
+    <DataGrid
+      rows={rows ?? []}
+      columns={columns}
+      rowHeight={38}
+      getRowId={(row) => row.accountId ?? 0}
+      slots={{ toolbar: GridToolbar }}
+      pageSizeOptions={[10, 25, 50]}
+      initialState={{
+        pagination: {
+          paginationModel: {
+            pageSize: 10,
           },
-        }}
-        checkboxSelection
-        disableRowSelectionOnClick
-      />
-    </Box>
-  );
-};
+        },
+      }}
+      checkboxSelection
+      disableRowSelectionOnClick
+    />
+  </Box>
+);
 
 export default Table;
