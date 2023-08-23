@@ -3,8 +3,8 @@ const fs = require("fs");
 const express = require("express");
 const sharp = require("sharp");
 
-sharp.cache({ items: 2 }); 
-sharp.concurrency(2); 
+sharp.cache({ items: 2 });
+sharp.concurrency(2);
 
 const router = express.Router();
 
@@ -22,30 +22,30 @@ router.post("/", async (req, res) => {
     const tempBaseImagePath = path.join("/tmp", "baseImage.gif");
     const tempOverlayImagePath = path.join("/tmp", "overlayImage.webp");
 
-    console.log("resizing...")
+    console.log("resizing...");
     await Promise.all([
-      sharp(buffer, { animated: true }, )
-        .resize(baseImageWidth, baseImageHeight)
-        .gif()
-        .toFile(tempBaseImagePath),
+      sharp(buffer, { animated: true, failOn: "truncated" } )
+          .resize(baseImageWidth, baseImageHeight)
+          .gif()
+          .toFile(tempBaseImagePath),
 
       sharp(tempOverlayPath, { animated: true })
-        .resize(baseImageWidth, baseImageHeight)
-        .webp({ quality: 90 })
-        .toFile(tempOverlayImagePath),
+          .resize(baseImageWidth, baseImageHeight)
+          .webp({ quality: 90 })
+          .toFile(tempOverlayImagePath),
     ]);
 
     const outputImagePath = path.join("/tmp", "output.gif");
 
-    console.log("compositing...")
+    console.log("compositing...");
     await sharp(tempOverlayImagePath, { animated: true, limitInputPixels: false })
-      .composite([
-        { input: tempBaseImagePath, left: 0, top: 0, tile: true, animated: true,  limitInputPixels: false},
-        { input: tempOverlayImagePath, tile: true, animated: true, limitInputPixels: false },
-      ])
-      .withMetadata()
-      .gif()
-      .toFile(outputImagePath);
+        .composite([
+          { input: tempBaseImagePath, left: 0, top: 0, tile: true, animated: true, limitInputPixels: false},
+          { input: tempOverlayImagePath, tile: true, animated: true, limitInputPixels: false },
+        ])
+        .withMetadata()
+        .gif()
+        .toFile(outputImagePath);
 
     // Send the processed image in the response
     const outputBuffer = fs.readFileSync(outputImagePath);

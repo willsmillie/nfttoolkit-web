@@ -110,5 +110,6 @@ router.get("/gate/:gateId", async (req, res) => {
   }
 });
 
+
 // Export the router
 module.exports = router;

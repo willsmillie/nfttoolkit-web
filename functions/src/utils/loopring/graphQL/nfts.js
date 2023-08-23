@@ -5,6 +5,7 @@ const getAccountNFTsQuery = gql`
     account(id: $id) {
       slots(first: $first, skip: $skip) {
         createdAt
+        balance
         nft {
           nftID
           mintedAtTransaction {

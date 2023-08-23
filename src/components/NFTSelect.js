@@ -1,10 +1,12 @@
 // @mui
 import { Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 // @web3-react
+import useTokenResolver from 'src/hooks/useTokenResolver';
 import ConnectButton from './ConnectButton';
 
 function TokenMenuItem({ nft }) {
-  const name = nft.metadata?.base?.name?.length > 0 ? nft.metadata?.base?.name : nft.nftId;
+  const { metadata } = useTokenResolver(nft.nftId);
+  const name = nft.metadata?.base?.name?.length > 0 ? nft.metadata?.base?.name : metadata?.name ?? nft.nftId;
   return <p>{name}</p>;
 }
 
