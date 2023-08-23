@@ -12,6 +12,7 @@ import MotionLazyContainer from './components/animate/MotionLazyContainer';
 // ----------------------------------------------------------------------
 
 const queryClient = new QueryClient();
+window.global = window;
 
 export default function App() {
   return (
