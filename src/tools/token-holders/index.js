@@ -1,20 +1,8 @@
 import { useState, useEffect } from 'react';
-import {
-  CardHeader,
-  Backdrop,
-  Grid,
-  Stack,
-  TextField,
-  Card,
-  CardContent,
-  Typography,
-  CircularProgress,
-} from '@mui/material';
-import ConnectButton from 'src/components/ConnectButton';
+import { CardHeader, Backdrop, Grid, Stack, Card, CardContent, Typography, CircularProgress } from '@mui/material';
 import NFTSelect from 'src/components/NFTSelect';
-import useDebounce from 'src/hooks/useDebounce';
 import useLoopring from 'src/hooks/useLoopring';
-import { getHoldersForNFTData, getAccountsByIds } from './utils';
+import { getHoldersForNFTData } from './utils';
 import Table from './table';
 
 const Content = () => {
@@ -34,6 +22,7 @@ const Content = () => {
           })
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   return (
