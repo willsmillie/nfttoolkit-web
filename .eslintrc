@@ -4,6 +4,23 @@
     "browser": true,
     "node": true
   },
+  "settings": {
+    "import/resolver": {
+      "alias": {
+        "map": [
+          [
+            "src",
+            "./src"
+          ]
+        ],
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".json"
+        ]
+      }
+    }
+  },
   "extends": [
     "airbnb",
     "plugin:jsx-a11y/recommended",

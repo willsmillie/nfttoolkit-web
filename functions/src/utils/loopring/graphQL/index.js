@@ -30,7 +30,8 @@ async function getAccountNFTs(id) {
       const filteredSlots = slots.filter((slot) => slot.nft && slot.nft.nftID !== null);
       // Compute NFT data hash for each NFT
       const computedBalances = filteredSlots
-          .map(({ nft }) => ({
+          .map(({ balance, nft }) => ({
+            balance,
             nftId: nft.nftID,
             minter: nft.mintedAtTransaction.minter.address,
             minterAccountId: nft.mintedAtTransaction.minter.id,

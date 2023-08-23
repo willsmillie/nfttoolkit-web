@@ -1,23 +1,28 @@
 import { useState } from 'react';
-import { Backdrop, Grid, Stack, TextField, Card, CardContent, Typography, CircularProgress } from '@mui/material';
-import ConnectButton from '../components/ConnectButton';
-import useDebounce from '../hooks/useDebounce';
-import useLoopring from '../hooks/useLoopring';
-import { resolveENS } from '../utils/web3';
+import {
+  Backdrop,
+  Grid,
+  Stack,
+  TextField,
+  Card,
+  CardContent,
+  CardHeader,
+  Typography,
+  CircularProgress,
+} from '@mui/material';
+import ConnectButton from 'src/components/ConnectButton';
+import useDebounce from 'src/hooks/useDebounce';
+import useLoopring from 'src/hooks/useLoopring';
+import { resolveENS, getAccountByAddress } from 'src/utils/web3';
+import Table from './table';
 
 const Content = () => {
   const [loading, setLoading] = useState(false);
   const [account, setAccount] = useState('');
   const [resolvedAccountId, setResolvedAccountId] = useState('');
-  const { getAccountByAddress, useBalances, active } = useLoopring();
+  const { useBalances, active } = useLoopring();
 
   const { data: balances, isLoading: balancesIsLoading } = useBalances(resolvedAccountId);
-  const results = JSON.stringify(
-    balances?.map((e) => e.nftId),
-    null,
-    2
-  );
-
   // DeBounce Function
   useDebounce(
     () => {
@@ -73,19 +78,9 @@ const Content = () => {
 
           <Grid item xs={12}>
             <Card>
+              <CardHeader title="Holdings" />
               <CardContent>
-                <Stack spacing={2}>
-                  <p>Results:</p>
-                  <TextField
-                    label="Metadata"
-                    multiline
-                    rows={15}
-                    value={results}
-                    id="outlined-size-small"
-                    defaultValue=""
-                    size="small"
-                  />
-                </Stack>
+                <Table rows={balances} />
               </CardContent>
             </Card>
           </Grid>

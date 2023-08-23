@@ -20,7 +20,7 @@ const {
   const { env } = process;
   return {
     ...env,
-    CHAIN_ID: parseInt(env.CHAIN_ID, 10),
+    CHAIN_ID: env.CHAIN_ID,
     VERBOSE: /^\s*(true|1|on)\s*$/i.test(env.VERBOSE),
   };
 })();

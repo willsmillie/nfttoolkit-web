@@ -11,6 +11,7 @@ import {
   Divider,
 } from '@mui/material';
 import ReactPlayer from 'react-player';
+import isValidResource from 'src/utils/isValidResource';
 import { db, timestamp } from '../../utils/firebase';
 import Iconify from '../Iconify';
 import TokenGateBuilder from '../token/TokenGateBuilder';
@@ -148,15 +149,6 @@ const Form = ({ onAddFile }) => {
       </Dialog>
     </div>
   );
-};
-
-const isValidResource = (url) => {
-  try {
-    const pattern = /^(ipfs|http|https):\/\/[^ "]+$/;
-    return pattern.test(url);
-  } catch (error) {
-    return false;
-  }
 };
 
 export default Form;

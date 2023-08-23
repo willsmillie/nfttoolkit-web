@@ -1,10 +1,10 @@
 // import AirDrop from './AirDrop';
 import ENSResolver from './EnsResolver';
 import TokenLookUp from './TokenLookUp';
-import WalletLookUp from './WalletLookUp';
+import WalletLookUp from './wallet-lookup';
 import ThreadRipper from './ThreadRipper';
 import TokenGate from './TokenGate';
-import TokenHolders from './TokenHolders';
+import TokenHolders from './token-holders';
 import Donate from './Donate';
 import MyTokens from './MyTokens';
 import IPFSIndex from './IPFSIndex';
