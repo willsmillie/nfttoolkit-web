@@ -82,12 +82,12 @@ router.get("/:id/mintedNfts", async (req, res) => {
 router.get("/:id/whales", async (req, res) => {
   try {
     const { id } = req.params;
-    const nftIds = await getAccountMintedNFTs(Number(id)).then(res => res.map(e => e.nftId))    
+    const nftIds = await getAccountMintedNFTs(Number(id)).then((res) => res.map((e) => e.nftId));
     const holdersResults = await Promise.all(nftIds.map(getNFTHolders)); // Await the Promise.all for the results
 
     // Aggregate the results by address
     const aggregatedResults = holdersResults.reduce((accumulator, holderList) => {
-      holderList.forEach(holder => {
+      holderList.forEach((holder) => {
         const { address, nftId, balance } = holder;
         if (!accumulator[address]) {
           accumulator[address] = {};
@@ -102,21 +102,10 @@ router.get("/:id/whales", async (req, res) => {
 
     // Calculate the combined balances for each address
     const combinedBalances = {};
-    for (const address in aggregatedResults) {
-      combinedBalances[address] = Object.values(aggregatedResults[address]).reduce((sum, balance) => sum + balance, 0);
-    }
-
-    // Find the address with the highest combined balance
-    let highestBalanceAddress = null;
-    let highestBalance = 0;
-    for (const address in combinedBalances) {
-      if (combinedBalances[address] > highestBalance) {
-        highestBalance = combinedBalances[address];
-        highestBalanceAddress = address;
-      }
-    }
-
-    // const sortedAddresses = combinedBalances.sort((a, b) => b - a);
+    Object.keys(aggregatedResults).forEach((address) => {
+      const balanceSum = Object.values(aggregatedResults[address]).reduce((sum, balance) => sum + balance, 0);
+      combinedBalances[address] = balanceSum;
+    });
 
     res.json(combinedBalances);
   } catch (error) {
@@ -124,7 +113,6 @@ router.get("/:id/whales", async (req, res) => {
     res.status(500).json(error);
   }
 });
-
 
 
 // Export the router

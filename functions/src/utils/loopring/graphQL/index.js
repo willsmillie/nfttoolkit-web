@@ -92,15 +92,15 @@ async function getAccountMintedNFTs(accountId) {
 
 /**
  * Fetches the NFTs minted by an account.
- * @param {string} accountId - The ID of the minter account.
- * @return {Promise<Array<string>>} - An array of NFT IDs minted by the account.
+ * @param {string} nftID - The ID of the nft for which to fetch holders.
+ * @return {Promise<Array<string>>} - An array of accounts account and their balance.
  * @throws {Error} - If an error occurs while fetching the minted NFTs.
  */
 async function getNFTHolders(nftID) {
   try {
-    const variables = { nftID }
+    const variables = { nftID };
     const {nonFungibleTokens: result} = await client.request(getNFTHoldersQuery, variables);
-    const response = result?.[0].slots.map(e => ({balance: Number(e.balance), address: e.account.address, nftId: e.nft.nftID}))
+    const response = result?.[0].slots.map((e) => ({balance: Number(e.balance), address: e.account.address, nftId: e.nft.nftID}));
     return response;
   } catch (error) {
     console.error(error);
