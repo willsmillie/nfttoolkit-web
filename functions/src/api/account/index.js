@@ -1,7 +1,7 @@
 const express = require("express");
 
 const router = express.Router();
-const { getAccountNFTs, getAccountMintedNFTs } = require("../../utils/loopring/graphQL");
+const { getAccountNFTs, getAccountMintedNFTs, getNFTHolders } = require("../../utils/loopring/graphQL");
 const { getAccountCollections } = require("../../utils/loopring/api");
 const { deriveCollectionsFromNFTs } = require("../../utils/loopring");
 
@@ -71,6 +71,46 @@ router.get("/:id/mintedNfts", async (req, res) => {
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "An error occurred" });
+  }
+});
+
+
+// Get the accounts held by a specific Loopring account
+// :id - Loopring account ID (Number)
+// GET /api/account/:id/whales
+// Returns an array of accounts holding the most nfts
+router.get("/:id/whales", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const nftIds = await getAccountMintedNFTs(Number(id)).then((res) => res.map((e) => e.nftId));
+    const holdersResults = await Promise.all(nftIds.map(getNFTHolders)); // Await the Promise.all for the results
+
+    // Aggregate the results by address
+    const aggregatedResults = holdersResults.reduce((accumulator, holderList) => {
+      holderList.forEach((holder) => {
+        const { address, nftId, balance } = holder;
+        if (!accumulator[address]) {
+          accumulator[address] = {};
+        }
+        if (!accumulator[address][nftId]) {
+          accumulator[address][nftId] = 0;
+        }
+        accumulator[address][nftId] += balance;
+      });
+      return accumulator;
+    }, {});
+
+    // Calculate the combined balances for each address
+    const combinedBalances = {};
+    Object.keys(aggregatedResults).forEach((address) => {
+      const balanceSum = Object.values(aggregatedResults[address]).reduce((sum, balance) => sum + balance, 0);
+      combinedBalances[address] = balanceSum;
+    });
+
+    res.json(combinedBalances);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json(error);
   }
 });
 

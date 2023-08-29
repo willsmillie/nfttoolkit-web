@@ -12,7 +12,7 @@ export const walletAPI = new sdk.WalletAPI({ chainId: CHAIN_ID });
 export const nftAPI = new sdk.NFTAPI({ chainId: CHAIN_ID });
 
 export const getAccountById = (accountId) => exchangeAPI.getAccount({ accountId });
-export const getAccountByAddress = async (address) => exchangeAPI.getAccount({ owner: address });
+export const getAccountByAddress = async (address) => exchangeAPI.getAccount({ owner: address }).then((e) => e.accInfo);
 export const ipfsNftIDToCid = (nftId) => {
   if (!nftId || nftId?.length === 0) return '';
   return nftAPI.ipfsNftIDToCid(nftId);

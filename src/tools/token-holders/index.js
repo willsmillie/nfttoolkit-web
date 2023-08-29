@@ -1,18 +1,41 @@
 import { useState, useEffect } from 'react';
-import { CardHeader, Backdrop, Grid, Stack, Card, CardContent, Typography, CircularProgress } from '@mui/material';
+import {
+  Tab,
+  Tabs,
+  CardHeader,
+  Backdrop,
+  Grid,
+  Stack,
+  Card,
+  CardContent,
+  Typography,
+  CircularProgress,
+  TextField,
+} from '@mui/material';
 import NFTSelect from 'src/components/NFTSelect';
 import useLoopring from 'src/hooks/useLoopring';
+import { getWhales } from 'src/API';
+import { resolveENS, getAccountByAddress } from 'src/utils/web3';
+import useDebounce from 'src/hooks/useDebounce';
 import { getHoldersForNFTData } from './utils';
 import Table from './table';
+import WhalesTable from './whales-table';
 
 const Content = () => {
   const { getNFTData, authData, active, mints } = useLoopring();
   const [loading, setLoading] = useState(false);
   const [id, setId] = useState('');
+  const [accountId, setAccountId] = useState(null);
+  const [address, setAddress] = useState(authData.account);
   const [metadata, setMetadata] = useState('');
 
+  const [selectedTab, setSelectedTab] = useState(0);
+  const handleTabChange = (event, newValue) => setSelectedTab(newValue);
+
   useEffect(() => {
-    if (id.length > 0) {
+    if (selectedTab === 0) {
+      if (id?.length === 0) return;
+      setLoading(true);
       const selectedTokenInfo = mints?.find((e) => e.nftId.toLowerCase() === id.toLowerCase());
       getNFTData(selectedTokenInfo).then(({ nftData }) =>
         getHoldersForNFTData(nftData, authData.apiKey)
@@ -21,9 +44,29 @@ const Content = () => {
             setLoading(false);
           })
       );
+    } else {
+      if (accountId?.length === 0) return;
+      setLoading(true);
+      getWhales(accountId)
+        .then(setMetadata)
+        .finally(() => {
+          setLoading(false);
+        });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [id, accountId, selectedTab]);
+
+  // DeBounce Function
+  useDebounce(
+    () => {
+      if (address.length === 0) return;
+      resolveENS(address)
+        .then(getAccountByAddress)
+        .then(({ accountId }) => setAccountId(accountId));
+    },
+    [address],
+    800
+  );
 
   return (
     <>
@@ -34,22 +77,30 @@ const Content = () => {
       )}
 
       <Stack spacing={1} padding={1}>
-        <Typography variant="h4">Take a snapshot of a token's currents holders</Typography>
+        <Typography variant="h4">Retrieve a list of holders by token or minter</Typography>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Card>
-              <CardHeader title="Select NFT" />
+              <CardHeader title="Fetch Holders By:" />
               <CardContent>
                 <Stack spacing={2}>
-                  <NFTSelect
-                    active={active}
-                    isLoading={loading}
-                    rows={mints}
-                    value={id}
-                    onChange={(e) => {
-                      setId(e.target.value);
-                    }}
-                  />
+                  <Tabs value={selectedTab} onChange={handleTabChange} aria-label="Holders Tab">
+                    <Tab value={0} label="NFT" />
+                    <Tab value={1} label="Minter" />
+                  </Tabs>
+                  {selectedTab === 0 ? (
+                    <NFTSelect
+                      active={active}
+                      isLoading={loading}
+                      rows={mints}
+                      value={id}
+                      onChange={(e) => {
+                        setId(e.target.value);
+                      }}
+                    />
+                  ) : (
+                    <TextField value={address} onChange={(e) => setAddress(e.target.value)} label="Address" />
+                  )}
                 </Stack>
               </CardContent>
             </Card>
@@ -58,7 +109,7 @@ const Content = () => {
             <Card>
               <CardHeader title="Holders" />
               <CardContent>
-                <Table rows={metadata} />
+                {selectedTab === 0 ? <Table rows={metadata} /> : <WhalesTable rows={metadata} />}
               </CardContent>
             </Card>
           </Grid>
@@ -70,7 +121,7 @@ const Content = () => {
 
 export default {
   name: '🧩 Token Holders',
-  description: 'Retrieve a list of holders of a given token for airdrops.',
+  description: 'Retrieve a list of holders by token or minter for airdrops.',
   color: 'blue',
   content: Content,
 };
