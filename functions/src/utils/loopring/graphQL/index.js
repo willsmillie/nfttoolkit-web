@@ -1,7 +1,9 @@
 const { GraphQLClient } = require("graphql-request");
 const { getAccountNFTsQuery, getAccountMintedNFTsQuery } = require("./nfts");
+const { getNFTHoldersQuery } = require("./accounts");
 
 const loopringGraphEndpoint = "https://api.thegraph.com/subgraphs/name/loopring/loopring";
+const client = new GraphQLClient(loopringGraphEndpoint);
 
 /**
  * Fetches the NFTs associated with an account.
@@ -14,7 +16,6 @@ async function getAccountNFTs(id) {
     const first = 100; // Number of results per page
     let skip = 0; // Number of results to skip
 
-    const client = new GraphQLClient(loopringGraphEndpoint);
     let nfts = [];
 
     // Fetch all pages of results
@@ -60,7 +61,6 @@ async function getAccountMintedNFTs(accountId) {
     const first = 100; // Number of results per page
     let skip = 0; // Number of results to skip
 
-    const client = new GraphQLClient(loopringGraphEndpoint);
     let mints = []; // Store all mints
 
     // Convert accountId to integer
@@ -90,4 +90,22 @@ async function getAccountMintedNFTs(accountId) {
   }
 }
 
-module.exports = { getAccountNFTs, getAccountMintedNFTs };
+/**
+ * Fetches the NFTs minted by an account.
+ * @param {string} accountId - The ID of the minter account.
+ * @return {Promise<Array<string>>} - An array of NFT IDs minted by the account.
+ * @throws {Error} - If an error occurs while fetching the minted NFTs.
+ */
+async function getNFTHolders(nftID) {
+  try {
+    const variables = { nftID }
+    const {nonFungibleTokens: result} = await client.request(getNFTHoldersQuery, variables);
+    const response = result?.[0].slots.map(e => ({balance: Number(e.balance), address: e.account.address, nftId: e.nft.nftID}))
+    return response;
+  } catch (error) {
+    console.error(error);
+    throw new Error("An error occurred while fetching NFT holders");
+  }
+}
+
+module.exports = { getAccountNFTs, getAccountMintedNFTs, getNFTHolders };

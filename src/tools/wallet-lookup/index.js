@@ -31,7 +31,7 @@ const Content = () => {
       setLoading(true);
       resolveENS(account)
         .then(getAccountByAddress)
-        .then((r) => setResolvedAccountId(r?.accInfo?.accountId))
+        .then((r) => setResolvedAccountId(r?.accountId))
         .finally(() => {
           setLoading(false);
         });

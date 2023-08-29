@@ -84,3 +84,13 @@ export const postRedPacketReveal = (imageFile) => {
     },
   });
 };
+
+// Get biggest holders for a specific account
+export const getWhales = async (accountId) => {
+  console.log('get whales for accountId: ', accountId);
+  if (!accountId) return [];
+  const endpoint = `api/account/${accountId}/whales`;
+  const url = `${base}${endpoint}`;
+  const response = await axios.get(url);
+  return response.data;
+};

@@ -4,37 +4,26 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
 const columns = [
   {
-    field: 'accountId',
-    headerName: 'Account ID',
-    width: 100,
-  },
-  {
     field: 'address',
     headerName: 'Address',
     width: 400,
     editable: true,
   },
   {
-    field: 'tokenId',
-    headerName: 'Token ID',
+    field: 'balance',
+    headerName: 'Amount',
     width: 150,
     editable: true,
-  },
-  {
-    field: 'amount',
-    headerName: 'Amount',
-    type: 'number',
-    width: 110,
   },
 ];
 
 const Table = ({ rows }) => (
   <Box sx={{ width: '100%' }}>
     <DataGrid
-      rows={rows ?? []}
+      rows={Object.keys(rows).map((key) => ({ address: key, balance: rows[key] })) ?? []}
       columns={columns}
       rowHeight={28}
-      getRowId={(row) => row.accountId ?? 0}
+      getRowId={(row) => row.address ?? 0}
       slots={{ toolbar: GridToolbar }}
       pageSizeOptions={[10, 25, 50]}
       initialState={{
@@ -42,6 +31,9 @@ const Table = ({ rows }) => (
           paginationModel: {
             pageSize: 25,
           },
+        },
+        sorting: {
+          sortModel: [{ field: 'balance', sort: 'desc' }],
         },
       }}
       checkboxSelection
