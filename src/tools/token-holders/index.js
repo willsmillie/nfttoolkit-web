@@ -59,7 +59,7 @@ const Content = () => {
   // DeBounce Function
   useDebounce(
     () => {
-      if (address.length === 0) return;
+      if (address?.length === 0) return;
       resolveENS(address)
         .then(getAccountByAddress)
         .then(({ accountId }) => setAccountId(accountId));

@@ -122,3 +122,12 @@ export const getL1Assets = (address) =>
   })
     .then((res) => res.json())
     .catch(console.error);
+
+export const resolveENSReverse = async (address) => {
+  address = address.toLowerCase();
+  if (address.startsWith('0x')) {
+    const { ensName } = await walletAPI.getEnsByAddress({ owner: address });
+    return ensName;
+  }
+  return address;
+};
