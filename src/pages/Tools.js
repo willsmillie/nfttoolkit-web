@@ -16,7 +16,7 @@ export default function PageOne() {
     <Page title="Tools">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Typography variant="h3" component="h1" paragraph>
-          Tools
+          🧰 NFT Tool Kit
         </Typography>
         <Typography gutterBottom>NFT Tool Kit provides essential utilities for interacting with Loopring </Typography>
 

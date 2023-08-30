@@ -1,14 +1,26 @@
 import { useState } from 'react';
-import { Backdrop, Grid, Stack, TextField, Card, CardContent, Typography, CircularProgress } from '@mui/material';
+import {
+  Tab,
+  Tabs,
+  Backdrop,
+  Grid,
+  Stack,
+  TextField,
+  Card,
+  CardContent,
+  Typography,
+  CircularProgress,
+} from '@mui/material';
 import useDebounce from '../hooks/useDebounce';
 
 import stringToArray from '../utils/stringToArray';
-import { resolveENS } from '../utils/web3';
+import { resolveENS, resolveENSReverse } from '../utils/web3';
 
 const Content = () => {
   const [loading, setLoading] = useState(false);
   const [account, setAccount] = useState('');
   const [results, setResults] = useState('');
+  const [reverse, setReverse] = useState(0);
 
   // DeBounce Function
   useDebounce(
@@ -17,7 +29,11 @@ const Content = () => {
       if (account.length === 0) return;
       setLoading(true);
       stringToArray(account).forEach((acct) => {
-        reqs.push(resolveENS(encodeURIComponent(acct)));
+        if (reverse) {
+          reqs.push(resolveENSReverse(encodeURIComponent(acct)));
+        } else {
+          reqs.push(resolveENS(encodeURIComponent(acct)));
+        }
       });
 
       Promise.all(reqs)
@@ -47,10 +63,18 @@ const Content = () => {
                 <Stack spacing={2}>
                   <p>Enter a comma-delimited list of addresses (ens or hex)</p>
 
+                  <Tabs value={reverse} onChange={(_, value) => setReverse(value)} aria-label="resolve-selector">
+                    <Tab value={0} label="ENS to 0x" />
+                    <Tab value={1} label="0x to ENS" />
+                  </Tabs>
                   <TextField
                     label="ENS(s)"
                     id="outlined-size-small"
-                    placeholder="fenneckit.eth, wikk.loopring.eth, vitalik.eth"
+                    placeholder={
+                      reverse
+                        ? '0xb28e467158f4de5a652d308ae580b1733e3fb463'
+                        : 'fenneckit.eth, wikk.loopring.eth, vitalik.eth'
+                    }
                     size="small"
                     rows={3}
                     onChange={(e) => {
