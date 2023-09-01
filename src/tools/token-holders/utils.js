@@ -5,7 +5,7 @@ import { getAccountById } from 'src/utils/web3';
 export const getHoldersForNFTData = async (nftData, apiKey) => {
   const results = [];
   let totalNum = null;
-  const batchSize = 500;
+  const batchSize = 50;
   let offset = 0;
 
   while (totalNum === null || results.length < totalNum) {
@@ -27,7 +27,7 @@ export const getHoldersForNFTData = async (nftData, apiKey) => {
     if (res?.nftHolders?.length === 0 || res?.nftHolders === undefined) break;
     results.push(...(res?.nftHolders ?? []));
 
-    offset += batchSize;
+    offset = results.length;
   }
 
   return results;
