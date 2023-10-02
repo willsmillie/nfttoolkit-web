@@ -10,7 +10,6 @@ import Design from './design';
 // initial configuration (and what we reset to)
 const defaultConfig = {
   name: null,
-  artist: null,
   description: null,
   animation_url: null,
   image: null,

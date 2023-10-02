@@ -8,7 +8,7 @@ const { REACT_APP_INFURA_IPFS_API_KEY: INFURA_IPFS_API_KEY, REACT_APP_INFURA_IPF
 const auth = `Basic ${Buffer.from(`${INFURA_IPFS_API_KEY}:${INFURA_IPFS_API_SECRET}`).toString('base64')}`;
 
 // gateway to access ipfs files
-const ipfsGateway = 'https://ipfs.io/ipfs/';
+const ipfsGateway = 'https://ipfs.loopring.io/ipfs/';
 
 // remove the ipfs protocol prefix replacing with the gateway
 export function ipfsToHttp(string) {

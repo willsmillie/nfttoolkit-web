@@ -14,7 +14,6 @@ import Iconify from '../../components/Iconify';
 
 const Design = ({ onChangeConfig, canReset, onReset, handleNext }) => {
   const [name, setName] = useState('');
-  const [artist, setArtist] = useState('');
   const [description, setDescription] = useState('');
   const [cid, setCid] = useState('');
   const [subpath, setSubpath] = useState('');
@@ -22,7 +21,6 @@ const Design = ({ onChangeConfig, canReset, onReset, handleNext }) => {
   const [collection, setCollection] = useState('');
 
   useEffect(() => onChangeConfig('name', name), [name, onChangeConfig]);
-  useEffect(() => onChangeConfig('artist', artist), [artist, onChangeConfig]);
   useEffect(() => onChangeConfig('description', description), [description, onChangeConfig]);
   useEffect(() => onChangeConfig('animation_url', `ipfs://${cid}`), [cid, onChangeConfig]);
   useEffect(() => onChangeConfig('image', `ipfs://${cid}/${subpath}`), [cid, subpath, onChangeConfig]);
@@ -31,12 +29,7 @@ const Design = ({ onChangeConfig, canReset, onReset, handleNext }) => {
 
   // indicates if the form is complete
   const designIsValid =
-    name.length > 0 &&
-    artist.length > 0 &&
-    description.length > 0 &&
-    cid.length > 0 &&
-    subpath.length > 0 &&
-    collection.length > 0;
+    name.length > 0 && description.length > 0 && cid.length > 0 && subpath.length > 0 && collection.length > 0;
 
   return (
     <>
@@ -56,7 +49,6 @@ const Design = ({ onChangeConfig, canReset, onReset, handleNext }) => {
       </Stack>
       {/* Album Metadata */}
       <TextField value={name} onChange={(e) => setName(e.target.value)} label="Token Name" />
-      <TextField value={artist} onChange={(e) => setArtist(e.target.value)} label="Artist" />
       <TextField
         value={description}
         onChange={(e) => setDescription(e.target.value)}
