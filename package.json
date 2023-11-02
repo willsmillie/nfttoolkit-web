@@ -5,7 +5,7 @@
   "description": "A react app interacting with Loopring API to perform common operations.",
   "private": true,
   "engine": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
   "scripts": {
     "start": "GENERATE_SOURCEMAP=false react-app-rewired start",
@@ -47,7 +47,7 @@
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@iconify/react": "^3.2.1",
-    "@loopexchange-labs/loopring-sdk": "^0.0.10",
+    "@loopexchange-labs/loopring-sdk": "^0.0.11",
     "@loopring-web/loopring-sdk": "^3.5.19-test.2",
     "@loopring-web/web3-provider": "^1.1.3",
     "@mui/icons-material": "^5.11.11",
