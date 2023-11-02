@@ -1,7 +1,3 @@
-// web3
-import { Web3ReactProvider } from '@web3-react/core';
-import { Web3Provider } from '@ethersproject/providers';
-
 // scroll bar
 import 'simplebar/src/simplebar.css';
 
@@ -14,33 +10,35 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 // contexts
+import { LoopringAccountProvider } from 'src/contexts/account-context';
+import { LoopringUnlockProvider } from 'src/contexts/unlock-context';
+import Web3 from 'src/components/web3';
+
 import { SettingsProvider } from './contexts/SettingsContext';
 import { CollapseDrawerProvider } from './contexts/CollapseDrawerContext';
 import AuthContextProvider from './contexts/L2Context';
 
-//
 import App from './App';
-
-// ----------------------------------------------------------------------
-function getLibrary(provider) {
-  return new Web3Provider(provider);
-}
 
 // ----------------------------------------------------------------------
 
 ReactDOM.render(
   <HelmetProvider>
-    <Web3ReactProvider getLibrary={getLibrary}>
-      <AuthContextProvider>
-        <SettingsProvider>
-          <CollapseDrawerProvider>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
-          </CollapseDrawerProvider>
-        </SettingsProvider>
-      </AuthContextProvider>
-    </Web3ReactProvider>
+    <Web3>
+      <LoopringAccountProvider>
+        <LoopringUnlockProvider>
+          <AuthContextProvider>
+            <SettingsProvider>
+              <CollapseDrawerProvider>
+                <BrowserRouter>
+                  <App />
+                </BrowserRouter>
+              </CollapseDrawerProvider>
+            </SettingsProvider>
+          </AuthContextProvider>
+        </LoopringUnlockProvider>
+      </LoopringAccountProvider>
+    </Web3>
   </HelmetProvider>,
   document.getElementById('root')
 );

@@ -97,4 +97,6 @@ export const getDAGForCID = async (cid) => {
   }
 };
 
+export const metadataForNFTId = async (nftId) => fetchIPFS(ipfsNftIDToCid(nftId));
+
 export const { ipfsNftIDToCid } = Web3;

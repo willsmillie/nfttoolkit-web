@@ -15,6 +15,7 @@ import {
 import useDebounce from 'src/hooks/useDebounce';
 import NFTSelect from 'src/components/NFTSelect';
 import useLoopring from 'src/hooks/useLoopring';
+import { metadataForNFTId } from 'src/utils/ipfs';
 
 const Content = () => {
   const { active, nfts, mints, getNFTData } = useLoopring();
@@ -33,10 +34,15 @@ const Content = () => {
 
       setLoading(true);
 
-      const selectedTokenInfo = nfts?.find((e) => e.nftId.toLowerCase() === id.toLowerCase());
+      const selectedTokenInfo =
+        nfts?.find((e) => e.nftId.toLowerCase() === id.toLowerCase()) ??
+        mints?.find((e) => e.nftId.toLowerCase() === id.toLowerCase());
+
       if (selectedTokenInfo) {
-        getNFTData(selectedTokenInfo).then(setTokenData);
-        setMetadata(selectedTokenInfo);
+        getNFTData(selectedTokenInfo).then((res) => {
+          setTokenData(res);
+          metadataForNFTId(id).then(setMetadata);
+        });
       } else {
         setTokenData('');
       }
@@ -66,30 +72,16 @@ const Content = () => {
                   <Tabs value={selectedTab} onChange={(e, value) => setSelectedTab(value)} aria-label="lookup-by">
                     <Tab label="Owned" value={0} />
                     <Tab label="Minted" value={1} />
-                    <Tab label="NFT ID" value={2} />
                   </Tabs>
-
-                  {selectedTab !== 2 ? (
-                    <NFTSelect
-                      active={active}
-                      isLoading={loading}
-                      rows={selectedTab === 0 ? nfts : mints}
-                      value={id}
-                      onChange={(e) => {
-                        setId(e.target.value);
-                      }}
-                    />
-                  ) : (
-                    <TextField
-                      label="nftId"
-                      id="outlined-size-small"
-                      placeholder="0x5fdda54fe162472b47b2a158580cf4bc782ea8d26478abf3c82491a7094f1baf"
-                      size="small"
-                      onChange={(e) => {
-                        setId(e.target.value);
-                      }}
-                    />
-                  )}
+                  <NFTSelect
+                    active={active}
+                    isLoading={loading}
+                    rows={selectedTab === 0 ? nfts : mints}
+                    value={id}
+                    onChange={(e) => {
+                      setId(e.target.value);
+                    }}
+                  />
                 </Stack>
               </CardContent>
             </Card>
@@ -102,7 +94,7 @@ const Content = () => {
                   <TextField
                     label="Metadata"
                     multiline
-                    rows={15}
+                    rows={30}
                     value={JSON.stringify(metadata, null, 2)}
                     id="outlined-size-small"
                     size="small"
