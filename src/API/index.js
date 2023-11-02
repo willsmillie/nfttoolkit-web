@@ -2,10 +2,11 @@ import axios from 'axios';
 
 const dev = 'http://127.0.0.1:5001/nfttoolkit-ba61b/us-central1/';
 const prod = 'https://us-central1-nfttoolkit-ba61b.cloudfunctions.net/';
-const base = process.env.REACT_APP_DEVELOPMENT ? dev : prod;
+const forceProd = true;
+const base = process.env.REACT_APP_DEVELOPMENT && !forceProd ? dev : prod;
 
 // cors proxy for GSMP collection reqs
-export const proxyUrl = `${base}proxy/`;
+export const proxyUrl = `${base}api/proxy/`;
 
 // Get tokens of a specific account
 export const getDerivedCollections = async (accountId) => {

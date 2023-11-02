@@ -4,7 +4,6 @@ import { RateLimit as limit } from 'async-sema';
 
 // Env vars
 const CHAIN_ID = Number(process.env.REACT_APP_CHAIN_ID) || 1;
-console.log(CHAIN_ID);
 
 export const exchangeAPI = new sdk.ExchangeAPI({ chainId: CHAIN_ID });
 export const userAPI = new sdk.UserAPI({ chainId: CHAIN_ID });
@@ -18,9 +17,7 @@ export const ipfsNftIDToCid = (nftId) => {
   return nftAPI.ipfsNftIDToCid(nftId);
 };
 
-console.log('CHAIN: ', CHAIN_ID === 1 ? 'MAINNET' : 'GOERLI');
 export const signatureKeyPairMock = async (accInfo, exchangeAddress, web3) => {
-  console.log(accInfo);
   const keySeed = accInfo.keySeed || 'Connect to NFTToolKit';
 
   const eddsaKey = await sdk.generateKeyPair({
@@ -32,27 +29,6 @@ export const signatureKeyPairMock = async (accInfo, exchangeAddress, web3) => {
   });
 
   return eddsaKey;
-};
-
-// Authenticate the account defined in your .env file
-export const authenticate = async (address, web3) => {
-  // const restoredKey = localStorage.getItem('loopring_api_key');
-  // if (restoredKey != null) return { apiKey: restoredKey };
-  // get info from chain / init of LoopringAPI contains process.env.CHAIN_ID
-  const { exchangeInfo } = await exchangeAPI.getExchangeInfo();
-  const { exchangeAddress } = exchangeInfo;
-
-  // Get the accountId and other metadata needed for sig
-  const { accInfo } = await exchangeAPI.getAccount({
-    owner: address,
-  });
-  const { accountId } = accInfo;
-
-  // Auth to API via signature
-  const eddsaKey = await signatureKeyPairMock(accInfo, exchangeAddress, web3);
-  const { apiKey } = await userAPI.getUserApiKey({ accountId }, eddsaKey.sk);
-
-  return { ...accInfo, apiKey, eddsaKey, exchangeAddress };
 };
 
 export const getBalances = async ({ accountId, apiKey }) => {
@@ -87,7 +63,7 @@ export const getBalances = async ({ accountId, apiKey }) => {
 
 // resolve an ens domain to hex address
 export const resolveENS = async (domain) =>
-  domain.toLowerCase().endsWith('.eth')
+  domain?.toLowerCase().endsWith('.eth')
     ? (
         await walletAPI.getAddressByENS({
           fullName: domain.toLowerCase(),
@@ -124,8 +100,8 @@ export const getL1Assets = (address) =>
     .catch(console.error);
 
 export const resolveENSReverse = async (address) => {
-  address = address.toLowerCase();
-  if (address.startsWith('0x')) {
+  address = address?.toLowerCase();
+  if (address?.startsWith('0x')) {
     const { ensName } = await walletAPI.getEnsByAddress({ owner: address });
     return ensName;
   }
