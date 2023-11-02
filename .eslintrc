@@ -42,6 +42,7 @@
     }
   },
   "rules": {
+    "no-template-curly-in-string": 0,
     "jsx-a11y/media-has-caption": 0,
     "no-else-return": 0,
     "default-param-last": 0,
