@@ -15,7 +15,7 @@ const AuthContextProvider = (props) => {
   // const { activate, deactivate, library, account, active } = useWeb3React();
   const { address } = useAccount();
   const { data: authData } = useUnlockContext();
-  const { accountId = undefined, apiKey = undefined } = authData ?? {};
+  const { accountId, apiKey } = authData ?? {};
 
   const [mints, setMints] = useState([]);
   const [nfts, setNFTs] = useState([]);
@@ -61,8 +61,6 @@ const AuthContextProvider = (props) => {
           apiKey
         )
         .then(({ collections: data }) => {
-          console.log('collections: ', data);
-
           setCollections(data);
         });
 
@@ -178,6 +176,7 @@ const AuthContextProvider = (props) => {
   return (
     <AuthContext.Provider
       value={{
+        apiKey,
         active: !!address && !!apiKey,
         address: address?.toLowerCase(),
         accountId,

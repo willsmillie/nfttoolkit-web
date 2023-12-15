@@ -12,7 +12,7 @@ import cssStyles from '../../../utils/cssStyles';
 // config
 import { NAVBAR } from '../../../config';
 // components
-// import Logo from '../../../components/Logo';
+import Logo from '../../../components/Logo';
 import Scrollbar from '../../../components/Scrollbar';
 import { NavSectionVertical } from '../../../components/nav-section';
 //
@@ -72,13 +72,13 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
           ...(isCollapse && { alignItems: 'center' }),
         }}
       >
-        {/* <Stack direction="row" alignItems="center" justifyContent="end">
+        <Stack direction="row" alignItems="center" justifyContent="end">
           <Logo />
 
-          {isDesktop && !isCollapse && (
+          {/* {isDesktop && !isCollapse && (
             <CollapseButton onToggleCollapse={onToggleCollapse} collapseClick={collapseClick} />
-          )}
-        </Stack> */}
+          )} */}
+        </Stack>
 
         {/* <NavbarAccount isCollapse={isCollapse} /> */}
       </Stack>
