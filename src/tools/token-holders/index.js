@@ -22,7 +22,7 @@ import Table from './table';
 import WhalesTable from './whales-table';
 
 const Content = () => {
-  const { address: myAddress, getNFTData, authData, active, mints, nfts } = useLoopring();
+  const { address: myAddress, getNFTData, apiKey, active, mints, nfts } = useLoopring();
   const [loading, setLoading] = useState(false);
   const [id, setId] = useState('');
   const [accountId, setAccountId] = useState(null);
@@ -40,7 +40,7 @@ const Content = () => {
         nfts?.find((e) => e.nftId.toLowerCase() === id.toLowerCase()) ??
         mints?.find((e) => e.nftId.toLowerCase() === id.toLowerCase());
       getNFTData(selectedTokenInfo).then(({ nftData }) =>
-        getHoldersForNFTData(nftData, authData.apiKey)
+        getHoldersForNFTData(nftData, apiKey)
           .then(setMetadata)
           .finally(() => {
             setLoading(false);
