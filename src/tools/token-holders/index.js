@@ -64,7 +64,11 @@ const Content = () => {
       if (address?.length === 0) return;
       resolveENS(address)
         .then(getAccountByAddress)
-        .then(({ accountId }) => setAccountId(accountId));
+        .then((res) => {
+          if (res?.accountId) {
+            setAccountId(res.accountId);
+          }
+        });
     },
     [address],
     800
