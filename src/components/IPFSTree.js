@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { List, TextField, Typography } from '@mui/material';
+import { List, Typography } from '@mui/material';
 import { getDAGForCID, sanitizeCID } from '../utils/ipfs';
 import IPFSFileRow from './IPFSFileRow';
 import useDebounce from '../hooks/useDebounce';
 
 const IPFSTree = ({ cid, onFileClick }) => {
-  const [customCid, setCustomCid] = useState(sanitizeCID(cid));
+  const customCid = sanitizeCID(cid);
 
   const [documentData, setDocumentData] = useState(null);
   // const [contentType, setContentType] = useState('');
