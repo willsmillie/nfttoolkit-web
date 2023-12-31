@@ -186,9 +186,7 @@ const FileRow = ({ file, onFileClick }) => {
 };
 
 function mapObject(obj, mapFn) {
-  return _.mapValues(obj, (value, key) => {
-    return mapFn(value, key, obj);
-  });
+  return _.mapValues(obj, (value, key) => mapFn(value, key, obj));
 }
 
 export default FileRow;
