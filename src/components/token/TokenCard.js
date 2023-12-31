@@ -82,13 +82,15 @@ export default function TokenCard({ nftId, metadata, collectionMetadata, files }
           </CardContent>
         </CardActionArea>
       </Card>
-      <TokenDetail
-        {...{ nftId, metadata, collectionMetadata }}
-        show={show}
-        handleClose={() => {
-          setShow(false);
-        }}
-      />
+      {nftId && metadata && collectionMetadata && (
+        <TokenDetail
+          {...{ nftId, metadata, collectionMetadata }}
+          show={show}
+          handleClose={() => {
+            setShow(false);
+          }}
+        />
+      )}
     </>
   );
 }

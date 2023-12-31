@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
+import _ from 'lodash';
 
 // @mui
 import { Collapse, List, ListItem, ListItemIcon, ListItemText, ListItemButton, IconButton } from '@mui/material';
@@ -110,7 +111,13 @@ const FileRow = ({ file, onFileClick }) => {
           console.log('fetching children for ', file.name);
           setIsLoading(true);
 
-          getDAGForCID(file?.id).then(setMetadata).then(setIsLoading(false));
+          getDAGForCID(file?.id)
+            .then((data) => mapObject(data, (ele) => ({ ...ele, path: `${file.path ?? file.name}/${ele.name}` })))
+            .then((data) => {
+              console.log(data);
+              setMetadata(data);
+            })
+            .then(setIsLoading(false));
         }
       }
 
@@ -135,7 +142,7 @@ const FileRow = ({ file, onFileClick }) => {
         </ListItemButton>
         <Collapse in={open} timeout="auto" unmountOnExit key={`${file?.name}-children`}>
           <List component="div" disablePadding sx={{ paddingLeft: '32px' }}>
-            {(metadata ?? []).map((file) => (
+            {(Object.values(metadata ?? {}) ?? []).map((file) => (
               <FileRow file={file} key={`${file?.name}-row`} onFileClick={onFileClick} />
             ))}
           </List>
@@ -177,5 +184,9 @@ const FileRow = ({ file, onFileClick }) => {
     <IPFSFile file={file} onFileClick={onFileClick} />
   );
 };
+
+function mapObject(obj, mapFn) {
+  return _.mapValues(obj, (value, key) => mapFn(value, key, obj));
+}
 
 export default FileRow;

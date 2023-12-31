@@ -1,5 +1,7 @@
 import { alpha } from '@mui/material/styles';
-import { Box, Typography, Stack, Paper } from '@mui/material';
+import { Grid, Box, Typography, Stack, Paper } from '@mui/material';
+import Aspect from 'react-aspect-ratio';
+
 import ScrollBar from '../../components/Scrollbar';
 import TokenCard from '../../components/token/TokenCard';
 
@@ -18,24 +20,30 @@ export default function Preview({ config }) {
           backgroundColor: config.color,
         }}
       >
-        <Stack direction="row" spacing={2}>
+        <Grid container spacing={2}>
           {/* Image */}
-          <ScrollBar id="logs" sx={{ p: 3 }}>
-            <Typography
-              sx={{
-                fontFamily: 'Monospace',
-                px: 2,
-                whiteSpace: 'pre-line',
-                textAlign: 'start',
-              }}
-              variant="caption"
-            >
-              <br />
-              {JSON.stringify(config, null, 2)}
-            </Typography>
-          </ScrollBar>
-          <TokenCard metadata={config} />
-        </Stack>
+          <Grid item xs={6}>
+            <ScrollBar id="logs" sx={{ p: 3, minWidth: 300 }}>
+              <Typography
+                sx={{
+                  fontFamily: 'Monospace',
+                  px: 2,
+                  whiteSpace: 'pre-line',
+                  textAlign: 'start',
+                }}
+                variant="caption"
+              >
+                <br />
+                {JSON.stringify(config, null, 2)}
+              </Typography>
+            </ScrollBar>
+          </Grid>
+          <Grid item xs={6}>
+            <Aspect ratio={9 / 16}>
+              <TokenCard metadata={config} />
+            </Aspect>
+          </Grid>
+        </Grid>
       </Box>
     </Stack>
   );

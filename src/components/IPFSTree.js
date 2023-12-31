@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { List, TextField } from '@mui/material';
+import { List, Typography } from '@mui/material';
 import { getDAGForCID, sanitizeCID } from '../utils/ipfs';
 import IPFSFileRow from './IPFSFileRow';
 import useDebounce from '../hooks/useDebounce';
 
 const IPFSTree = ({ cid, onFileClick }) => {
-  const [customCid, setCustomCid] = useState(sanitizeCID(cid));
+  const customCid = sanitizeCID(cid);
 
   const [documentData, setDocumentData] = useState(null);
   // const [contentType, setContentType] = useState('');
@@ -74,14 +74,13 @@ const IPFSTree = ({ cid, onFileClick }) => {
 
   return (
     <>
-      <TextField
-        value={customCid}
-        placeholder="Qm..."
-        label="IPFS CID"
-        onChange={(e) => setCustomCid(sanitizeCID(e.target.value))}
-      />
-
-      {containsFiles && (
+      {!containsFiles ? (
+        <Typography sx={{ p: 4 }} textAlign="center">
+          No Results...
+          <br />
+          Ensure the above cid is a directory.
+        </Typography>
+      ) : (
         <List
           sx={{
             width: '100%',
