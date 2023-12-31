@@ -149,6 +149,5 @@ export default {
   name: '🧧 Red Packet Reveal',
   description: 'Prevent bot scans of Red Packets by temporarily obscuring the QR code.',
   color: 'blue',
-  label: 'New',
   content: Content,
 };

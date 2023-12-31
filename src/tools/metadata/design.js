@@ -9,21 +9,43 @@ import {
   IconButton,
   Divider,
   Tooltip,
+  Popover,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@mui/material';
+import PermMediaIcon from '@mui/icons-material/PermMedia';
+import IPFSTree from 'src/components/IPFSTree';
+import CollectionSelect from 'src/components/collection-select';
 import Iconify from '../../components/Iconify';
 
 const Design = ({ onChangeConfig, canReset, onReset, handleNext }) => {
+  const [imageSelectType, setImageSelectType] = useState('subpath');
+
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [cid, setCid] = useState('');
   const [subpath, setSubpath] = useState('');
   const [royalty, setRoyalty] = useState(0);
-  const [collection, setCollection] = useState('');
+  const [collection, setCollection] = useState(null);
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleShowGADTree = (e) => setAnchorEl(e.currentTarget);
+  const handleHideGADTree = () => setAnchorEl(null);
+  const showGADTree = Boolean(anchorEl);
+  const id = showGADTree ? 'simple-popover' : undefined;
 
   useEffect(() => onChangeConfig('name', name), [name, onChangeConfig]);
   useEffect(() => onChangeConfig('description', description), [description, onChangeConfig]);
   useEffect(() => onChangeConfig('animation_url', `ipfs://${cid}`), [cid, onChangeConfig]);
-  useEffect(() => onChangeConfig('image', `ipfs://${cid}/${subpath}`), [cid, subpath, onChangeConfig]);
+  useEffect(() => {
+    if (imageSelectType === 'subpath') {
+      onChangeConfig('image', `ipfs://${cid}/${encodeURIComponent(subpath)}`);
+    } else {
+      onChangeConfig('image', `ipfs://${subpath}}`);
+    }
+  }, [cid, subpath, onChangeConfig, imageSelectType]);
   useEffect(() => onChangeConfig('royalty_percentage', royalty), [royalty, onChangeConfig]);
   useEffect(() => onChangeConfig('collection_metadata', collection), [collection, onChangeConfig]);
 
@@ -48,8 +70,9 @@ const Design = ({ onChangeConfig, canReset, onReset, handleNext }) => {
         )}
       </Stack>
       {/* Album Metadata */}
-      <TextField value={name} onChange={(e) => setName(e.target.value)} label="Token Name" />
+      <TextField id="name" value={name} onChange={(e) => setName(e.target.value)} label="Token Name" />
       <TextField
+        id="description"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         label="Token Description"
@@ -60,6 +83,7 @@ const Design = ({ onChangeConfig, canReset, onReset, handleNext }) => {
         value={cid}
         onChange={(e) => setCid(e.target.value)}
         label="IPFS CID"
+        id="ipfs"
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
@@ -72,43 +96,79 @@ const Design = ({ onChangeConfig, canReset, onReset, handleNext }) => {
           ),
         }}
       />
-      <TextField
-        value={subpath}
-        onChange={(e) => setSubpath(e.target.value)}
-        label="Image subpath"
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <Tooltip title="This is the path to the image within the IPFS folder from the previous step.">
-                <IconButton aria-label="subpath hint">
-                  <Iconify icon="mdi:help-circle" />
-                </IconButton>
-              </Tooltip>
-            </InputAdornment>
-          ),
-        }}
-      />
+      <Stack direction="row" justifyContent="space-between">
+        <FormControl sx={{ minWidth: '125px' }}>
+          <InputLabel id="image-type-select-label">Image Source</InputLabel>
+          <Select
+            labelId="image-type-select-label"
+            id="image-type-select"
+            value={imageSelectType}
+            label="Image Select"
+            onChange={(e) => setImageSelectType(e.target.value)}
+          >
+            <MenuItem value={'subpath'}>Subpath</MenuItem>
+            <MenuItem value={'ipfs'}>IPFS CID</MenuItem>
+          </Select>
+        </FormControl>
+        <TextField
+          value={subpath}
+          onChange={(e) => setSubpath(e.target.value)}
+          label={imageSelectType === 'subpath' ? 'Image subpath' : 'Image CID'}
+          placeholder={
+            imageSelectType === 'subpath' ? 'assets/images/cover.png' : 'QmVA8QmYcm2ymVtLf5Wu2mhvtANoHpCW29yAcvZZLgDmFX'
+          }
+          fullWidth
+          id="image"
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <Tooltip
+                  title={
+                    imageSelectType === 'subpath'
+                      ? 'This is the path to the image within the IPFS folder from the previous step.'
+                      : 'This is the cid for image on IPFS.'
+                  }
+                >
+                  <IconButton aria-label="subpath hint">
+                    <Iconify icon="mdi:help-circle" />
+                  </IconButton>
+                </Tooltip>
+              </InputAdornment>
+            ),
+          }}
+        />
+        {imageSelectType === 'subpath' && (
+          <Button onClick={handleShowGADTree}>
+            <PermMediaIcon />
+          </Button>
+        )}
+      </Stack>
 
-      <TextField
-        value={collection}
-        onChange={(e) => setCollection(e.target.value)}
-        label="Collection Url"
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <Tooltip title="The collection address which this token should display within.">
-                <IconButton aria-label="subpath hint">
-                  <Iconify icon="mdi:help-circle" />
-                </IconButton>
-              </Tooltip>
-            </InputAdornment>
-          ),
+      <Popover
+        id={id}
+        open={showGADTree}
+        anchorEl={anchorEl}
+        onClose={handleHideGADTree} // Close Popover on blur
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
         }}
-      />
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <IPFSTree cid={cid} onFileClick={(e) => setSubpath(e.path)} />
+      </Popover>
+
+      <Stack direction="row" justifyContent="space-between" spacing={1}>
+        <CollectionSelect value={collection?.url ?? null} onChange={(e) => setCollection(e?.url)} />
+      </Stack>
 
       <TextField
         type="number"
         value={royalty}
+        id="royalty"
         inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', min: 0, max: 10 }}
         onChange={(e) => setRoyalty(Number(e.target.value))}
         label="Royalty Percentage"

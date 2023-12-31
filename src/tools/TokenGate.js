@@ -29,5 +29,5 @@ export default {
   description: 'Configure token gated content for your tokens and/or collections.',
   color: 'blue',
   content: Content,
-  label: 'New',
+  // label: 'New',
 };
