@@ -43,7 +43,7 @@ const Design = ({ onChangeConfig, canReset, onReset, handleNext }) => {
     if (imageSelectType === 'subpath') {
       onChangeConfig('image', `ipfs://${cid}/${encodeURIComponent(subpath)}`);
     } else {
-      onChangeConfig('image', `ipfs://${subpath}}`);
+      onChangeConfig('image', `ipfs://${subpath}`);
     }
   }, [cid, subpath, onChangeConfig, imageSelectType]);
   useEffect(() => onChangeConfig('royalty_percentage', royalty), [royalty, onChangeConfig]);
