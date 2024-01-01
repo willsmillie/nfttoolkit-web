@@ -51,7 +51,7 @@ const Design = ({ onChangeConfig, canReset, onReset, handleNext }) => {
 
   // indicates if the form is complete
   const designIsValid =
-    name.length > 0 && description.length > 0 && cid.length > 0 && subpath.length > 0 && collection.length > 0;
+    name?.length > 0 && description?.length > 0 && cid?.length > 0 && subpath?.length > 0 && collection?.length > 0;
 
   return (
     <>
