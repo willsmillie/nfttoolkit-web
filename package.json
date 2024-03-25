@@ -47,7 +47,7 @@
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@iconify/react": "^3.2.1",
-    "@loopexchange-labs/loopring-sdk": "^0.0.11",
+    "@loopexchange-labs/loopring-sdk": "^0.0.13",
     "@loopring-web/loopring-sdk": "^3.5.19-test.2",
     "@loopring-web/web3-provider": "^1.1.3",
     "@mui/icons-material": "^5.11.11",

@@ -2708,10 +2708,10 @@
   dependencies:
     "@lit-labs/ssr-dom-shim" "^1.0.0"
 
-"@loopexchange-labs/loopring-sdk@^0.0.10":
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/@loopexchange-labs/loopring-sdk/-/loopring-sdk-0.0.10.tgz#7ebbdecffaab067383dc7388ab942d1f882ebec3"
-  integrity sha512-SwaYDKdhIAASh9DSGe/KBphTHHLg0U8VewhfN2dokdTPCMdFUShUi87Pt3KsnAKNQ40Jj+FG2V3my5/K5n2ZGg==
+"@loopexchange-labs/loopring-sdk@^0.0.13":
+  version "0.0.13"
+  resolved "https://npm.pkg.github.com/download/@loopexchange-labs/loopring-sdk/0.0.13/7390a0d21e8381450cd5e5d89f59642acddf9a0e#7390a0d21e8381450cd5e5d89f59642acddf9a0e"
+  integrity sha512-FqGT/8kPtOt4w8+IqKkPuWzw4eW2vvUQY/bynjGYZtTsl8+jHBUP71oIrn3xDq/u2NlSVL9ufvOR4K+sKqA4hg==
 
 "@loopring-web/loopring-sdk@^3.5.19-test.2":
   version "3.5.19-test.2"
