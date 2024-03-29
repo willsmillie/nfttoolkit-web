@@ -1,10 +1,11 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useMemo } from 'react';
+
 import { useQuery } from 'react-query';
 import { RateLimit as ratelimit } from 'async-sema';
 import { useAccount } from 'wagmi';
+
 import { getFilesForGates, parseGatesFromNFTs } from 'src/utils/tokenGate';
 import { useUnlockContext } from 'src/contexts/unlock-context';
-
 import { userAPI } from '../utils/web3';
 import * as API from '../API';
 
@@ -12,10 +13,22 @@ export const AuthContext = createContext();
 const rateLimiter = ratelimit(5);
 
 const AuthContextProvider = (props) => {
-  // const { activate, deactivate, library, account, active } = useWeb3React();
   const { address } = useAccount();
   const { data: authData } = useUnlockContext();
-  const { accountId, apiKey } = authData ?? {};
+  const { accountId: accId, apiKey } = authData ?? {};
+
+  const accountId = useMemo(() => {
+    async function fetchData() {
+      if (accId) return accId;
+      if (address) {
+        const res = await API.getAccountId(address);
+        return String(res?.accountId);
+      }
+      return null;
+    }
+
+    fetchData();
+  }, [address, accId]);
 
   const [mints, setMints] = useState([]);
   const [nfts, setNFTs] = useState([]);
@@ -26,8 +39,6 @@ const AuthContextProvider = (props) => {
 
   // paginator for loopring API requests
   const loopringFetcher = async (url) => {
-    if (!apiKey) return {};
-
     const response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
@@ -35,44 +46,42 @@ const AuthContextProvider = (props) => {
       },
     });
 
-    return response.json();
+    if (response.ok) return response.json();
+
+    throw new Error('Failed to fetch');
   };
 
   // fetch account data after authenticating
   useEffect(() => {
-    function fetchData() {
-      if (accountId?.length === 0 || !accountId) return;
+    async function fetchData() {
+      const accId = accountId || (await API.getAccountId(address).then((r) => r.accountId));
+      if (accId?.length === 0 || !accId) return;
 
-      getAllNFTs(accountId)
+      API.getNFTs(accId)
         .then((results) => {
           setNFTs(results);
-          parseGatesFromNFTs(results).then(setGateIds);
+          parseGatesFromNFTs(results)
+            .then(setGateIds)
+            .then((err) => console.error(err?.message ?? err));
         })
-        .catch(console.error);
+        .catch((err) => console.error(err?.message ?? err));
 
-      API.getMints(accountId).then(setMints);
+      API.getMints(accId).then(setMints);
 
-      userAPI
-        .getUserOwenCollection(
-          {
-            owner: address,
-            isMintable: true,
-          },
-          apiKey
-        )
-        .then(({ collections: data }) => {
+      if (authData)
+        userAPI.getUserOwenCollection({ owner: address, isMintable: true }, apiKey).then(({ collections: data }) => {
           setCollections(data);
         });
 
       // get the users gated files
-      API.getFiles(accountId).then(setFiles).catch(console.error);
+      API.getFiles(accId).then(setFiles).catch(console.error);
     }
 
     fetchData();
 
     return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authData]);
+  }, [authData, address]);
 
   useEffect(() => getFilesForGates(gateIds).then(setFiles), [gateIds]);
 
@@ -131,7 +140,7 @@ const AuthContextProvider = (props) => {
   const getNFTData = async ({ minter, tokenAddress, nftId }) => {
     const url = `https://api3.loopring.io/api/v3/nft/info/nftData?minter=${minter}&tokenAddress=${tokenAddress}&nftId=${nftId}`;
     // call the loopring api
-    const res = await loopringFetcher(url).catch(console.warn); // eslint-disable-line no-await-in-loop
+    const res = await loopringFetcher(url);
     return res;
   };
 
@@ -145,6 +154,7 @@ const AuthContextProvider = (props) => {
     return res;
   };
 
+  // Fetch nfts, paginating Looprings REST API
   const getAllNFTs = async (accountId) => {
     let totalNum = null;
     const results = [];
@@ -187,6 +197,7 @@ const AuthContextProvider = (props) => {
         getTokenInfo,
         fetchMints,
         fetchNFTs,
+        getAllNFTs,
         collections,
         files,
       }}

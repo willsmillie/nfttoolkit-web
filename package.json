@@ -65,6 +65,7 @@
     "fslightbox-react": "^1.7.6",
     "history": "^5.3.0",
     "ipfs-http-client": "^60.0.1",
+    "notistack": "^3.0.1",
     "nprogress": "^0.2.0",
     "numeral": "^2.0.6",
     "package.json": "^2.0.1",

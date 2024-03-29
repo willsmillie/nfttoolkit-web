@@ -1,25 +1,34 @@
 import { useState } from 'react';
+
 import { Backdrop, Grid, Stack, TextField, Card, CardContent, Typography, CircularProgress } from '@mui/material';
+
+import { useSnackbar } from 'src/components/snackbar';
 import useDebounce from '../hooks/useDebounce';
 import { getDAGForCID } from '../utils/ipfs';
 
 const Content = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [cid, setCID] = useState('');
   const [results, setResults] = useState('');
 
-  // DeBounce Function
+  // DeBounce Function to load after typing
   useDebounce(
     () => {
-      if (cid.length === 0) return;
-
-      setLoading(true);
-      getDAGForCID(cid)
-        .then(setResults)
-        .catch(console.error)
-        .finally(() => {
+      async function fetchData() {
+        if (cid.length === 0) return;
+        let newData;
+        try {
+          setLoading(true);
+          newData = await getDAGForCID(cid);
+        } catch (err) {
+          enqueueSnackbar(err.message ?? 'Error retrieving IPFS data', { variant: 'error' });
+        } finally {
           setLoading(false);
-        });
+          setResults(newData);
+        }
+      }
+      fetchData();
     },
     [cid],
     800

@@ -5,6 +5,11 @@ const prod = 'https://us-central1-nfttoolkit-ba61b.cloudfunctions.net/';
 const forceProd = true;
 const base = process.env.REACT_APP_DEVELOPMENT && !forceProd ? dev : prod;
 
+const loopringBase =
+  process.env.REACT_APP_DEVELOPMENT && !forceProd
+    ? `https://uat2.loopring.io/api/v3`
+    : `https://api3.loopring.io/api/v3`;
+console.log(process.env.REACT_APP_DEVELOPMENT && !forceProd);
 // cors proxy for GSMP collection reqs
 export const proxyUrl = `${base}api/proxy/`;
 
@@ -94,4 +99,24 @@ export const getWhales = async (accountId) => {
   const url = `${base}${endpoint}`;
   const response = await axios.get(url);
   return response.data;
+};
+
+// Get Account ID for an address
+export const getAccountId = async (address) => {
+  console.log('get account for address: ', address);
+  if (!address || address?.length === 0) return [];
+  const endpoint = `account?owner=${address}`;
+  const url = `${loopringBase}/${endpoint}`;
+  const response = await axios.get(url);
+  return response.data;
+};
+
+// Get Account ID for an address
+export const isActivationRequired = async (address) => {
+  console.log('get account for address: ', address);
+  if (!address || address?.length === 0) return [];
+  const endpoint = `api/v3/account?owner=${address}`;
+  const url = `${loopringBase}/${endpoint}`;
+  const response = await axios.get(url);
+  return response.data?.code === 101002;
 };
