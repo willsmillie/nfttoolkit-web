@@ -43,8 +43,8 @@ export const fetchTokenMetadata = async (nftId) => {
 
 // Function to fetch token collection metadata
 export const fetchTokenCollectionMetadata = async (metadata) => {
-  if (metadata && metadata.collection_metadata) {
-    const collectionId = parseCollectionId(metadata.collection_metadata);
+  if (metadata && metadata?.collection_metadata) {
+    const collectionId = parseCollectionId(metadata?.collection_metadata);
     // Check if collection metadata is available in cache
     const cachedCollectionMetadata = localStorage.getItem(`collection_metadata_${collectionId}`);
     if (cachedCollectionMetadata) {
@@ -52,7 +52,7 @@ export const fetchTokenCollectionMetadata = async (metadata) => {
     }
 
     try {
-      const response = await fetch(proxyUrl + metadata.collection_metadata);
+      const response = await fetch(proxyUrl + metadata?.collection_metadata);
       if (response.ok) {
         const data = await response.json();
         // Cache the collection metadata in localStorage

@@ -1,20 +1,11 @@
 import { useState, useEffect } from 'react';
-import {
-  CircularProgress,
-  // Tooltip,
-  Autocomplete,
-  Chip,
-  TextField,
-  Checkbox,
-} from '@mui/material';
+import { CircularProgress, Autocomplete, Chip, TextField, Checkbox } from '@mui/material';
 import useLoopring from 'src/hooks/useLoopring';
 import { parseCollectionId, fetchTokenMetadata, fetchTokenCollectionMetadata } from 'src/hooks/useTokenResolver';
 import ConnectButton from 'src/components/ConnectButton';
-import { useUnlockContext } from 'src/contexts/unlock-context';
 
 const CollectionSelect = ({ value = null, onChange }) => {
   const { loading, mints, address } = useLoopring();
-  const { isUnlocked } = useUnlockContext();
 
   const [resolvedTokenMetadata, setResolvedTokenMetadata] = useState({});
   const [resolvedCollectionMetadata, setResolvedCollectionMetadata] = useState({});
@@ -68,8 +59,8 @@ const CollectionSelect = ({ value = null, onChange }) => {
     const selectedNFTs = Object.entries(resolvedTokenMetadata)
       // eslint-disable-next-line no-unused-vars
       .filter(([nftId, metadata]) => {
-        if (metadata.collection_metadata) {
-          const collectionId = parseCollectionId(metadata.collection_metadata);
+        if (metadata?.collection_metadata) {
+          const collectionId = parseCollectionId(metadata?.collection_metadata);
           return collectionId && selectedCollection === collectionId;
         }
         return false;
@@ -94,7 +85,7 @@ const CollectionSelect = ({ value = null, onChange }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCollection, selectedTokens, tokensFromCollection]);
 
-  return !address || !isUnlocked ? (
+  return !address ? (
     <ConnectButton fullWidth />
   ) : (
     <Autocomplete
@@ -109,7 +100,7 @@ const CollectionSelect = ({ value = null, onChange }) => {
       isOptionEqualToValue={(a, b) => a.value === b.value}
       onChange={(event, newValue) => setSelectedCollection(newValue)}
       disableCloseOnSelect
-      getOptionLabel={(option) => option?.value ?? ''}
+      getOptionLabel={(option) => option?.label ?? ''}
       renderInput={(params) => (
         <TextField
           {...params}

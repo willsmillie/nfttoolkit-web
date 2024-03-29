@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import {
   Backdrop,
   Grid,
@@ -10,7 +11,7 @@ import {
   Typography,
   CircularProgress,
 } from '@mui/material';
-import ConnectButton from 'src/components/ConnectButton';
+
 import useDebounce from 'src/hooks/useDebounce';
 import useLoopring from 'src/hooks/useLoopring';
 import { resolveENS, getAccountByAddress } from 'src/utils/web3';
@@ -20,7 +21,7 @@ const Content = () => {
   const [loading, setLoading] = useState(false);
   const [account, setAccount] = useState('');
   const [resolvedAccountId, setResolvedAccountId] = useState('');
-  const { useBalances, active } = useLoopring();
+  const { useBalances } = useLoopring();
 
   const { data: balances, isLoading: balancesIsLoading } = useBalances(resolvedAccountId);
   // DeBounce Function
@@ -57,20 +58,16 @@ const Content = () => {
                 <Stack spacing={2}>
                   <p>Enter an ENS/Wallet Address</p>
 
-                  {!active ? (
-                    <ConnectButton />
-                  ) : (
-                    <TextField
-                      label="ENS / 0x Address"
-                      id="outlined-size-small"
-                      placeholder="fenneckit.eth"
-                      size="small"
-                      rows={3}
-                      onChange={(e) => {
-                        setAccount(e.target.value);
-                      }}
-                    />
-                  )}
+                  <TextField
+                    label="ENS / 0x Address"
+                    id="outlined-size-small"
+                    placeholder="fenneckit.eth"
+                    size="small"
+                    rows={3}
+                    onChange={(e) => {
+                      setAccount(e.target.value);
+                    }}
+                  />
                 </Stack>
               </CardContent>
             </Card>

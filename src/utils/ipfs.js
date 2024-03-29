@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import * as Web3 from './web3';
 // env vars
 const { REACT_APP_INFURA_IPFS_API_KEY: INFURA_IPFS_API_KEY, REACT_APP_INFURA_IPFS_API_SECRET: INFURA_IPFS_API_SECRET } =
@@ -35,7 +36,7 @@ export async function fetchIPFS(cid) {
   }
 }
 
-const getMetadataForCID = async (cid) => {
+const getDirectoriesForCID = async (cid) => {
   // url containing the cid
   const url = `https://ipfs.infura.io:5001/api/v0/dag/get?arg=${cid}&encoding=json`;
 
@@ -43,7 +44,6 @@ const getMetadataForCID = async (cid) => {
   const headers = { 'Content-Type': 'application/json', Authorization: auth, RequestMode: 'no-cors' };
   const request = fetch(url, { method: 'POST', headers, redirect: 'follow' });
   const response = await request.then((res) => res.json()).catch(console.error);
-  console.log(JSON.stringify(response, null, null, 2));
   return parseLinks(response);
 };
 
@@ -66,35 +66,28 @@ const getBufferForCID = async (cid) => {
     Authorization: auth,
   };
 
-  try {
-    const response = await axios({
-      method: 'POST',
-      url,
-      headers,
-      responseType: 'arraybuffer', // Set the response type to 'arraybuffer'
-    });
+  const response = await axios({
+    method: 'POST',
+    url,
+    headers,
+    responseType: 'arraybuffer', // Set the response type to 'arraybuffer'
+  });
 
-    const buffer = Buffer.from(response.data);
-    return buffer;
-  } catch (error) {
-    console.error('Error retrieving file:', error);
-    return null;
-  }
+  if (!response.data) throw new Error('Missing data for buffer');
+
+  const buffer = Buffer.from(response.data);
+  return buffer;
 };
 
 // Fetch the file graph
 export const getDAGForCID = async (cid) => {
-  try {
-    // attempt to fetch a cached version
-    const data = await getMetadataForCID(cid).catch(console.warn);
-    if (data) return data;
+  const data = await getDirectoriesForCID(cid);
+  if (data) return data;
 
-    const buffer = await getBufferForCID(cid).catch(console.warn);
-    return buffer;
-  } catch (error) {
-    console.error(error);
-    return error;
-  }
+  const buffer = await getBufferForCID(cid).catch(console.warn);
+  if (buffer) return buffer;
+
+  throw new Error('Failed to retrieve IPFS CID');
 };
 
 export const metadataForNFTId = async (nftId) => fetchIPFS(ipfsNftIDToCid(nftId));

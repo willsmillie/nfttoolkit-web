@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { Typography, Stack, Tooltip } from '@mui/material';
 import Select from 'react-select';
 import useLoopring from '../../hooks/useLoopring';
+import { parseCollectionId, fetchTokenMetadata, fetchTokenCollectionMetadata } from '../../hooks/useTokenResolver';
 
 // Import the fetchTokenMetadata function
-import { parseCollectionId, fetchTokenMetadata, fetchTokenCollectionMetadata } from '../../hooks/useTokenResolver';
 
 const TokenGateBuilder = ({ value, onChange }) => {
   const { mints } = useLoopring();
@@ -58,8 +58,8 @@ const TokenGateBuilder = ({ value, onChange }) => {
     const selectedNFTs = Object.entries(resolvedTokenMetadata)
       // eslint-disable-next-line no-unused-vars
       .filter(([nftId, metadata]) => {
-        if (metadata.collection_metadata) {
-          const collectionId = parseCollectionId(metadata.collection_metadata);
+        if (metadata?.collection_metadata) {
+          const collectionId = parseCollectionId(metadata?.collection_metadata);
           return collectionId && selectedCollections.map((e) => e.value).includes(collectionId);
         }
         return false;

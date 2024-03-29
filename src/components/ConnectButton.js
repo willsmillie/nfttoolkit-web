@@ -1,17 +1,13 @@
-/* eslint-disable react/jsx-no-undef */
-/* eslint-disable react/jsx-key */
 import { useState } from 'react';
-import { Button, Menu, MenuItem, Divider } from '@mui/material';
 
-import PlugIcon from '@mui/icons-material/PowerSettingsNewRounded';
-import PowerIcon from '@mui/icons-material/Power';
-import LockOpenIcon from '@mui/icons-material/LockOpen';
-import LockIcon from '@mui/icons-material/Lock';
-
+import { Stack, Button, Menu, MenuItem, Divider } from '@mui/material';
+import PowerIcon from '@mui/icons-material/PowerSettingsNewRounded';
+import PlugIcon from '@mui/icons-material/Power';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useDisconnect } from 'wagmi';
 
 import { useUnlockContext } from '../contexts/unlock-context';
+import Iconify from './Iconify';
 
 export default function ConnectPopover() {
   const { disconnect } = useDisconnect();
@@ -48,7 +44,7 @@ export default function ConnectPopover() {
               {(() => {
                 if (!connected) {
                   return (
-                    <Button endIcon={<PowerIcon />} onClick={openConnectModal} variant="contained" color="primary">
+                    <Button endIcon={<PlugIcon />} onClick={openConnectModal} variant="contained" color="primary">
                       Connect Wallet
                     </Button>
                   );
@@ -67,13 +63,15 @@ export default function ConnectPopover() {
                       variant="contained"
                       color="primary"
                       startIcon={
-                        <img
-                          alt={account?.display ?? 'account icon'}
-                          src={account?.ensAvatar}
-                          style={{ width: 24, height: 24, borderRadius: '100%' }}
-                        />
+                        account?.ensAvatar && (
+                          <img
+                            alt={account?.display ?? 'account icon'}
+                            src={account?.ensAvatar}
+                            style={{ width: 24, height: 24, borderRadius: '100%' }}
+                          />
+                        )
                       }
-                      endIcon={<PowerIcon />}
+                      endIcon={<PlugIcon />}
                     >
                       {account.displayName}
                     </Button>
@@ -86,12 +84,18 @@ export default function ConnectPopover() {
                       anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                     >
                       <MenuItem onClick={unlock} disabled={!connected}>
-                        {isUnlocked ? <LockOpenIcon fontSize="small" /> : <LockIcon fontSize="small" />}
-                        {isUnlocked ? 'Lock' : 'Unlock'} Account{!connected && ' (disabled)'}
+                        <Stack direction="row" justifyContent="space-between" spacing={2} alignItems="center">
+                          {isUnlocked ? (
+                            <Iconify sx={{ pr: '10px', width: '24px' }} icon="fa:lock-alt" />
+                          ) : (
+                            <Iconify sx={{ pr: '10px', width: '24px' }} icon="fa:unlock-alt" />
+                          )}
+                          {isUnlocked ? 'Lock' : 'Unlock'} Account{!connected && ' (disabled)'}
+                        </Stack>
                       </MenuItem>
                       <Divider />
                       <MenuItem onClick={handleDisconnect}>
-                        <PlugIcon fontSize="small" />
+                        <PowerIcon sx={{ pr: '10px' }} fontSize="large" />
                         Disconnect
                       </MenuItem>
                     </Menu>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import {
   Tab,
   Tabs,
@@ -12,13 +13,16 @@ import {
   Typography,
   CircularProgress,
 } from '@mui/material';
+
 import useDebounce from 'src/hooks/useDebounce';
 import NFTSelect from 'src/components/NFTSelect';
 import useLoopring from 'src/hooks/useLoopring';
 import { metadataForNFTId } from 'src/utils/ipfs';
+import { useSnackbar } from 'src/components/snackbar';
 
 const Content = () => {
-  const { active, nfts, mints, getNFTData } = useLoopring();
+  const { address, nfts, mints, getNFTData } = useLoopring();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [loading, setLoading] = useState(false);
   const [id, setId] = useState('');
@@ -39,10 +43,20 @@ const Content = () => {
         mints?.find((e) => e.nftId.toLowerCase() === id.toLowerCase());
 
       if (selectedTokenInfo) {
-        getNFTData(selectedTokenInfo).then((res) => {
-          setTokenData(res);
-          metadataForNFTId(id).then(setMetadata);
-        });
+        getNFTData(selectedTokenInfo)
+          .then((res) => {
+            setTokenData(res);
+            metadataForNFTId(id)
+              .then(setMetadata)
+              .catch((err) => {
+                console.error(err.message);
+                enqueueSnackbar(err.message ?? 'Failed to load metadata', { variant: 'error' });
+              });
+          })
+          .catch((err) => {
+            console.error(err.message);
+            enqueueSnackbar(err.message, { variant: 'error' });
+          });
       } else {
         setTokenData('');
       }
@@ -72,16 +86,24 @@ const Content = () => {
                   <Tabs value={selectedTab} onChange={(e, value) => setSelectedTab(value)} aria-label="lookup-by">
                     <Tab label="Owned" value={0} />
                     <Tab label="Minted" value={1} />
+                    {/* <Tab label="NFT ID" value={2} /> // !TODO: Add support for nftId */}
                   </Tabs>
-                  <NFTSelect
-                    active={active}
-                    isLoading={loading}
-                    rows={selectedTab === 0 ? nfts : mints}
-                    value={id}
-                    onChange={(e) => {
-                      setId(e.target.value);
-                    }}
-                  />
+                  {selectedTab !== 2 ? (
+                    <NFTSelect
+                      active={address}
+                      isLoading={loading}
+                      rows={selectedTab === 0 ? nfts : mints}
+                      value={id}
+                      onChange={(e) => {
+                        setId(e.target.value);
+                      }}
+                    />
+                  ) : (
+                    <>
+                      <TextField label="NFT ID" id="nft-id" size="small" />
+                      <TextField label="Minter" id="minter" size="small" />
+                    </>
+                  )}
                 </Stack>
               </CardContent>
             </Card>
@@ -90,22 +112,20 @@ const Content = () => {
             <Card>
               <CardContent>
                 <Stack spacing={2}>
-                  <p>IPFS Metadata:</p>
                   <TextField
-                    label="Metadata"
+                    label="IPFS Metadata"
                     multiline
                     rows={30}
                     value={JSON.stringify(metadata, null, 2)}
-                    id="outlined-size-small"
+                    id="token-metadata-results"
                     size="small"
                   />
-                  <p>Token Data:</p>
                   <TextField
-                    label="Metadata"
+                    label="Token Data"
                     multiline
                     rows={15}
                     value={JSON.stringify(tokenData, null, 2)}
-                    id="outlined-size-small"
+                    id="token-metadata-results"
                     size="small"
                   />
                 </Stack>

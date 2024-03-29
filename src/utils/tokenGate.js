@@ -77,7 +77,7 @@ export const parseGatesFromNFTs = async (nfts) => {
 
   const collectionsFromMetadata = _.uniqWith(
     nftMetadatas
-      .map((e) => e.collection_metadata ?? e.collectionAddress ?? e.contractAddress)
+      .map((e) => e?.collection_metadata ?? e?.collectionAddress ?? e?.contractAddress)
       .filter((e) => !_.isNil(e)),
     _.isEqual
   );
