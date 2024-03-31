@@ -42,9 +42,9 @@ const Content = () => {
         </Backdrop>
       )}
 
-      <Stack spacing={1} padding={1}>
+      <Stack spacing={1}>
         <Typography variant="h4">Fetch the file tree for a pinned IPFS</Typography>
-        <Grid container spacing={2}>
+        <Grid container>
           <Grid item xs={12}>
             <Card>
               <CardContent>

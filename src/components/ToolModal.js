@@ -32,21 +32,19 @@ export default function ToolCard({ tool }) {
   };
 
   return (
-    <>
-      <Grid item xs={12} sm={6} lg={4} xl={3}>
-        <Card>
-          <CardActionArea onClick={handleClickOpen}>
-            <CardContent>
-              <Stack direction="row" justifyContent="space-between" alignItems="center">
-                <Typography variant="h4">{tool.name}</Typography>
-                {tool.label && <Label color="primary">{tool.label}</Label>}
-              </Stack>
-              <Typography>{tool.description}</Typography>
-            </CardContent>
-          </CardActionArea>
-        </Card>
-      </Grid>
-      <Dialog fullScreen open={open} onClose={handleClose}>
+    <Grid item xs={12} sm={6} lg={4} xl={3}>
+      <Card>
+        <CardActionArea onClick={handleClickOpen}>
+          <CardContent>
+            <Stack direction="row" justifyContent="space-between" alignItems="center">
+              <Typography variant="h4">{tool.name}</Typography>
+              {tool.label && <Label color="primary">{tool.label}</Label>}
+            </Stack>
+            <Typography>{tool.description}</Typography>
+          </CardContent>
+        </CardActionArea>
+      </Card>
+      <Dialog fullScreen={true} open={open} onClose={handleClose}>
         <AppBar sx={{ position: 'relative' }}>
           <Toolbar>
             <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
@@ -59,6 +57,6 @@ export default function ToolCard({ tool }) {
         </AppBar>
         <Container>{tool.content()}</Container>
       </Dialog>
-    </>
+    </Grid>
   );
 }

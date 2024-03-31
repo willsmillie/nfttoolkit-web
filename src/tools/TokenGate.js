@@ -8,7 +8,7 @@ const Content = () => {
   const { active, account } = useLoopring();
 
   return (
-    <Grid container margin={2} spacing={2}>
+    <Grid container>
       <Grid item xs={12}>
         <Card>
           <CardContent>
