@@ -102,6 +102,7 @@ const Content = () => {
                     <>
                       <TextField label="NFT ID" id="nft-id" size="small" />
                       <TextField label="Minter" id="minter" size="small" />
+                      <TextField label="Token/Contract Address" id="token" size="small" />
                     </>
                   )}
                 </Stack>
