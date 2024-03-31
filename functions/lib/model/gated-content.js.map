@@ -1,1 +1,0 @@
-{"version":3,"file":"gated-content.js","sourceRoot":"","sources":["../../src/model/gated-content.ts"],"names":[],"mappings":"AAAA,OAAO,eAAe,MAAM,6BAA6B,CAAC;AAC1D,OAAO,EAAC,YAAY,EAAC,MAAM,sBAAsB,CAAC;AAGlD,4CAA4C;AAC5C,MAAM,CAAC,MAAM,eAAe,GAAG,KAAK,EAAE,KAAK,EAAE,EAAE;IAC7C,OAAO,MAAM,eAAe,CAAC,YAAY,EAAE,KAAK,EAAE,IAAI,CAAC,CAAC;AAC1D,CAAC,CAAC"}
