@@ -12,7 +12,7 @@ export default function PageOne() {
     <Page title="Tools">
       <Container>
         <Typography variant="h1" component="h1" paragraph>
-          🧰 NFT Tool K.it
+          🧰 NFT Tool Kit
         </Typography>
         <Typography variant="h3" component="h2" fontWeight="light" paragraph>
           L2 Swiss Army Knife
