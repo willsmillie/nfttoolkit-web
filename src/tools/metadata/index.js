@@ -38,12 +38,12 @@ function MetadataView() {
       <Typography variant="body"> Configure token metadata for minting with IPFS.</Typography>
       <Grid container spacing={2} marginTop={3}>
         {/* Preview */}
-        <Grid item xs={6} md={6}>
+        <Grid item xs={12} sm={6} md={6}>
           <Preview config={config} />
         </Grid>
 
         {/* Layers */}
-        <Grid item xs={6} md={6}>
+        <Grid item xs={12} sm={6} md={6}>
           {/* nft layers manager */}
           <Controls config={config} onChangeConfig={handleChangeConfig} canReset={canReset} onReset={handleReset} />
         </Grid>

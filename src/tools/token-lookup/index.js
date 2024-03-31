@@ -75,7 +75,7 @@ const Content = () => {
         </Backdrop>
       )}
 
-      <Stack spacing={1} padding={1}>
+      <Stack spacing={1}>
         <Typography variant="h4">View the current holdings of an account</Typography>
         <Grid container spacing={2}>
           <Grid item xs={12}>
@@ -102,6 +102,7 @@ const Content = () => {
                     <>
                       <TextField label="NFT ID" id="nft-id" size="small" />
                       <TextField label="Minter" id="minter" size="small" />
+                      <TextField label="Token/Contract Address" id="token" size="small" />
                     </>
                   )}
                 </Stack>

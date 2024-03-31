@@ -49,9 +49,9 @@ const Content = () => {
         </Backdrop>
       )}
 
-      <Stack spacing={1} padding={1}>
+      <Stack spacing={1}>
         <Typography variant="h4">Fetch the contents of a wallet</Typography>
-        <Grid container spacing={2}>
+        <Grid container>
           <Grid item xs={12}>
             <Card>
               <CardContent>

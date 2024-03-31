@@ -82,9 +82,9 @@ const Content = () => {
         </Backdrop>
       )}
 
-      <Stack spacing={1} padding={1}>
+      <Stack spacing={1}>
         <Typography variant="h4">Retrieve a list of holders by token or minter</Typography>
-        <Grid container spacing={2}>
+        <Grid container>
           <Grid item xs={12}>
             <Card>
               <CardHeader title="Fetch Holders By:" />
