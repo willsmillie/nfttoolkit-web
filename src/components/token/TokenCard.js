@@ -87,7 +87,7 @@ export default function TokenCard({ nftId, metadata: _metadata, collectionMetada
           </CardContent>
         </CardActionArea>
       </Card>
-      {nftId && metadata && collectionMetadata && (
+      {metadata && (
         <TokenDetail
           {...{ nftId, metadata, collectionMetadata }}
           show={show}

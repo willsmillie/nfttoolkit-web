@@ -7,8 +7,8 @@ import { Box, Grid, Stack, Typography, Modal } from '@mui/material';
 
 import { fetchTokenMetadata } from '../../hooks/useTokenResolver';
 // components
-import GatedFilesList from '../files/GatedFilesList';
-import TokenInfo from './TokenInfo';
+// import GatedFilesList from '../files/GatedFilesList';
+// import TokenInfo from './TokenInfo';
 import TokenEmbed from './TokenEmbed';
 
 // IPFS LIST
@@ -49,14 +49,8 @@ export default function TokenDetail({ nftId, metadata: partial_metadata, show, h
     >
       <Box sx={style}>
         <Grid container spacing={3}>
-          <Grid item xs={12} md={6} lg={6}>
-            <Stack
-              direction="column"
-              justifyContent="flex-start"
-              alignItems="stretch"
-              spacing={2}
-              sx={{ height: '50%' }}
-            >
+          <Grid item xs={12}>
+            <Stack direction="column" justifyContent="flex-start" alignItems="stretch" spacing={2}>
               <Typography
                 level="h2"
                 variant="h3"
@@ -65,10 +59,10 @@ export default function TokenDetail({ nftId, metadata: partial_metadata, show, h
               />
 
               <TokenEmbed nftId={nftId} metadata={metadata ?? partial_metadata} open={show} />
-              <TokenInfo token={partial_metadata} />
+              {/* <TokenInfo token={partial_metadata ?? metadata} /> */}
             </Stack>
           </Grid>
-          <Grid item xs={12} md={6} lg={6}>
+          {/* <Grid item xs={12} md={6} lg={6}>
             <Typography level="h2" variant="h3" component="div">
               Files & assets
             </Typography>
@@ -76,7 +70,7 @@ export default function TokenDetail({ nftId, metadata: partial_metadata, show, h
               Documents and attachments that have been uploaded as part of your current tokens.
             </Typography>
             <GatedFilesList gateId={nftId} />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Box>
     </Modal>
