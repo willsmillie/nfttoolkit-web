@@ -2,7 +2,8 @@ const { GraphQLClient } = require("graphql-request");
 const { getAccountNFTsQuery, getAccountMintedNFTsQuery } = require("./nfts");
 const { getNFTHoldersQuery } = require("./accounts");
 
-const loopringGraphEndpoint = "https://api.thegraph.com/subgraphs/name/loopring/loopring";
+// const loopringGraphEndpoint = "https://api.thegraph.com/subgraphs/name/loopring/loopring";
+const loopringGraphEndpoint = `https://gateway-arbitrum.network.thegraph.com/api/${process.env.LOOPRING_SUBGRAPH_KEY}/subgraphs/id/8Z15oyPLRCYzVdNbjKSU2iD8BE6Sj8PZRV4KddDuvuk2`;
 const client = new GraphQLClient(loopringGraphEndpoint);
 
 /**

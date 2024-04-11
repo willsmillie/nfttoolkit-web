@@ -20,13 +20,14 @@ const parseCollectionId = (url) => {
 };
 
 const getGates = async (accountId) => {
+  if (!accountId) return [];
   const nfts = await getAccountNFTs(accountId);
 
-  const nftIds = nfts.map((e) => e.nftId);
+  const nftIds = (nfts ?? []).map((e) => e.nftId);
   const collectionIds = await deriveCollectionsFromNFTs(nfts, accountId)
-      .then((collections) => collections.map((e) => parseCollectionId(e.collectionAddress) ?? e.contractAddress));
+      .then((collections) => collections.map((e) => parseCollectionId(e?.collectionAddress) ?? e?.contractAddress));
 
-  return [nftIds, collectionIds].flat().map((e)=>e.toString());
+  return [nftIds, collectionIds].flat().map((e)=>e?.toString());
 };
 
 // Serve the entire list of gateIds for which an account may access

@@ -24,7 +24,7 @@ const deriveCollectionsFromNFTs = async (nfts, id) => {
   const promises = uniquePairs.map(getUserCollectionPromise);
   const result = await Promise.all(promises);
 
-  return result.map((e) => e.collections).flat().filter((e)=>e.id !== -1);
+  return result.map((e) => e.collections).flat().filter((e)=>e?.id !== -1);
 };
 
 module.exports = {

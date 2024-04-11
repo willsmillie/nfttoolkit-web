@@ -1,5 +1,6 @@
+/* eslint-disable require-jsdoc */
 const express = require("express");
-const jsmediatags = require("jsmediatags")
+const jsmediatags = require("jsmediatags");
 
 const router = express.Router();
 
@@ -14,9 +15,9 @@ router.get("/tags/:cid", async (req, res) => {
   try {
     const { cid } = req.params;
 
-    const {tags} = await readMediaTagsFromIPFS(cid)
-    const {title, album, artist, track, year} = tags
-  
+    const {tags} = await readMediaTagsFromIPFS(cid);
+    const {title, album, artist, track, year} = tags;
+
     res.json({title, album, artist, track, year});
   } catch (error) {
     console.error("Error listing files:", error);
@@ -24,15 +25,16 @@ router.get("/tags/:cid", async (req, res) => {
   }
 });
 
+
 function readMediaTagsFromIPFS(cid) {
   return new Promise((resolve, reject) => {
     jsmediatags.read(`http://ipfs.io/ipfs/${cid}`, {
-      onSuccess: function(tag) {
+      onSuccess(tag) {
         resolve(tag);
       },
-      onError: function(error) {
+      onError(error) {
         reject(error);
-      }
+      },
     });
   });
 }
