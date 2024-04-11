@@ -7,10 +7,10 @@ import useLoopring from '../../hooks/useLoopring';
 // ----------------------------------------------------------------------
 
 export default function TokenGrid({ rows }) {
-  const { active } = useLoopring();
+  const { address } = useLoopring();
   return (
     <Stack padding={2}>
-      {!active ? (
+      {!address ? (
         <Typography variant="h5" align="center">
           Connect your wallet to view your assets!
         </Typography>
