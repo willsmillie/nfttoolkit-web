@@ -87,15 +87,18 @@ const AuthContextProvider = (props) => {
 
   // fetch held NFTs for a given accountId
   const fetchNFTs = async (accountId, page = 0, limit = 50) => {
-    const response = await userAPI.getUserNFTBalances(
-      {
-        accountId,
-        offset: page * limit,
-        limit,
-        metadata: true,
-      },
-      apiKey
-    );
+    const response = await userAPI
+      .getUserNFTBalances(
+        {
+          accountId,
+          offset: page * limit,
+          limit,
+          metadata: true,
+        },
+        apiKey
+      )
+      .catch((e) => console.error(e));
+    console.log('Fetched nfts', { response });
     return {
       totalNum: response.totalNum,
       results: response.userNFTBalances,

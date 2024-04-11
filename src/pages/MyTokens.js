@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useQuery } from 'react-query';
 // @mui
 import { Container, Grid, Tooltip, Tabs, Tab, Card, Typography, CardActionArea } from '@mui/material';
 
@@ -24,7 +23,7 @@ import { isYouTubeLink } from '../utils/youtube';
 
 export default function GeneralApp() {
   const { themeStretch } = useSettings();
-  const { files, accountId, active, fetchMints, fetchNFTs } = useLoopring();
+  const { nfts, mints, files } = useLoopring();
   // Filter tabs
   const STATUS_OPTIONS = ['collected', 'created', 'files'];
   const { currentTab: filterStatus, onChangeTab: onChangeFilterStatus } = useTabs(STATUS_OPTIONS[0]);
@@ -38,37 +37,13 @@ export default function GeneralApp() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(12);
 
-  const queryParams = {
-    keepPreviousData: true,
-    enabled: active,
-    refetchOnWindowFocus: false,
-    getNextPageParam: (lastPage) => {
-      const { totalNum } = lastPage;
-      const currentOffset = lastPage.offset;
-      const nextPageOffset = currentOffset + lastPage.data.length;
+  const filteredTotal = showCollected ? nfts?.length : showCreated ? mints?.length ?? 0 : files?.length ?? 0;
+  const rows = (showCollected ? nfts : showCreated ? mints : files) ?? [];
 
-      if (nextPageOffset < totalNum) return nextPageOffset;
-      return false; // Return false if there are no more pages
-    },
-  };
-
-  const { data: nfts } = useQuery(
-    ['projects', page, rowsPerPage, showCollected],
-    () => fetchNFTs(accountId, page, rowsPerPage),
-    queryParams
-  );
-
-  const { data: mints } = useQuery(
-    ['mints', page, rowsPerPage, showCollected],
-    () => fetchMints(accountId, page, rowsPerPage),
-    queryParams
-  );
-
-  const filteredTotal = showCollected ? nfts?.totalNum : showCreated ? mints?.totalNum ?? 0 : files?.length ?? 0;
-  const rows = (showCollected ? nfts?.results : showCreated ? mints?.results : files) ?? [];
   // Calculate the start and end indexes for the current page
   const startIndex = page * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
+  const filteredRows = rows?.slice(startIndex, endIndex);
   const filesForPage = files?.slice(startIndex, endIndex);
 
   const [lightBoxContent, setLightBoxContent] = useState(null);
@@ -97,8 +72,8 @@ export default function GeneralApp() {
                   value={tab}
                   icon={
                     <Label variant={'ghost'} color={'success'}>
-                      {tab === 'collected' && (nfts?.totalNum ?? 0)}
-                      {tab === 'created' && (mints?.totalNum ?? 0)}
+                      {tab === 'collected' && (nfts?.length ?? 0)}
+                      {tab === 'created' && (mints?.length ?? 0)}
                       {tab === 'files' && (files?.length ?? 0)}
                     </Label>
                   }
@@ -109,7 +84,7 @@ export default function GeneralApp() {
             {!showFiles && (
               <Grid container spacing={3}>
                 <Grid item xs={12}>
-                  <TokenGrid title="Tokens" rows={rows} />
+                  <TokenGrid title="Tokens" rows={filteredRows} />
                 </Grid>
               </Grid>
             )}

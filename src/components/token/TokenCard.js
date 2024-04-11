@@ -1,10 +1,14 @@
 import * as React from 'react';
 import { Card, CardActionArea, Typography, CardContent, Chip, Stack } from '@mui/material';
+import useTokenResolver from 'src/hooks/useTokenResolver';
 import TokenDetail from './TokenDetail';
 import { ipfsNftIDToCid, ipfsToHttp } from '../../utils/ipfs';
 import Image from '../Image';
 
-export default function TokenCard({ nftId, metadata, collectionMetadata, files }) {
+export default function TokenCard({ nftId, metadata: _metadata, collectionMetadata, files }) {
+  const { metadata: __metadata } = useTokenResolver(nftId);
+  const metadata = __metadata ?? _metadata;
+
   const [show, setShow] = React.useState(false);
   const imageSrc = ipfsToHttp(metadata?.image ?? metadata?.animation_url ?? ipfsNftIDToCid(nftId));
   const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
@@ -14,6 +18,7 @@ export default function TokenCard({ nftId, metadata, collectionMetadata, files }
     if (type) acc[type] = (acc[type] || 0) + 1;
     return acc;
   }, {});
+
   const types = Object.keys(typeCounts ?? {});
   function colorForType(type) {
     switch (type) {
