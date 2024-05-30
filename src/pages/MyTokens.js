@@ -14,11 +14,13 @@ import {
   IconButton,
   OutlinedInput,
   Box,
+  Stack,
 } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { partial_ratio } from 'fuzzball';
 
 // hooks
+import useResponsive from 'src/hooks/useResponsive';
 import useSettings from '../hooks/useSettings';
 import useTabs from '../hooks/useTabs';
 import useLoopring from '../hooks/useLoopring';
@@ -40,6 +42,7 @@ import { isYouTubeLink } from '../utils/youtube';
 export default function GeneralApp() {
   const { themeStretch } = useSettings();
   const { nfts, mints, files } = useLoopring();
+  const isDesktop = useResponsive('up', 'sm');
 
   // Filter tabs
   const STATUS_OPTIONS = ['collected', 'created', 'files'];
@@ -86,7 +89,16 @@ export default function GeneralApp() {
             Assets
           </Typography>
           <Card>
-            <Box sx={{ display: 'flex', alignItems: 'center', px: 2, bgcolor: 'background.neutral' }}>
+            <Box
+              component={Stack}
+              direction={isDesktop ? 'row' : 'column'}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                px: 2,
+                bgcolor: 'background.neutral',
+              }}
+            >
               <Tabs
                 sx={{ minWidth: '330px' }}
                 allowScrollButtonsMobile
