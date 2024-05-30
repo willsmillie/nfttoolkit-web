@@ -4,6 +4,7 @@ import { useQuery } from 'react-query';
 import { RateLimit as ratelimit } from 'async-sema';
 import { useAccount } from 'wagmi';
 
+import { useNftMetadata } from 'src/contexts/MetadataStore';
 import { getFilesForGates, parseGatesFromNFTs } from 'src/utils/tokenGate';
 import { useUnlockContext } from 'src/contexts/unlock-context';
 import { userAPI } from '../utils/web3';
@@ -13,6 +14,7 @@ export const AuthContext = createContext();
 const rateLimiter = ratelimit(5);
 
 const AuthContextProvider = (props) => {
+  const { resolveMetadata } = useNftMetadata();
   const { address } = useAccount();
   const { data: authData } = useUnlockContext();
   const { accountId: accId, apiKey } = authData ?? {};
@@ -58,15 +60,17 @@ const AuthContextProvider = (props) => {
       if (accId?.length === 0 || !accId) return;
 
       API.getNFTs(accId)
-        .then((results) => {
-          setNFTs(results);
-          parseGatesFromNFTs(results)
-            .then(setGateIds)
-            .then((err) => console.error(err?.message ?? err));
-        })
+        .then((results) =>
+          Promise.allSettled([
+            resolveMetadata(results, setNFTs),
+            parseGatesFromNFTs(results)
+              .then(setGateIds)
+              .then((err) => console.error(err?.message ?? err)),
+          ])
+        )
         .catch((err) => console.error(err?.message ?? err));
 
-      API.getMints(accId).then(setMints);
+      API.getMints(accId).then((results) => resolveMetadata(results, setMints));
 
       if (authData)
         userAPI.getUserOwenCollection({ owner: address, isMintable: true }, apiKey).then(({ collections: data }) => {
@@ -98,7 +102,6 @@ const AuthContextProvider = (props) => {
         apiKey
       )
       .catch((e) => console.error(e));
-    console.log('Fetched nfts', { response });
     return {
       totalNum: response.totalNum,
       results: response.userNFTBalances,
@@ -119,10 +122,10 @@ const AuthContextProvider = (props) => {
     );
 
     const mints = response.userNFTTxs;
-    const resolvedMetadata = await getTokenInfo(mints.map((e) => e.nftData).join(','));
+    const extraInfo = await getTokenInfo(mints.map((e) => e.nftData).join(','));
     const enrichedResults = mints.map((mint) => ({
       ...mint,
-      ...resolvedMetadata.find((e) => e.nftData === mint.nftData),
+      ...extraInfo.find((e) => e.nftData === mint.nftData),
     }));
 
     return {
