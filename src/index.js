@@ -19,26 +19,29 @@ import { CollapseDrawerProvider } from './contexts/CollapseDrawerContext';
 import AuthContextProvider from './contexts/L2Context';
 
 import App from './App';
+import { NftMetadataProvider } from './contexts/MetadataStore';
 
 // ----------------------------------------------------------------------
 
 ReactDOM.render(
   <HelmetProvider>
-    <Web3>
-      <LoopringAccountProvider>
-        <LoopringUnlockProvider>
-          <AuthContextProvider>
-            <SettingsProvider>
-              <CollapseDrawerProvider>
-                <BrowserRouter>
-                  <App />
-                </BrowserRouter>
-              </CollapseDrawerProvider>
-            </SettingsProvider>
-          </AuthContextProvider>
-        </LoopringUnlockProvider>
-      </LoopringAccountProvider>
-    </Web3>
+    <NftMetadataProvider>
+      <Web3>
+        <LoopringAccountProvider>
+          <LoopringUnlockProvider>
+            <AuthContextProvider>
+              <SettingsProvider>
+                <CollapseDrawerProvider>
+                  <BrowserRouter>
+                    <App />
+                  </BrowserRouter>
+                </CollapseDrawerProvider>
+              </SettingsProvider>
+            </AuthContextProvider>
+          </LoopringUnlockProvider>
+        </LoopringAccountProvider>
+      </Web3>
+    </NftMetadataProvider>
   </HelmetProvider>,
   document.getElementById('root')
 );
